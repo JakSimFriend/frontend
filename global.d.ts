@@ -6,5 +6,6 @@ declare namespace ReactNavigation {
     Notifications: undefined;
     Search: undefined;
     ChallengeDesc: undefined;
+    NickName: undefined;
   }
 }

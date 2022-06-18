@@ -1,8 +1,9 @@
-import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 import { useRecoilValue } from "recoil";
-import { isLoggedInAtom } from "../../atom";
+import { isLoggedInAtom, isUserAtom } from "../../atom";
 import { Category, ChallengeDesc, Notifications, Search, Setting } from "../screens/main";
+import { NickName } from "../screens/main/NickName";
 import LoggedInNav from "./LoggedInNav";
 import LoggedOutNav from "./LoggedOutNav";
 
@@ -10,11 +11,12 @@ const Stack = createStackNavigator();
 
 const MainNav = () => {
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
+  const isUser = useRecoilValue(isUserAtom);
   return (
     <>
       {isLoggedIn ? (
         <Stack.Navigator
-          initialRouteName="Tabs"
+          initialRouteName="Home"
           screenOptions={{
             headerTitle: () => false,
             headerTransparent: true,
@@ -22,7 +24,11 @@ const MainNav = () => {
             headerBackTitleVisible: false,
           }}
         >
-          <Stack.Screen name="Tabs" component={LoggedInNav} />
+          {isUser ? (
+            <Stack.Screen name="Home" component={LoggedInNav} />
+          ) : (
+            <Stack.Screen name="NickName" component={NickName} />
+          )}
           <Stack.Screen
             name="Notifications"
             component={Notifications}

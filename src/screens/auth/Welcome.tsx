@@ -7,8 +7,11 @@ import { isLoggedInAtom } from "../../../atom";
 const Welcome = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const onDone = () => {
-    setIsLoggedIn(true);
+    setTimeout(() => {
+      setIsLoggedIn(true);
+    }, 1000);
   };
+
   return (
     <Wrapper>
       <Title>어서오세요!</Title>
@@ -50,7 +53,7 @@ const Detail = styled.Text`
 const Button = styled.TouchableOpacity`
   background-color: #101647;
   padding: 15px 10px;
-  margin: 10px 0 10px 0 ;
+  margin: 10px 0 10px 0;
   border-radius: 13px;
 `;
 const ButtonText = styled.Text`

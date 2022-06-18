@@ -5,6 +5,11 @@ export const isLoggedInAtom = atom({
   default: false,
 });
 
+export const isUserAtom = atom({
+  key: "isUser",
+  default: false,
+});
+
 export const tierAtom = atom({
   key: "tier",
   default: "다이아몬드",
