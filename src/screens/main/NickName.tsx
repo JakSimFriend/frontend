@@ -88,6 +88,7 @@ export const NickName = () => {
     if (nickName.length % 2) {
       setModalVisible1(true);
       setButtonColor1(BLACK);
+      setGuideColor3(BLUE);
     } else {
       setModalVisible2(true);
       setGuideColor3(BLACK);
@@ -100,6 +101,7 @@ export const NickName = () => {
     if (nickName2.length % 2) {
       setModalVisible3(true);
       setButtonColor2(BLACK);
+      setGuideColor4(BLUE);
     } else {
       setModalVisible4(true);
       setGuideColor4(BLACK);
