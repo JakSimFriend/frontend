@@ -14,3 +14,8 @@ export const tierAtom = atom({
   key: "tier",
   default: "다이아몬드",
 });
+
+export const categoryIndexAtom = atom({
+  key: "categoryIndex",
+  default: 0,
+});

@@ -40,7 +40,8 @@ const MainNav = () => {
             name="Search"
             component={Search}
             options={{
-              presentation: "modal",
+              presentation: "transparentModal",
+              headerShown:false
             }}
           />
           <Stack.Screen name="Setting" component={Setting} />

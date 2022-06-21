@@ -3,7 +3,7 @@ import { Text } from "react-native";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components/native";
 import { tierAtom } from "../../../../../atom";
-import { Wrapper } from "../../../../styles/styles";
+import { TabBox, Wrapper } from "../../../../styles/styles";
 
 const DATA = [
   {
@@ -62,10 +62,10 @@ export const Tier = () => {
   return (
     <Wrapper>
       <Date>2022/05/01 ~ 2022/05/05</Date>
-      <TierBox>
+      <TabBox TierBox>
         <Text>이모티콘</Text>
         <TierTitle>{tier} 티어</TierTitle>
-      </TierBox>
+      </TabBox>
       <TierList>
         {DATA.map((item, index) => {
           return(<Text key={index}>{item.exp}</Text>)
@@ -78,13 +78,6 @@ export const Tier = () => {
 const Date = styled.Text`
   color: #b2b1b0;
   font-size: 12px;
-`;
-const TierBox = styled.View`
-  align-items: center;
-  background-color: #f6f5fb;
-  padding: 15px 10px 15px 10px;
-  margin-top: 15px;
-  border-radius: 15px;
 `;
 const TierTitle = styled.Text`
   margin-top: 5px;

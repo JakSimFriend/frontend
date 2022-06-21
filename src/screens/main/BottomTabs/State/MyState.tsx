@@ -1,15 +1,11 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text } from "react-native";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components/native";
 import { tierAtom } from "../../../../../atom";
-import { Wrapper } from "../../../../styles/styles";
+import { TabBox, Wrapper } from "../../../../styles/styles";
 
-type Props = {
-  Tier?: boolean;
-  Exp?: boolean;
-  Percentage?: boolean;
-};
+// 이 페이지 아직 GUI FIX 안됨; 대기
 
 export const MyState = () => {
   const tier = useRecoilValue(tierAtom);
@@ -62,14 +58,7 @@ const InfoWrapper = styled.View`
   align-items: flex-start;
   margin-top: 10px;
 `;
-const TabBox = styled.View<Props>`
-  background-color: #f6f5fb;
-  padding: 15px 10px 15px 10px;
-  border-radius: 15px;
-  margin-right: 10px;
-  margin-top: ${(props) => (props.Tier ? "15px" : "0")};
-  width: ${(props) => (props.Exp || props.Percentage ? "49%" : "100%")};
-`;
+
 const StatTitle = styled.Text`
   font-size: 18px;
   font-weight: 600;

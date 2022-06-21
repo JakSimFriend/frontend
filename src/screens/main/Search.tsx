@@ -1,21 +1,74 @@
-import React from "react";
-import { Keyboard, Text, TouchableWithoutFeedback } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Animated, Button, Keyboard, Text } from "react-native";
 import styled from "styled-components/native";
+import { BackIcon, SearchIcon } from "../../components/TabIcon";
 
 export const Search = () => {
+  const navigation = useNavigation();
+  const goHome = () =>
+    setTimeout(() => {
+      navigation.goBack();
+    }, 100);
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
+  const DownValue = useState(new Animated.Value(0))[0];
+  const MoveSearchBarDown = () => {
+    Animated.timing(DownValue, {
+      toValue: 75,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  };
   return (
-    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={dismissKeyboard}>
-      <Wrapper>
-        <Text>검색</Text>
-      </Wrapper>
-    </TouchableWithoutFeedback>
+    <Wrapper>
+      <BackButton
+        onPress={() => {
+          MoveSearchBarDown();
+          goHome();
+        }}
+      >
+        <BackIcon />
+      </BackButton>
+      <Animated.View
+        style={{
+          top: DownValue,
+        }}
+      >
+        <InputWrapper onPress={dismissKeyboard}>
+          <InputBox>
+            <InputText>다양한 챌린지를 검색해보세요!</InputText>
+          </InputBox>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+        </InputWrapper>
+      </Animated.View>
+    </Wrapper>
   );
 };
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 80px 25px 0 25px;
+  padding: 40px 0 0 18px;
+`;
+const BackButton = styled.TouchableOpacity``;
+const InputWrapper = styled.TouchableOpacity`
+  align-items: flex-start;
+  flex-direction: row;
+  margin-top: 30px;
+`;
+const InputBox = styled.View`
+  background-color: #f6f5fb;
+  border-radius: 10px;
+  padding: 15px;
+  width: 83%;
+  margin-left: 12px;
+`;
+const InputText = styled.Text`
+  color: #6b7ba2;
+`;
+const SearchIconWrapper = styled.View`
+  margin: 12px 0 0 5px;
 `;

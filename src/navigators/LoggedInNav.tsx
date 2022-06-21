@@ -12,9 +12,10 @@ const LoggedInNav = () => {
         initialRouteName="홈"
         screenOptions={{
           headerTitle: () => false,
-          tabBarActiveTintColor: "#000000",
+          tabBarActiveTintColor: "#054DE4",
+          tabBarInactiveTintColor: "#000000",
           tabBarStyle: { backgroundColor: "#ffffff" },
-          headerShadowVisible:false,
+          headerShadowVisible: false,
         }}
       >
         <Tabs.Screen
