@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1089968001443",
+    "project_id": "jaksimfriend",
+    "storage_bucket": "jaksimfriend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089968001443:android:163c35f5136a92e82bca16",
+        "android_client_info": {
+          "package_name": "com.jaksimfriend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1089968001443-vj36pcn30br6d6d5sfihs8e3am7ecg8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jaksimfriend",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1089968001443-hhtv80b2qgauhm32e9bor0s22g8oq5nd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPuueVQ5IpltD3ZRNpRrDLoklFfQ4WGZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1089968001443-hhtv80b2qgauhm32e9bor0s22g8oq5nd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1089968001443-igbfoqmugaohlqpikobabiuk2v2aeifo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.jaksimfriend"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
