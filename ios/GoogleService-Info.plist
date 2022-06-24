@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1089968001443-igbfoqmugaohlqpikobabiuk2v2aeifo.apps.googleusercontent.com</string>
+	<string>1089968001443-3dchng1m8g16gg23r25h0k5e7tg8l3ba.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1089968001443-igbfoqmugaohlqpikobabiuk2v2aeifo</string>
+	<string>com.googleusercontent.apps.1089968001443-3dchng1m8g16gg23r25h0k5e7tg8l3ba</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>1089968001443-vj36pcn30br6d6d5sfihs8e3am7ecg8g.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.jaksimfriend</string>
+	<string>org.reactjs.native.jaksimfriend</string>
 	<key>PROJECT_ID</key>
 	<string>jaksimfriend</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1089968001443:ios:65a79f5393ca5d7f2bca16</string>
+	<string>1:1089968001443:ios:4ad3d2d22f3e9e482bca16</string>
 </dict>
 </plist>

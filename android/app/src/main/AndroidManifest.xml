@@ -10,16 +10,6 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
-       <!-- <activity
-          android:name=".SplashActivity"
-          android:theme="@style/SplashTheme"
-          android:label="@string/app_name"
-          >
-          <intent-filter>
-              <action android:name="android.intent.action.MAIN" />
-              <category android:name="android.intent.category.LAUNCHER" />
-          </intent-filter>
-        </activity> -->
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -27,11 +17,23 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
-        <!-- intentfilter 요기 밑에거 삭제해야 한다는데 그럼 안드로이드 앱 재실행시 에러뜸 -->
         <intent-filter> 
               <action android:name="android.intent.action.MAIN" />
               <category android:name="android.intent.category.LAUNCHER" />
           </intent-filter>
       </activity>
+      <!-- <activity
+        android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+        android:exported="true">
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+
+          <data android:host="oauth"
+            android:scheme="kakaoc605d543f71f25e977a9833ad1fcbcbf" />
+        </intent-filter>
+      </activity> -->
+
     </application>
 </manifest>

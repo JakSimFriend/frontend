@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Animated, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 import { SearchIcon } from "../../../components/TabIcon";
 import { CategoryHeader } from "./Home/CategoryHeader";
 import { Challenges } from "./Home/Challenges";
+import { GradientButtons } from "../../../components/GradientButtons";
 
-export const Home = () => {
+export const Home = React.memo(() => {
   const navigation = useNavigation();
   const [userName, setUserName] = useState("유저"); //서버데이터
   const goToSearch = () => navigation.navigate("Search");
   const goToOpenChallenge = () => navigation.navigate("Category");
+
+  // 페이지 이동시 scrollTo top
+  const isFocused = useIsFocused();
+  const scrollViewRef = useRef<ScrollView>(null);
+  if (isFocused) {
+    scrollViewRef.current?.scrollTo({ x: 5, y: 5, animated: false });
+  }
 
   // 검색바 애니메이션
   const upValue = useState(new Animated.Value(0))[0];
@@ -30,7 +38,11 @@ export const Home = () => {
   };
   return (
     <HomeWrapper>
-      <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+      <ScrollView
+        ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+      >
         <Title>
           환영합니다. {userName}님!{"\n"}새로운 챌린지를 찾아보세요!
         </Title>
@@ -56,12 +68,12 @@ export const Home = () => {
         <CategoryHeader />
         <Challenges />
       </ScrollView>
-      <OpenChallenge onPress={goToOpenChallenge}>
-        <OpenChallengeText> 챌린지 개설하기</OpenChallengeText>
+      <OpenChallenge>
+        <GradientButtons onPress={goToOpenChallenge} Title="챌린지 개설하기" />
       </OpenChallenge>
     </HomeWrapper>
   );
-};
+});
 
 const HomeWrapper = styled.View`
   flex: 1;
@@ -93,19 +105,10 @@ const InputText = styled.Text`
 const SearchIconWrapper = styled.View`
   margin: 12px 0 0 5px;
 `;
-const OpenChallenge = styled.TouchableOpacity`
+const OpenChallenge = styled.View`
   align-self: center;
-  align-items: center;
-  background-color: #054de4;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  padding: 15px;
   width: 70%;
   position: absolute;
   bottom: 0;
 `;
-const OpenChallengeText = styled.Text`
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 600;
-`;
+
