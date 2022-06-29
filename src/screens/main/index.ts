@@ -10,4 +10,5 @@ export * from './Notifications';
 export * from './Search';
 export * from './Setting';
 export * from './ChallengeOpen/Category';
-export * from './ChallengeOpen/ChallengeDesc';
+export * from './ChallengeOpen/ChallengeOpenOne';
+export * from './ChallengeOpen/ChallengeOpenTwo';

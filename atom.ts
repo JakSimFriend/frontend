@@ -15,6 +15,20 @@ export const tierAtom = atom({
   default: "다이아몬드",
 });
 
+export const nextButtonAtom = atom({
+  key: "nextButton",
+  default: true,
+});
+export const submitButtonAtom = atom({
+  key: "submitButton",
+  default: true,
+});
+export const createdModalAtom = atom({
+  key: "createdModalVisible",
+  default: false,
+});
+
+
 export const categoryIndexAtom = atom({
   key: "categoryIndex",
   default: 0,

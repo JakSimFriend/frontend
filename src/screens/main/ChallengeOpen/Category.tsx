@@ -1,20 +1,37 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Button, Text } from "react-native";
 import styled from "styled-components/native";
+import { CategoryHeader } from "../BottomTabs/Home/CategoryHeader";
+import * as Progress from "react-native-progress";
+import { StyleSheet } from "react-native";
 
 export const Category = () => {
-  const navigation = useNavigation();
-  const goToChallengeDesc = () => navigation.navigate("ChallengeDesc");
   return (
     <Wrapper>
-      <Text>카테고리</Text>
-      <Button title="다음으로" onPress={goToChallengeDesc}></Button>
+      <Progress.Bar style={styles.progressBar} progress={0} width={390} height={2} />
+      <Title>도전작심 카테고리를 골라주세요</Title>
+      <SubTitle>한 카테고리만 선택해 주세요!</SubTitle>
+      <CategoryHeader />
     </Wrapper>
   );
 };
+
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 80px 25px 0 25px;
+  padding-left: 18px;
 `;
+const Title = styled.Text`
+  font-size: 20px;
+  margin-top: 35px;
+  font-weight: 600;
+`;
+const SubTitle = styled.Text`
+  margin-top: 10px;
+  font-size: 12px;
+`;
+const styles = StyleSheet.create({
+  progressBar: {
+    marginHorizontal: -18,
+    borderColor: "#fff",
+  },
+});

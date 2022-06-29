@@ -24,12 +24,29 @@ export const Home = React.memo(() => {
   const upValue = useState(new Animated.Value(0))[0];
   const MoveSearchBarUp = () => {
     Animated.timing(upValue, {
-      toValue: 75,
+      toValue: 60,
       duration: 200,
       useNativeDriver: false,
     }).start();
     setTimeout(() => {
       Animated.timing(upValue, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }, 250);
+  };
+
+  // 카테고리 애니메이션
+  const iconValue = useState(new Animated.Value(0))[0];
+  const MoveIconUp = () => {
+    Animated.timing(iconValue, {
+      toValue: 40,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+    setTimeout(() => {
+      Animated.timing(iconValue, {
         toValue: 0,
         duration: 200,
         useNativeDriver: false,
@@ -65,11 +82,23 @@ export const Home = React.memo(() => {
             </SearchIconWrapper>
           </InputWrapper>
         </Animated.View>
-        <CategoryHeader />
+        <Animated.View
+          style={{
+            bottom: iconValue,
+          }}
+        >
+          <CategoryHeader />
+        </Animated.View>
         <Challenges />
       </ScrollView>
       <OpenChallenge>
-        <GradientButtons onPress={goToOpenChallenge} Title="챌린지 개설하기" />
+        <GradientButtons
+          onPress={() => {
+            MoveIconUp();
+            goToOpenChallenge();
+          }}
+          Title="도전작심 개설하기"
+        />
       </OpenChallenge>
     </HomeWrapper>
   );

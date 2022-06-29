@@ -5,7 +5,8 @@ declare namespace ReactNavigation {
     Category: undefined;
     Notifications: undefined;
     Search: undefined;
-    ChallengeDesc: undefined;
+    ChallengeOpenOne: undefined;
+    ChallengeOpenTwo: undefined;
     NickName: undefined;
   }
 }

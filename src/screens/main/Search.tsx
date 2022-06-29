@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Animated, Button, Keyboard, Text } from "react-native";
+import { Animated, Keyboard } from "react-native";
 import styled from "styled-components/native";
 import { BackIcon, SearchIcon } from "../../components/TabIcon";
 
@@ -16,7 +16,7 @@ export const Search = () => {
   const DownValue = useState(new Animated.Value(0))[0];
   const MoveSearchBarDown = () => {
     Animated.timing(DownValue, {
-      toValue: 75,
+      toValue: 60,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -51,7 +51,7 @@ export const Search = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 40px 0 0 18px;
+  padding: 50px 0 0 18px;
 `;
 const BackButton = styled.TouchableOpacity``;
 const InputWrapper = styled.TouchableOpacity`
