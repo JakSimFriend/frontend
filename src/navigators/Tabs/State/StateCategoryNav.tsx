@@ -1,5 +1,5 @@
 import React from "react";
-import { Tier, MyState } from "../../../screens/main";
+import { MyState } from "../../../screens/main";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const Tab = createMaterialTopTabNavigator();
@@ -16,12 +16,11 @@ export const StateCategoryNav = () => {
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          marginEnd: 165,
+          right: 130,
         },
       }}
     >
       <Tab.Screen name="내 현황" component={MyState} />
-      <Tab.Screen name=" 티어" component={Tier} />
     </Tab.Navigator>
   );
 };

@@ -3,7 +3,6 @@ export * from './BottomTabs/MyChallenge';
 export * from './BottomTabs/State';
 export * from './BottomTabs/Profile';
 export * from './BottomTabs/State/MyState';
-export * from './BottomTabs/State/Tier';
 export * from './BottomTabs/MyChallenge/Part';
 export * from './BottomTabs/MyChallenge/Manage';
 export * from './Notifications';
