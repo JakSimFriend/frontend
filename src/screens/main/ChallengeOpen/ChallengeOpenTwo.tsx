@@ -248,7 +248,7 @@ export const ChallengeOpenTwo = () => {
           mode="time"
           onConfirm={handleTimeConfirm}
           onCancel={hideTimePicker}
-          modalStyleIOS={{ marginBottom: 200 }}
+          modalStyleIOS={{ marginBottom: 250, paddingHorizontal: 40 }}
           locale="en_GB"
           confirmTextIOS="시간 설정하기"
         />

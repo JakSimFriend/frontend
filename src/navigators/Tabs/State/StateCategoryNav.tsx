@@ -16,11 +16,11 @@ export const StateCategoryNav = () => {
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          right: 130,
+          right: 145,
         },
       }}
     >
-      <Tab.Screen name="내 현황" component={MyState} />
+      <Tab.Screen name="시즌" component={MyState} />
     </Tab.Navigator>
   );
 };

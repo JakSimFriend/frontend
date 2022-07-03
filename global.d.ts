@@ -8,5 +8,6 @@ declare namespace ReactNavigation {
     ChallengeOpenOne: undefined;
     ChallengeOpenTwo: undefined;
     NickName: undefined;
+    Record: undefined;
   }
 }

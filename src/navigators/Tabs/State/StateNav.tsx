@@ -23,6 +23,7 @@ export const StateNav = () => {
         name="State"
         component={State}
         options={{
+          headerTitle: "현황",
           headerRight: () => <Bell name="bells" size={23} onPress={goToNotifications} />,
         }}
       />

@@ -9,14 +9,14 @@ const Stack = createStackNavigator();
 
 export const MyChallengeNav = () => {
   const navigation = useNavigation();
-  const goToOpenChallenge = () => navigation.navigate("Category");
+  const goToRecord = () => navigation.navigate("Record");
   return (
     <Stack.Navigator
       initialRouteName="MyChallenge"
       screenOptions={{
         headerTitle: () => false,
-        headerShadowVisible:false,
-        headerRightContainerStyle: { paddingRight: 20},
+        headerShadowVisible: false,
+        headerRightContainerStyle: { paddingRight: 20 },
       }}
     >
       <Stack.Screen
@@ -24,8 +24,8 @@ export const MyChallengeNav = () => {
         component={MyChallenge}
         options={{
           headerRight: () => (
-            <TouchableOpacity onPress={goToOpenChallenge}>
-              <Text>개설</Text>
+            <TouchableOpacity onPress={goToRecord}>
+              <Text>기록</Text>
             </TouchableOpacity>
           ),
         }}

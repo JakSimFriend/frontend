@@ -21,6 +21,7 @@ import LoggedInNav from "./LoggedInNav";
 import LoggedOutNav from "./LoggedOutNav";
 import { Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Record } from "../screens/main/Record";
 
 const Stack = createStackNavigator();
 
@@ -66,6 +67,7 @@ const MainNav = () => {
             }}
           />
           <Stack.Screen name="Setting" component={Setting} />
+          <Stack.Screen name="Record" component={Record} />
           <Stack.Screen
             name="Category"
             component={Category}
