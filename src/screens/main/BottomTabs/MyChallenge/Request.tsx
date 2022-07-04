@@ -3,6 +3,7 @@ import React from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export const RecruitData = [
   {
@@ -78,8 +79,19 @@ export const RequestData = [
   },
 ];
 
+type StackParamList = {
+  RequestPage: {
+    title: string;
+    content: string;
+    startDate: string;
+    schedule: string;
+    members: number;
+  };
+};
+type NavigationProps = StackNavigationProp<StackParamList>;
+
 export const Request = () => {
-  const navigation: any = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
   return (
     <RequestWrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -130,7 +142,7 @@ export const Request = () => {
                 <ChallengeBox key={index}>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("BeforeStart", {
+                      navigation.navigate("RequestPage", {
                         title: item.title,
                         content: item.content,
                         startDate: item.startDate,

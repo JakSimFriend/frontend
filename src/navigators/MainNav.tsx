@@ -23,7 +23,8 @@ import LoggedOutNav from "./LoggedOutNav";
 import { Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Record } from "../screens/main/BottomTabs/MyChallenge/Record";
-import { BeforeStart } from "../screens/main/BottomTabs/MyChallenge/BeforeStart";
+import { RequestPage } from "../screens/main/BottomTabs/MyChallenge/RequestPage";
+import ArrowLeft from "react-native-vector-icons/AntDesign";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,7 @@ const MainNav = () => {
   const navigation = useNavigation();
   const goToChallengeOpenOne = () => navigation.navigate("ChallengeOpenOne");
   const goToChallengeOpenTwo = () => navigation.navigate("ChallengeOpenTwo");
+  const goBack = () => navigation.goBack();
   return (
     <>
       {isLoggedIn ? (
@@ -59,6 +61,19 @@ const MainNav = () => {
             component={Notifications}
             options={{
               presentation: "card",
+              headerTitle: "알림",
+              headerRight: () => (
+                <Button
+                  onPress={() => {
+                    console.warn("전부삭제~");
+                  }}
+                  title="전부 삭제"
+                  color="#054de4"
+                />
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
             }}
           />
           <Stack.Screen
@@ -77,11 +92,14 @@ const MainNav = () => {
               headerTitle: "기록",
               headerTransparent: false,
               headerShadowVisible: false,
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
             }}
           />
           <Stack.Screen
-            name="BeforeStart"
-            component={BeforeStart}
+            name="RequestPage"
+            component={RequestPage}
             options={{
               headerShadowVisible: false,
               headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
@@ -93,6 +111,9 @@ const MainNav = () => {
                   title="신청 취소"
                   color="#054de4"
                 />
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
             }}
           />
@@ -106,6 +127,9 @@ const MainNav = () => {
               headerTintColor: "#000000",
               headerRight: () => (
                 <Button onPress={goToChallengeOpenOne} title="다음" color="#000000" />
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
             }}
           />
@@ -124,6 +148,9 @@ const MainNav = () => {
                   title="다음"
                   color={nextButtonDisable ? "#9a9797" : "#000000"}
                 />
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
             }}
           />
@@ -144,6 +171,9 @@ const MainNav = () => {
                   title="완료"
                   color={submitButtonDisable ? "#9a9797" : "#000000"}
                 />
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
             }}
           />

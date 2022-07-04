@@ -1,18 +1,27 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
-import Feather from "react-native-vector-icons/FontAwesome";
+import Flag from "react-native-vector-icons/FontAwesome";
 import Calendar from "react-native-vector-icons/FontAwesome5";
 import Clock from "react-native-vector-icons/AntDesign";
 import User from "react-native-vector-icons/FontAwesome";
 import Diamond from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from "moment";
-import { useSetRecoilState } from "recoil";
-import { cancelModalAtom } from "../../../../../atom";
 import ChallengeCancelModal from "../../../../components/organisms/ChallengeCancelModal";
 
-export const BeforeStart = ({ route }: any) => {
-  const setCancelModal = useSetRecoilState(cancelModalAtom);
+type RouteParams = {
+  route: {
+    params: {
+      title: string;
+      content: string;
+      startDate: string;
+      schedule: string;
+      members: number;
+    };
+  };
+};
+
+export const RequestPage = ({ route }: RouteParams) => {
   const { title, content, startDate, schedule, members } = route.params;
   return (
     <Wrapper>
@@ -21,7 +30,7 @@ export const BeforeStart = ({ route }: any) => {
       <Infos>
         <InfoWrapper>
           <IconWrapper>
-            <Feather name="flag" size={20} color={"#054de4"} />
+            <Flag name="flag" size={20} color={"#054de4"} />
           </IconWrapper>
           <TextWrapper>
             <TopText>완주시 최대</TopText>

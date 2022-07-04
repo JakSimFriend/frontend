@@ -114,85 +114,87 @@ export const Progress = () => {
           </View>
         ) : (
           // 진행 중 전체데이터 map연결해야함
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setIsCollapsed(!isCollapsed);
-            }}
-          >
-            <View style={styles.accordionWrapper}>
-              <View style={styles.titleWrapper}>
-                <Text style={styles.accordionTitle}>제목</Text>
-                <View style={styles.dropdownButton}>
-                  {!isCollapsed ? (
-                    <Entypo name="chevron-up" size={20} />
-                  ) : (
-                    <Entypo name="chevron-down" size={20} />
-                  )}
+          <>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setIsCollapsed(!isCollapsed);
+              }}
+            >
+              <View style={styles.accordionWrapper}>
+                <View style={styles.titleWrapper}>
+                  <Text style={styles.accordionTitle}>제목</Text>
+                  <View style={styles.dropdownButton}>
+                    {!isCollapsed ? (
+                      <Entypo name="chevron-up" size={20} />
+                    ) : (
+                      <Entypo name="chevron-down" size={20} />
+                    )}
+                  </View>
+                </View>
+
+                {/* accordion 외부내용 */}
+                <Collapsible collapsed={!isCollapsed}>
+                  <Text style={styles.accordionMyState}>내 달성률 {data[0].percentage}%</Text>
+                  <ProgressBar.Bar
+                    progress={data[0].percentage / 100}
+                    width={330}
+                    height={12}
+                    borderRadius={30}
+                    color={MYCOLOR}
+                  />
+                </Collapsible>
+
+                {/* accordion 내부내용 */}
+                <Collapsible collapsed={isCollapsed} style={styles.innerDataWrapper}>
+                  {data.map((item, index) => {
+                    return (
+                      <View style={styles.innerData} key={index}>
+                        <View style={styles.pictureWrapper}>
+                          <View style={styles.picture}></View>
+                          <TouchableOpacity onPress={ShowBottomSheet}>
+                            <View style={styles.reactionButton}>
+                              <Logo resizeMode="contain" source={Emo} />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                        <View>
+                          <Text style={styles.innerTitle}>
+                            {item.member}
+                            <Text style={styles.innerPercentage}> {item.percentage}%</Text>
+                          </Text>
+                          <ProgressBar.Bar
+                            progress={item.percentage / 100}
+                            width={250}
+                            height={12}
+                            borderRadius={30}
+                            color={OTHERSCOLOR}
+                          />
+                        </View>
+                      </View>
+                    );
+                  })}
+                </Collapsible>
+                <View style={styles.accordionButtons}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.warn("상세 보기");
+                    }}
+                    style={styles.detailButton}
+                  >
+                    <Text style={styles.detailButtonText}>상세 보기</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.completedButton}
+                    onPress={() => {
+                      console.warn("인증하기");
+                    }}
+                  >
+                    <Text style={styles.completedButtonText}>인증하기</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-
-              {/* accordion 외부내용 */}
-              <Collapsible collapsed={!isCollapsed}>
-                <Text style={styles.accordionMyState}>내 달성률 {data[0].percentage}%</Text>
-                <ProgressBar.Bar
-                  progress={data[0].percentage / 100}
-                  width={330}
-                  height={12}
-                  borderRadius={30}
-                  color={MYCOLOR}
-                />
-              </Collapsible>
-
-              {/* accordion 내부내용 */}
-              <Collapsible collapsed={isCollapsed} style={styles.innerDataWrapper}>
-                {data.map((item, index) => {
-                  return (
-                    <View style={styles.innerData} key={index}>
-                      <View style={styles.pictureWrapper}>
-                        <View style={styles.picture}></View>
-                        <TouchableOpacity onPress={ShowBottomSheet}>
-                          <View style={styles.reactionButton}>
-                            <Logo resizeMode="contain" source={Emo} />
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                      <View>
-                        <Text style={styles.innerTitle}>
-                          {item.member}
-                          <Text style={styles.innerPercentage}> {item.percentage}%</Text>
-                        </Text>
-                        <ProgressBar.Bar
-                          progress={item.percentage / 100}
-                          width={250}
-                          height={12}
-                          borderRadius={30}
-                          color={OTHERSCOLOR}
-                        />
-                      </View>
-                    </View>
-                  );
-                })}
-              </Collapsible>
-              <View style={styles.accordionButtons}>
-                <TouchableOpacity
-                  onPress={() => {
-                    console.warn("상세 보기");
-                  }}
-                  style={styles.detailButton}
-                >
-                  <Text style={styles.detailButtonText}>상세 보기</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.completedButton}
-                  onPress={() => {
-                    console.warn("인증하기");
-                  }}
-                >
-                  <Text style={styles.completedButtonText}>인증하기</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+          </>
         )}
 
         {/* 시작 전 */}

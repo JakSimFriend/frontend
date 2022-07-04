@@ -37,9 +37,7 @@ export const Search = () => {
         }}
       >
         <InputWrapper onPress={dismissKeyboard}>
-          <InputBox>
-            <InputText>다양한 챌린지를 검색해보세요!</InputText>
-          </InputBox>
+          <InputBox placeholder="다양한 챌린지를 검색해보세요!" placeholderTextColor={"#6b7ba2"} />
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
@@ -59,15 +57,12 @@ const InputWrapper = styled.TouchableOpacity`
   flex-direction: row;
   margin-top: 30px;
 `;
-const InputBox = styled.View`
+const InputBox = styled.TextInput`
   background-color: #f6f5fb;
   border-radius: 10px;
   padding: 15px;
   width: 83%;
   margin-left: 12px;
-`;
-const InputText = styled.Text`
-  color: #6b7ba2;
 `;
 const SearchIconWrapper = styled.View`
   margin: 12px 0 0 5px;
