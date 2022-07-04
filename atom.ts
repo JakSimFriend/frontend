@@ -27,6 +27,14 @@ export const createdModalAtom = atom({
   key: "createdModalVisible",
   default: false,
 });
+export const reactionModalAtom = atom({
+  key: "ReactionModalVisible",
+  default: false,
+});
+export const cancelModalAtom = atom({
+  key: "CancelModalVisible",
+  default: false,
+});
 
 
 export const categoryIndexAtom = atom({

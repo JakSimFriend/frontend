@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
-import { ChallengeData } from "./ChallengeData";
 
-export const MojibData = [
+export const RecruitData = [
   {
     title: "제목1",
     day: 6,
@@ -30,24 +30,72 @@ export const MojibData = [
     newRequest: 3,
   },
 ];
+export const RequestData = [
+  {
+    title: "제목1",
+    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
+    approve: false,
+    tags: ["#최대4글", "자넘어가", "면잘리게"],
+    startDate: "2022-08-01",
+    schedule: "1주일에 2회",
+    members: 4,
+  },
+  {
+    title: "제목2",
+    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
+    approve: true,
+    tags: ["#최대4글", "자넘어가", "면잘리게"],
+    startDate: "2022-08-04",
+    schedule: "1주일에 2회",
+    members: 2,
+  },
+  {
+    title: "제목3",
+    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
+    approve: false,
+    tags: ["#최대4글", "자넘어가", "면잘리게"],
+    startDate: "2022-08-07",
+    schedule: "1주일에 2회",
+    members: 3,
+  },
+  {
+    title: "제목4",
+    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
+    approve: true,
+    tags: ["#최대4글", "자넘어가", "면잘리게"],
+    startDate: "2022-09-01",
+    schedule: "1주일에 2회",
+    members: 5,
+  },
+  {
+    title: "제목5",
+    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
+    approve: false,
+    tags: ["#최대4글", "자넘어가", "면잘리게"],
+    startDate: "2022-10-23",
+    schedule: "1주일에 2회",
+    members: 1,
+  },
+];
 
 export const Request = () => {
+  const navigation: any = useNavigation();
   return (
     <RequestWrapper>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.textWrapper}>
           <Text style={styles.title}>모집 중</Text>
-          <Text style={styles.number}>{MojibData.length}</Text>
+          <Text style={styles.number}>{RecruitData.length}</Text>
         </View>
-        {MojibData.length === 0 ? (
+        {RecruitData.length === 0 ? (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyText}>모집하고 있는 도전작심이 없어요</Text>
           </View>
         ) : (
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {MojibData.map((item, index) => {
+            {RecruitData.map((item, index) => {
               return (
-                <TouchableOpacity style={styles.mojibBox} key={index}>
+                <TouchableOpacity style={styles.recruitBox} key={index}>
                   <RecruitWrapper>
                     <Text style={styles.recruitTitle}>{item.title}</Text>
                     <View style={styles.recruitInfo}>
@@ -69,32 +117,43 @@ export const Request = () => {
         )}
         <View style={styles.textWrapper}>
           <Text style={styles.title}>신청 중</Text>
-          <Text style={styles.number}>{ChallengeData.length}</Text>
+          <Text style={styles.number}>{RequestData.length}</Text>
         </View>
-        {ChallengeData.length === 0 ? (
+        {RequestData.length === 0 ? (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyText}>신청한 도전작심이 없어요</Text>
           </View>
         ) : (
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {ChallengeData.map((item, index) => {
-              const Members = [1, 2, 3, 4, 5, 6];
-              const selected = Members.slice(0, item.members);
-              const common = Members.concat(selected);
-              const Others = common.filter(function (v) {
-                return common.indexOf(v) == common.lastIndexOf(v);
-              });
+            {RequestData.map((item, index) => {
               return (
                 <ChallengeBox key={index}>
-                  <TouchableOpacity>
-                    <ChallengeCategory>
-                      <ChallengeCategoryText>{item.category}</ChallengeCategoryText>
-                    </ChallengeCategory>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("BeforeStart", {
+                        title: item.title,
+                        content: item.content,
+                        startDate: item.startDate,
+                        schedule: item.schedule,
+                        members: item.members,
+                      });
+                    }}
+                  >
+                    {item.approve ? (
+                      <ChallengeCategory>
+                        <ChallengeCategoryText>승인</ChallengeCategoryText>
+                      </ChallengeCategory>
+                    ) : (
+                      <ChallengeCategoryTwo>
+                        <ChallengeCategoryTextTwo>승인 대기</ChallengeCategoryTextTwo>
+                      </ChallengeCategoryTwo>
+                    )}
                     <ChallengeTitle>{item.title}</ChallengeTitle>
                     <ChallengeTags>{item.tags}</ChallengeTags>
                     <DateWrapper>
                       <HomeCalendar />
-                      <InfoText>{item.date}</InfoText>
+                      {/* startDate빼기 지금 날짜 해서 d-day구해야함(모멘트사용) */}
+                      <InfoText>D-{item.startDate}</InfoText>
                     </DateWrapper>
                     <ScheduleWrapper>
                       <HomeClock />
@@ -102,23 +161,15 @@ export const Request = () => {
                     </ScheduleWrapper>
                     <MembersWrapper>
                       <HomeUser />
-                      {/* 선택된맴버수 예시:4명 */}
-                      {Members.slice(0, item.members).map((item, index) => {
-                        return (
-                          <SelectedWrapper key={index}>
-                            <ButtonText>{item}</ButtonText>
-                          </SelectedWrapper>
-                        );
-                      })}
-                      {/* 전체 맴버수 예시:6명 */}
-                      {Others.map((item, index) => {
-                        return (
-                          <NonSelectedWrapper key={index}>
-                            <ButtonText>{item}</ButtonText>
-                          </NonSelectedWrapper>
-                        );
-                      })}
+                      <InfoText>{item.members}명</InfoText>
                     </MembersWrapper>
+                    {item.members < 4 ? (
+                      <View style={styles.moreMembersButton}>
+                        <Text>{4 - item.members}명 더 필요해요</Text>
+                      </View>
+                    ) : (
+                      <></>
+                    )}
                   </TouchableOpacity>
                 </ChallengeBox>
               );
@@ -132,7 +183,6 @@ export const Request = () => {
 
 const RequestWrapper = styled.View`
   flex: 1;
-  padding: 0px 10px;
   background-color: #ffffff;
 `;
 const RecruitWrapper = styled.View`
@@ -160,10 +210,21 @@ const ChallengeCategory = styled.View`
   border-radius: 15px;
   padding: 8px 0;
   margin: 6px 0;
-  width: 50px;
+  width: 50%;
+`;
+const ChallengeCategoryTwo = styled.View`
+  background-color: #4f65e7;
+  border-radius: 15px;
+  padding: 8px 0;
+  margin: 6px 0;
+  width: 50%;
 `;
 const ChallengeCategoryText = styled.Text`
   text-align: center;
+`;
+const ChallengeCategoryTextTwo = styled.Text`
+  text-align: center;
+  color: #ffffff;
 `;
 const ChallengeTags = styled.Text`
   margin: 0 0 20px 0;
@@ -181,44 +242,22 @@ const MembersWrapper = styled.View`
   flex-direction: row;
   margin-top: 5px;
 `;
-const SelectedWrapper = styled.View`
-  background-color: #054de4;
-  border-radius: 4px;
-  margin-left: 3px;
-`;
-const NonSelectedWrapper = styled.View`
-  background-color: #bfc7d7;
-  border-radius: 4px;
-  margin-left: 3px;
-`;
 const InfoText = styled.Text`
   padding: 0 5px;
 `;
-const ButtonText = styled.Text`
-  padding: 0 5px;
-  color: transparent;
-`;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: "grey",
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: "center",
-  },
   textWrapper: {
     marginTop: 40,
     flexDirection: "row",
+    paddingLeft: 10,
   },
   title: {
     color: "#000000",
     fontSize: 20,
     fontWeight: "600",
   },
-  mojibBox: {
+  recruitBox: {
     flexDirection: "row",
   },
   number: {
@@ -255,5 +294,11 @@ const styles = StyleSheet.create({
   newInfoText: {
     color: "#054DE4",
     alignSelf: "center",
+  },
+  moreMembersButton: {
+    padding: 10,
+    backgroundColor: "#ffffff",
+    borderRadius: 15,
+    marginTop: 10,
   },
 });

@@ -13,7 +13,7 @@ const LoggedInNav = () => {
         screenOptions={{
           headerTitle: () => false,
           tabBarActiveTintColor: "#054DE4",
-          tabBarInactiveTintColor: "#000000",
+          tabBarInactiveTintColor: "#647498",
           tabBarStyle: { backgroundColor: "#ffffff" },
           headerShadowVisible: false,
         }}

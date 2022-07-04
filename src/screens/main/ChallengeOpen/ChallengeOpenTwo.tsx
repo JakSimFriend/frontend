@@ -70,8 +70,8 @@ export const ChallengeOpenTwo = () => {
     setTimePickerVisibility(false);
   };
   const handleDateConfirm = (date: Date) => {
-    setStartDate(moment(date).format(`YYYY/MM/DD`));
-    setEndDate(moment(date).add(14, "days").format(`YYYY/MM/DD`));
+    setStartDate(moment(date).format(`YYYY월-MM-DD`));
+    setEndDate(moment(date).add(14, "days").format(`YYYY-MM-DD`));
     hideDatePicker();
   };
   const handleTimeConfirm = (time: Date) => {
