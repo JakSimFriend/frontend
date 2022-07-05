@@ -15,15 +15,17 @@ import {
   ChallengeOpenTwo,
   Notifications,
   Search,
+  SearchChallenge,
   Setting,
+  NickName,
+  Record,
+  RequestPage,
+  Detail,
 } from "../screens/main";
-import { NickName } from "../screens/main/NickName";
 import LoggedInNav from "./LoggedInNav";
 import LoggedOutNav from "./LoggedOutNav";
 import { Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Record } from "../screens/main/BottomTabs/MyChallenge/Record";
-import { RequestPage } from "../screens/main/BottomTabs/MyChallenge/RequestPage";
 import ArrowLeft from "react-native-vector-icons/AntDesign";
 
 const Stack = createStackNavigator();
@@ -77,6 +79,14 @@ const MainNav = () => {
             }}
           />
           <Stack.Screen
+            name="Detail"
+            component={Detail}
+            options={{
+              presentation: "card",
+              headerTitle: "상세",
+            }}
+          />
+          <Stack.Screen
             name="Search"
             component={Search}
             options={{
@@ -112,6 +122,17 @@ const MainNav = () => {
                   color="#054de4"
                 />
               ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="SearchChallenge"
+            component={SearchChallenge}
+            options={{
+              headerShadowVisible: false,
+              headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),

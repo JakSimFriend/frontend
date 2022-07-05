@@ -113,7 +113,7 @@ export const Progress = () => {
             <Text style={styles.emptyText}>진행하고 있는 도전작심이 없어요</Text>
           </View>
         ) : (
-          // 진행 중 전체데이터 map연결해야함
+          // 진행 중 전체데이터 map연결해야함 (그럼 개별적으로 iscollapsed컨트롤 가능)
           <>
             <TouchableWithoutFeedback
               onPress={() => {

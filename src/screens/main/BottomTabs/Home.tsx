@@ -24,7 +24,7 @@ export const Home = React.memo(() => {
   const upValue = useState(new Animated.Value(0))[0];
   const MoveSearchBarUp = () => {
     Animated.timing(upValue, {
-      toValue: 60,
+      toValue: 70,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -106,8 +106,8 @@ export const Home = React.memo(() => {
 
 const HomeWrapper = styled.View`
   flex: 1;
-  padding-left: 18px;
   background-color: #ffffff;
+  padding-left: 15px;
   height: 100%;
 `;
 const Title = styled.Text`

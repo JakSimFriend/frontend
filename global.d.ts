@@ -10,5 +10,7 @@ declare namespace ReactNavigation {
     NickName: undefined;
     Record: undefined;
     BeforeStart: undefined;
+    SearchChallenge: undefined;
+    Detail: undefined;
   }
 }

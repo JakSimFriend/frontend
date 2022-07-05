@@ -1,15 +1,15 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Bell from "react-native-vector-icons/AntDesign";
 import { StateCategoryNav } from "./StateCategoryNav";
 import { State } from "../../../screens/main";
 import { useNavigation } from "@react-navigation/native";
+import { Text, TouchableOpacity } from "react-native";
 
 const Stack = createStackNavigator();
 
 export const StateNav = () => {
   const navigation = useNavigation();
-  const goToNotifications = () => navigation.navigate("Notifications");
+  const goToDetail = () => navigation.navigate("Detail");
   return (
     <Stack.Navigator
       initialRouteName="State"
@@ -24,7 +24,11 @@ export const StateNav = () => {
         component={State}
         options={{
           headerTitle: "현황",
-          headerRight: () => <Bell name="bells" size={23} onPress={goToNotifications} />,
+          headerRight: () => (
+            <TouchableOpacity onPress={goToDetail}>
+              <Text>상세</Text>
+            </TouchableOpacity>
+          ),
         }}
       />
       <Stack.Screen name="StateCategoryNav" component={StateCategoryNav} />

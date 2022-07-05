@@ -35,6 +35,10 @@ export const cancelModalAtom = atom({
   key: "CancelModalVisible",
   default: false,
 });
+export const applyModalAtom = atom({
+  key: "ApplyModalVisible",
+  default: false,
+});
 
 
 export const categoryIndexAtom = atom({
