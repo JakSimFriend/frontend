@@ -9,11 +9,13 @@ import {
   View,
 } from "react-native";
 import styled from "styled-components/native";
-import Flag from "react-native-vector-icons/FontAwesome";
-import Calendar from "react-native-vector-icons/FontAwesome5";
-import Clock from "react-native-vector-icons/AntDesign";
-import User from "react-native-vector-icons/FontAwesome";
-import Diamond from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  CalendarIcon,
+  ClockIconTwo,
+  DiamondIconTwo,
+  FlagIcon,
+  UserIconTwo,
+} from "../../../components/TabIcon";
 import moment from "moment";
 import { GradientButtons } from "../../../components/GradientButtons";
 import ChallengeApplyModal from "../../../components/organisms/ChallengeApplyModal";
@@ -73,7 +75,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
       <Infos>
         <InfoWrapper>
           <IconWrapper>
-            <Flag name="flag" size={20} color={"#054de4"} />
+            <FlagIcon />
           </IconWrapper>
           <TextWrapper>
             <TopText>완주시 최대</TopText>
@@ -82,7 +84,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         </InfoWrapper>
         <InfoWrapper>
           <IconWrapper>
-            <Calendar name="calendar-day" size={22} color={"#054de4"} />
+            <CalendarIcon />
           </IconWrapper>
           <TextWrapper>
             <Text style={{ marginTop: 9 }}>
@@ -93,7 +95,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         </InfoWrapper>
         <InfoWrapper>
           <IconWrapper>
-            <Clock name="clockcircle" size={20} color={"#054de4"} />
+            <ClockIconTwo />
           </IconWrapper>
           <TextWrapper>
             <Text style={{ marginTop: 9 }}>{schedule}씩 인증</Text>
@@ -101,7 +103,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         </InfoWrapper>
         <InfoWrapper>
           <IconWrapper>
-            <User name="user" size={25} color={"#054de4"} style={{ paddingHorizontal: 1 }} />
+            <UserIconTwo />
           </IconWrapper>
           <TextWrapper>
             <Text style={{ marginTop: 9 }}>신청 인원 {members}명</Text>
@@ -109,7 +111,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         </InfoWrapper>
         <InfoWrapper>
           <IconWrapper>
-            <Diamond name="diamond" size={20} color={"#054de4"} />
+            <DiamondIconTwo />
           </IconWrapper>
           <TextWrapper>
             <TopText>팀원 평균</TopText>

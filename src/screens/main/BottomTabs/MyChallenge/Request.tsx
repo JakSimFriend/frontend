@@ -4,82 +4,18 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import styled from "styled-components/native";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
 import { StackNavigationProp } from "@react-navigation/stack";
-
-export const RecruitData = [
-  {
-    title: "제목1",
-    day: 6,
-    people: 6,
-    newRequest: 6,
-  },
-  {
-    title: "제목2",
-    day: 5,
-    people: 5,
-    newRequest: 5,
-  },
-  {
-    title: "제목3",
-    day: 4,
-    people: 4,
-    newRequest: 4,
-  },
-  {
-    title: "제목4",
-    day: 3,
-    people: 3,
-    newRequest: 3,
-  },
-];
-export const RequestData = [
-  {
-    title: "제목1",
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    approve: false,
-    tags: ["#최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-08-01",
-    schedule: "1주일에 2회",
-    members: 4,
-  },
-  {
-    title: "제목2",
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    approve: true,
-    tags: ["#최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-08-04",
-    schedule: "1주일에 2회",
-    members: 2,
-  },
-  {
-    title: "제목3",
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    approve: false,
-    tags: ["#최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-08-07",
-    schedule: "1주일에 2회",
-    members: 3,
-  },
-  {
-    title: "제목4",
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    approve: true,
-    tags: ["#최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-09-01",
-    schedule: "1주일에 2회",
-    members: 5,
-  },
-  {
-    title: "제목5",
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    approve: false,
-    tags: ["#최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-10-23",
-    schedule: "1주일에 2회",
-    members: 1,
-  },
-];
+import { RecruitData, RequestData } from "./ChallengeData";
+import moment from "moment";
 
 type StackParamList = {
+  RecruitPage: {
+    title: string;
+    content: string;
+    startDate: string;
+    schedule: string;
+    members: number;
+    waiting: number;
+  };
   RequestPage: {
     title: string;
     content: string;
@@ -95,6 +31,7 @@ export const Request = () => {
   return (
     <RequestWrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {/* 모집 중 */}
         <View style={styles.textWrapper}>
           <Text style={styles.title}>모집 중</Text>
           <Text style={styles.number}>{RecruitData.length}</Text>
@@ -107,18 +44,36 @@ export const Request = () => {
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {RecruitData.map((item, index) => {
               return (
-                <TouchableOpacity style={styles.recruitBox} key={index}>
+                <TouchableOpacity
+                  style={styles.recruitBox}
+                  key={index}
+                  onPress={() => {
+                    navigation.navigate("RecruitPage", {
+                      title: item.title,
+                      content: item.content,
+                      startDate: item.startDate,
+                      schedule: item.schedule,
+                      members: item.members,
+                      waiting: item.waiting,
+                    });
+                  }}
+                >
                   <RecruitWrapper>
                     <Text style={styles.recruitTitle}>{item.title}</Text>
                     <View style={styles.recruitInfo}>
                       <HomeCalendar />
-                      <RecruitText>D-{item.day}</RecruitText>
+                      <RecruitText>
+                        D-
+                        {Math.ceil(
+                          moment.duration({ from: new Date(), to: item.startDate }).asDays(),
+                        )}
+                      </RecruitText>
                       <HomeUser />
-                      <RecruitText>{item.people}명</RecruitText>
+                      <RecruitText>{item.members}명</RecruitText>
                     </View>
                     <View style={styles.newInfo}>
                       <Text style={styles.newInfoText}>
-                        신규 신청이 {item.newRequest}건 있어요!
+                        신규 신청이 {item.waiting}건 있어요!
                       </Text>
                     </View>
                   </RecruitWrapper>
@@ -127,6 +82,8 @@ export const Request = () => {
             })}
           </ScrollView>
         )}
+
+        {/* 신청 중 */}
         <View style={styles.textWrapper}>
           <Text style={styles.title}>신청 중</Text>
           <Text style={styles.number}>{RequestData.length}</Text>
@@ -164,8 +121,12 @@ export const Request = () => {
                     <ChallengeTags>{item.tags}</ChallengeTags>
                     <DateWrapper>
                       <HomeCalendar />
-                      {/* startDate빼기 지금 날짜 해서 d-day구해야함(모멘트사용) */}
-                      <InfoText>D-{item.startDate}</InfoText>
+                      <InfoText>
+                        D-
+                        {Math.ceil(
+                          moment.duration({ from: new Date(), to: item.startDate }).asDays(),
+                        )}
+                      </InfoText>
                     </DateWrapper>
                     <ScheduleWrapper>
                       <HomeClock />

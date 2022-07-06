@@ -14,7 +14,7 @@ export const HomeNav = () => {
       initialRouteName="Home"
       screenOptions={{
         headerTitle: () => false,
-        headerShadowVisible:false,
+        headerShadowVisible: false,
         headerRightContainerStyle: { paddingRight: 20 },
       }}
     >
@@ -22,9 +22,7 @@ export const HomeNav = () => {
         name="Home"
         component={Home}
         options={{
-          headerRight: () => (
-            <Bell name="bells" size={23}  onPress={goToNotifications} />
-          ),
+          headerRight: () => <Bell name="bells" size={23} onPress={goToNotifications} />,
         }}
       />
     </Stack.Navigator>

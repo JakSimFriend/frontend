@@ -21,12 +21,16 @@ import {
   Record,
   RequestPage,
   Detail,
+  RecruitPage,
+  BeforeStartPage,
 } from "../screens/main";
 import LoggedInNav from "./LoggedInNav";
 import LoggedOutNav from "./LoggedOutNav";
-import { Button } from "react-native";
+import { Button, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ArrowLeft from "react-native-vector-icons/AntDesign";
+import { RecruitPageInfo } from "../screens/main/BottomTabs/MyChallenge/RecruitPageInfo";
+import { BeforeStartPageInfo } from "../screens/main/BottomTabs/MyChallenge/BeforeStartPageInfo";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +44,8 @@ const MainNav = () => {
   const navigation = useNavigation();
   const goToChallengeOpenOne = () => navigation.navigate("ChallengeOpenOne");
   const goToChallengeOpenTwo = () => navigation.navigate("ChallengeOpenTwo");
+  const goToRecruitPageInfo = () => navigation.navigate("RecruitPageInfo");
+  const goToBeforeStartPageInfo = () => navigation.navigate("BeforeStartPageInfo");
   const goBack = () => navigation.goBack();
   return (
     <>
@@ -108,6 +114,29 @@ const MainNav = () => {
             }}
           />
           <Stack.Screen
+            name="RecruitPage"
+            component={RecruitPage}
+            options={{
+              headerRight: () => (
+                <TouchableOpacity onPress={goToRecruitPageInfo}>
+                  <Text style={{ color: "#000000", fontSize: 16, marginRight: 15 }}>정보</Text>
+                </TouchableOpacity>
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="RecruitPageInfo"
+            component={RecruitPageInfo}
+            options={{
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
             name="RequestPage"
             component={RequestPage}
             options={{
@@ -122,6 +151,29 @@ const MainNav = () => {
                   color="#054de4"
                 />
               ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="BeforeStartPage"
+            component={BeforeStartPage}
+            options={{
+              headerRight: () => (
+                <TouchableOpacity onPress={goToBeforeStartPageInfo}>
+                  <Text style={{ color: "#000000", fontSize: 16, marginRight: 15 }}>정보</Text>
+                </TouchableOpacity>
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="BeforeStartPageInfo"
+            component={BeforeStartPageInfo}
+            options={{
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),

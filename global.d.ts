@@ -12,5 +12,9 @@ declare namespace ReactNavigation {
     BeforeStart: undefined;
     SearchChallenge: undefined;
     Detail: undefined;
+    BeforeStartPage: undefined;
+    BeforeStartPageInfo: undefined;
+    RecruitPage: undefined;
+    RecruitPageInfo: undefined;
   }
 }

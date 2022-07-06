@@ -2,6 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { ClockIcon, DiamondIcon, HomeIcon, UserIcon } from "../components/TabIcon";
 import { ProfileNav, StateNav, MyChallengeNav, HomeNav } from ".";
+import { Platform } from "react-native";
 
 const Tabs = createBottomTabNavigator();
 
@@ -12,6 +13,7 @@ const LoggedInNav = () => {
         initialRouteName="홈"
         screenOptions={{
           headerTitle: () => false,
+          headerTransparent: Platform.OS === "android" ? true : false,
           tabBarActiveTintColor: "#054DE4",
           tabBarInactiveTintColor: "#647498",
           tabBarStyle: { backgroundColor: "#ffffff" },

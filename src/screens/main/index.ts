@@ -7,6 +7,8 @@ export * from './BottomTabs/Profile';
 export * from './BottomTabs/State/MyState';
 export * from './BottomTabs/MyChallenge/Progress';
 export * from './BottomTabs/MyChallenge/Request';
+export * from './BottomTabs/MyChallenge/RecruitPage';
+export * from './BottomTabs/MyChallenge/BeforeStartPage';
 export * from './Notifications';
 export * from './Search/Search';
 export * from './Search/SearchChallenge';

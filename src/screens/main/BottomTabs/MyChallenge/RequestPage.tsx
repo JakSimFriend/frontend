@@ -1,11 +1,13 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
-import Flag from "react-native-vector-icons/FontAwesome";
-import Calendar from "react-native-vector-icons/FontAwesome5";
-import Clock from "react-native-vector-icons/AntDesign";
-import User from "react-native-vector-icons/FontAwesome";
-import Diamond from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  CalendarIcon,
+  ClockIconTwo,
+  DiamondIconTwo,
+  FlagIcon,
+  UserIconTwo,
+} from "../../../../components/TabIcon";
 import moment from "moment";
 import ChallengeCancelModal from "../../../../components/organisms/ChallengeCancelModal";
 
@@ -25,76 +27,78 @@ export const RequestPage = ({ route }: RouteParams) => {
   const { title, content, startDate, schedule, members } = route.params;
   return (
     <Wrapper>
-      <Title>{title}</Title>
-      <Content>{content}</Content>
-      <Infos>
-        <InfoWrapper>
-          <IconWrapper>
-            <Flag name="flag" size={20} color={"#054de4"} />
-          </IconWrapper>
-          <TextWrapper>
-            <TopText>완주시 최대</TopText>
-            <Text>2,000 캐시와 1,000 경험치</Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <Calendar name="calendar-day" size={22} color={"#054de4"} />
-          </IconWrapper>
-          <TextWrapper>
-            <Text style={{ marginTop: 9 }}>
-              {moment(startDate).format(`M월 D일`)}~
-              {moment(startDate).add(14, "days").format(`M월 D일`)}
-            </Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <Clock name="clockcircle" size={20} color={"#054de4"} />
-          </IconWrapper>
-          <TextWrapper>
-            <Text style={{ marginTop: 9 }}>{schedule}씩 인증</Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <User name="user" size={25} color={"#054de4"} style={{ paddingHorizontal: 1 }} />
-          </IconWrapper>
-          <TextWrapper>
-            <Text style={{ marginTop: 9 }}>신청 인원 {members}명</Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <Diamond name="diamond" size={20} color={"#054de4"} />
-          </IconWrapper>
-          <TextWrapper>
-            <TopText>팀원 평균</TopText>
-            <Text>상위 50%</Text>
-          </TextWrapper>
-        </InfoWrapper>
-      </Infos>
-      <ChallengeCash>
-        <ChallengeCashText>도전 캐시</ChallengeCashText>
-        <ChallengeCashText>1,000C</ChallengeCashText>
-      </ChallengeCash>
-      <MyCash>
-        <Text>내 캐시</Text>
-        <Text>10,000C</Text>
-      </MyCash>
-      <Buttons>
-        <TouchableOpacity
-          style={styles.shareButton}
-          onPress={() => {
-            console.warn("공유할래용");
-          }}
-        >
-          <Text>공유할래요</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CompletedButton} disabled>
-          <Text style={{ color: "#ffffff" }}>이미 신청했어요</Text>
-        </TouchableOpacity>
-      </Buttons>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Title>{title}</Title>
+        <Content>{content}</Content>
+        <Infos>
+          <InfoWrapper>
+            <IconWrapper>
+              <FlagIcon />
+            </IconWrapper>
+            <TextWrapper>
+              <TopText>완주시 최대</TopText>
+              <Text>2,000 캐시와 1,000 경험치</Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <CalendarIcon />
+            </IconWrapper>
+            <TextWrapper>
+              <Text style={{ marginTop: 9 }}>
+                {moment(startDate).format(`M월 D일`)} ~{" "}
+                {moment(startDate).add(14, "days").format(`M월 D일`)}
+              </Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <ClockIconTwo />
+            </IconWrapper>
+            <TextWrapper>
+              <Text style={{ marginTop: 9 }}>{schedule}씩 인증</Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <UserIconTwo />
+            </IconWrapper>
+            <TextWrapper>
+              <Text style={{ marginTop: 9 }}>신청 인원 {members}명</Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <DiamondIconTwo />
+            </IconWrapper>
+            <TextWrapper>
+              <TopText>팀원 평균</TopText>
+              <Text>상위 50%</Text>
+            </TextWrapper>
+          </InfoWrapper>
+        </Infos>
+        <ChallengeCash>
+          <ChallengeCashText>도전 캐시</ChallengeCashText>
+          <ChallengeCashText>1,000C</ChallengeCashText>
+        </ChallengeCash>
+        <MyCash>
+          <Text>내 캐시</Text>
+          <Text>10,000C</Text>
+        </MyCash>
+        <Buttons>
+          <TouchableOpacity
+            style={styles.shareButton}
+            onPress={() => {
+              console.warn("공유할래용");
+            }}
+          >
+            <Text>공유할래요</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.CompletedButton} disabled>
+            <Text style={{ color: "#ffffff" }}>이미 신청했어요</Text>
+          </TouchableOpacity>
+        </Buttons>
+      </ScrollView>
       <ChallengeCancelModal />
     </Wrapper>
   );

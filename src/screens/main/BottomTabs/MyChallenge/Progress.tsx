@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import styled from "styled-components/native";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
-import { ChallengeData } from "./ChallengeData";
+import { BeforeStartData, progressData } from "./ChallengeData";
 import Collapsible from "react-native-collapsible";
 import * as ProgressBar from "react-native-progress";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -20,33 +20,8 @@ import ReactionModal from "../../../../components/organisms/ReactionModal";
 import { useSetRecoilState } from "recoil";
 import { reactionModalAtom } from "../../../../../atom";
 import { Emo } from "../../../../assets/images";
-
-const data = [
-  {
-    member: "만두",
-    percentage: 10,
-  },
-  {
-    member: "예슬",
-    percentage: 20,
-  },
-  {
-    member: "예레나",
-    percentage: 30,
-  },
-  {
-    member: "기정",
-    percentage: 40,
-  },
-  {
-    member: "곰달",
-    percentage: 50,
-  },
-  {
-    member: "지노",
-    percentage: 0,
-  },
-];
+import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
 
 export const Progress = () => {
   const MYCOLOR = "#5266E8",
@@ -55,6 +30,7 @@ export const Progress = () => {
   const [onProgress, setOnProgress] = useState(3); //data(진행중)
   const [isCollapsed, setIsCollapsed] = useState(true); //accordion클릭이벤트
   const [reactionType, setReactionType] = useState("");
+  const navigation: any = useNavigation();
 
   //바텀시트
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -134,9 +110,11 @@ export const Progress = () => {
 
                 {/* accordion 외부내용 */}
                 <Collapsible collapsed={!isCollapsed}>
-                  <Text style={styles.accordionMyState}>내 달성률 {data[0].percentage}%</Text>
+                  <Text style={styles.accordionMyState}>
+                    내 달성률 {progressData[0].percentage}%
+                  </Text>
                   <ProgressBar.Bar
-                    progress={data[0].percentage / 100}
+                    progress={progressData[0].percentage / 100}
                     width={330}
                     height={12}
                     borderRadius={30}
@@ -146,7 +124,7 @@ export const Progress = () => {
 
                 {/* accordion 내부내용 */}
                 <Collapsible collapsed={isCollapsed} style={styles.innerDataWrapper}>
-                  {data.map((item, index) => {
+                  {progressData.map((item, index) => {
                     return (
                       <View style={styles.innerData} key={index}>
                         <View style={styles.pictureWrapper}>
@@ -200,59 +178,83 @@ export const Progress = () => {
         {/* 시작 전 */}
         <View style={styles.textWrapper}>
           <Text style={styles.title}>시작 전</Text>
-          <Text style={styles.number}>{ChallengeData.length}</Text>
+          <Text style={styles.number}>{BeforeStartData.length}</Text>
         </View>
-        {ChallengeData.length === 0 ? (
+        {BeforeStartData.length === 0 ? (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyText}>시작을 기다리는 도전작심이 없어요</Text>
           </View>
         ) : (
           <>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              {ChallengeData.map((item, index) => {
+              {BeforeStartData.map((item, index) => {
                 const Members = [1, 2, 3, 4, 5, 6];
                 const selected = Members.slice(0, item.members);
                 const common = Members.concat(selected);
                 const Others = common.filter(function (v) {
                   return common.indexOf(v) == common.lastIndexOf(v);
                 });
+                const todayDate = moment(new Date()).format("YYYY-MM-DD");
                 return (
-                  <ChallengeBox key={index}>
-                    <TouchableOpacity>
-                      <ChallengeCategory>
-                        <ChallengeCategoryText>{item.category}</ChallengeCategoryText>
-                      </ChallengeCategory>
-                      <ChallengeTitle>{item.title}</ChallengeTitle>
-                      <ChallengeTags>{item.tags}</ChallengeTags>
-                      <DateWrapper>
-                        <HomeCalendar />
-                        <InfoText>{item.date}</InfoText>
-                      </DateWrapper>
-                      <ScheduleWrapper>
-                        <HomeClock />
-                        <InfoText>{item.schedule}</InfoText>
-                      </ScheduleWrapper>
-                      <MembersWrapper>
-                        <HomeUser />
-                        {/* 선택된맴버수 예시:4명 */}
-                        {Members.slice(0, item.members).map((item, index) => {
-                          return (
-                            <SelectedWrapper key={index}>
-                              <ButtonText>{item}</ButtonText>
-                            </SelectedWrapper>
-                          );
-                        })}
-                        {/* 전체 맴버수 예시:6명 */}
-                        {Others.map((item, index) => {
-                          return (
-                            <NonSelectedWrapper key={index}>
-                              <ButtonText>{item}</ButtonText>
-                            </NonSelectedWrapper>
-                          );
-                        })}
-                      </MembersWrapper>
-                    </TouchableOpacity>
-                  </ChallengeBox>
+                  <View key={index}>
+                    {/* 아직 시작전인 챌린지들만 띄우기 */}
+                    {item.startDate > todayDate ? (
+                      <ChallengeBox>
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate("BeforeStartPage", {
+                              title: item.title,
+                              content: item.content,
+                              startDate: item.startDate,
+                              schedule: item.schedule,
+                              members: item.members,
+                              waiting: item.waiting,
+                            });
+                          }}
+                        >
+                          <ChallengeCategory>
+                            <ChallengeCategoryText>{item.category}</ChallengeCategoryText>
+                          </ChallengeCategory>
+                          <ChallengeTitle>{item.title}</ChallengeTitle>
+                          <ChallengeTags>{item.tags}</ChallengeTags>
+                          <DateWrapper>
+                            <HomeCalendar />
+                            <InfoText>
+                              D-
+                              {Math.ceil(
+                                moment.duration({ from: new Date(), to: item.startDate }).asDays(),
+                              )}
+                            </InfoText>
+                          </DateWrapper>
+                          <ScheduleWrapper>
+                            <HomeClock />
+                            <InfoText>{item.schedule}</InfoText>
+                          </ScheduleWrapper>
+                          <MembersWrapper>
+                            <HomeUser />
+                            {/* 선택된맴버수 예시:4명 */}
+                            {Members.slice(0, item.members).map((item, index) => {
+                              return (
+                                <SelectedWrapper key={index}>
+                                  <ButtonText>{item}</ButtonText>
+                                </SelectedWrapper>
+                              );
+                            })}
+                            {/* 전체 맴버수 예시:6명 */}
+                            {Others.map((item, index) => {
+                              return (
+                                <NonSelectedWrapper key={index}>
+                                  <ButtonText>{item}</ButtonText>
+                                </NonSelectedWrapper>
+                              );
+                            })}
+                          </MembersWrapper>
+                        </TouchableOpacity>
+                      </ChallengeBox>
+                    ) : (
+                      <></>
+                    )}
+                  </View>
                 );
               })}
             </ScrollView>
@@ -343,7 +345,7 @@ const ChallengeCategory = styled.View`
   border-radius: 15px;
   padding: 8px 0;
   margin: 6px 0;
-  width: 50px;
+  width: 80px;
 `;
 const ChallengeCategoryText = styled.Text`
   text-align: center;
