@@ -1,13 +1,14 @@
 import React from "react";
-import { Progress, Request } from "../../../screens/main";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { StatInfoNav } from "./StatInfoNav";
+import { ProgressInfoNav } from "./ProgressInfoNav";
 
 const Tab = createMaterialTopTabNavigator();
 
-export const MyChallengeCategoryNav = () => {
+export const ProgressTopbarNav = () => {
   return (
     <Tab.Navigator
-      initialRouteName="진행"
+      initialRouteName="정보"
       screenOptions={{
         swipeEnabled: false,
         tabBarActiveTintColor: "#000000",
@@ -16,12 +17,13 @@ export const MyChallengeCategoryNav = () => {
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          marginRight: 220,
+          marginRight: 230,
+          marginTop: 10,
         },
       }}
     >
-      <Tab.Screen name="진행" component={Progress} />
-      <Tab.Screen name="신청" component={Request} />
+      <Tab.Screen name="정보" component={ProgressInfoNav} options={{}} />
+      <Tab.Screen name="정산" component={StatInfoNav} />
     </Tab.Navigator>
   );
 };

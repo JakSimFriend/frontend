@@ -72,9 +72,7 @@ export const Request = () => {
                       <RecruitText>{item.members}명</RecruitText>
                     </View>
                     <View style={styles.newInfo}>
-                      <Text style={styles.newInfoText}>
-                        신규 신청이 {item.waiting}건 있어요!
-                      </Text>
+                      <Text style={styles.newInfoText}>신규 신청이 {item.waiting}건 있어요!</Text>
                     </View>
                   </RecruitWrapper>
                 </TouchableOpacity>

@@ -115,7 +115,7 @@ const ScheduleWrapper = styled.View`
 `;
 const MembersWrapper = styled.View`
   flex-direction: row;
-  margin-top: 5px;
+  margin-top: 3px;
 `;
 
 const SelectedWrapper = styled.View`

@@ -12,32 +12,26 @@ export const MyState = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <LinearGradient style={styles.blueBox} colors={["#947BEA", "#1151E5"]}>
           <UpBox>
-            <SeasonTitle>작심 시즌 1</SeasonTitle>
+            <SeasonTitle>시즌 1</SeasonTitle>
             <ChallengeText>2022/06/01 ~ 2022/08/30</ChallengeText>
             <ChallengeText>기간동안 만료한 챌린지만 합산됩니다</ChallengeText>
           </UpBox>
           <InfoWrapper>
             <View>
-              <Text style={styles.text}>경험치 상위</Text>
+              <Text style={styles.text}>평균 달성률</Text>
               <Text style={styles.text}>
                 <Text style={styles.number}>20</Text>%
               </Text>
-              <Text style={styles.text}>누적 경험치 40,000</Text>
-            </View>
-            <View>
-              <Text style={styles.text}>참가율 상위</Text>
-              <Text style={styles.text}>
-                <Text style={styles.number}>30</Text>%
-              </Text>
-              <Text style={styles.text}>참가 챌린지 40개</Text>
             </View>
           </InfoWrapper>
         </LinearGradient>
+        <Text style={styles.expTitle}>누적 경험치</Text>
+        <Text style={styles.expNumber}>4,0000 EXP</Text>
         <StatTitle>카테고리 통계</StatTitle>
         {categoryEmpty ? (
           <>
             <View style={styles.EmptyView}>
-              <Text style={styles.EmptyText}>완료한 챌린지가 없어요</Text>
+              <Text style={styles.EmptyText}>완료한 도전작심이 없어요</Text>
             </View>
           </>
         ) : (
@@ -75,6 +69,7 @@ const ChallengeText = styled.Text`
   margin-top: 10px;
 `;
 const InfoWrapper = styled.View`
+  justify-content: center;
   flex-direction: row;
   margin-top: 25px;
   margin-left: 10px;
@@ -127,6 +122,16 @@ const styles = StyleSheet.create({
   number: {
     fontSize: 45,
     fontWeight: "bold",
+  },
+  expTitle: {
+    marginTop: 30,
+    fontSize: 20,
+    fontWeight: "400",
+  },
+  expNumber: {
+    marginTop: 10,
+    fontSize: 25,
+    fontWeight: "600",
   },
   categoryBackground: {
     backgroundColor: "#f6f5fb",

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import styled from "styled-components/native";
-import { HomeCalendar, HomeClock, HomeUser, HomeCamera } from "../../../../components/TabIcon";
+import { HomeCalendar, HomeClock, HomeUser, HomeCameraBlue } from "../../../../../components/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
@@ -13,8 +13,8 @@ import {
   BeforeStartStartDateInfoAtom,
   BeforeStartTitleInfoAtom,
   BeforeStartWaitingInfoAtom,
-} from "../../../../../atom";
-import { a } from "../../../../assets/images";
+} from "../../../../../../atom";
+import { a } from "../../../../../assets/images";
 
 type RouteParams = {
   route: {
@@ -55,6 +55,7 @@ export const BeforeStartPage = ({ route }: RouteParams) => {
           firstDay={1}
           initialDate={startDate}
           minDate={startDate}
+          hideDayNames
           maxDate={moment(startDate).add(14, "days").format(`YYYY-MM-DD`)}
         />
         <View style={styles.spendingDateBox}>
@@ -64,20 +65,20 @@ export const BeforeStartPage = ({ route }: RouteParams) => {
         </View>
         <View style={styles.infoBox}>
           <View style={styles.infoWrapper}>
-            <Text>
+            <Text style={{ color: "#6F81A9" }}>
               <HomeCalendar /> {moment(startDate).format(`M월 D일`)} ~{" "}
               {moment(startDate).add(14, "days").format(`M월 D일`)}
             </Text>
-            <Text>
+            <Text style={{ marginTop: 10, color: "#6F81A9" }}>
               <HomeClock /> {schedule}
             </Text>
           </View>
           <View style={styles.infoWrapper}>
-            <Text>
+            <Text style={{ color: "#6F81A9" }}>
               <HomeUser /> {members} 명
             </Text>
-            <Text>
-              <HomeCamera /> 11시 30분 마감
+            <Text style={{ color: "#6F81A9", marginTop: 10 }}>
+              <HomeCameraBlue /> 11시 30분 마감
             </Text>
           </View>
         </View>
@@ -109,6 +110,9 @@ const Friend = styled.View`
   flex-direction: row;
   align-items: center;
   margin-bottom: 15px;
+  border-bottom-color: #f6f5fb;
+  border-bottom-width: 1px;
+  padding-bottom: 10px;
 `;
 const Logo = styled.Image`
   width: 35px;

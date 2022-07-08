@@ -4,10 +4,13 @@ import Diamond from "react-native-vector-icons/MaterialCommunityIcons";
 import Clock from "react-native-vector-icons/AntDesign";
 import User from "react-native-vector-icons/FontAwesome";
 import ClockTwo from "react-native-vector-icons/Feather";
+import ClockTwoBlue from "react-native-vector-icons/AntDesign";
 import CalendarTwo from "react-native-vector-icons/Feather";
+import CalendarTwoBlue from "react-native-vector-icons/FontAwesome5";
 import UserTwo from "react-native-vector-icons/Feather";
+import UserTwoBlue from "react-native-vector-icons/FontAwesome";
 import Search from "react-native-vector-icons/EvilIcons";
-import Camera from "react-native-vector-icons/Feather";
+import CameraBlue from "react-native-vector-icons/FontAwesome5";
 import Back from "react-native-vector-icons/Ionicons";
 import Flag from "react-native-vector-icons/FontAwesome";
 import Calendar from "react-native-vector-icons/FontAwesome5";
@@ -52,16 +55,25 @@ export const UserIcon = ({ focused }: TabBarIconProps) => {
   );
 };
 export const HomeClock = () => {
-  return <ClockTwo name="clock" size={15} />;
+  return <ClockTwo name="clock" size={17} />;
+};
+export const HomeClockBlue = () => {
+  return <ClockTwoBlue name="clockcircle" size={13} color={"#054de4"} />;
 };
 export const HomeCalendar = () => {
-  return <CalendarTwo name="calendar" size={15} />;
+  return <CalendarTwo name="calendar" size={17} />;
+};
+export const HomeCalendarBlue = () => {
+  return <CalendarTwoBlue name="calendar-day" size={15} color={"#054de4"} />;
 };
 export const HomeUser = () => {
-  return <UserTwo name="users" size={15} />;
+  return <UserTwo name="user" size={15} />;
 };
-export const HomeCamera = () => {
-  return <Camera name="camera" size={15} />;
+export const HomeUserBlue = () => {
+  return <UserTwoBlue name="user" size={17} color={"#054de4"} />;
+};
+export const HomeCameraBlue = () => {
+  return <CameraBlue name="camera" size={15} color={"#054de4"} />;
 };
 export const SearchIcon = () => {
   return <Search name="search" size={30} />;

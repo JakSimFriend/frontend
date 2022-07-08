@@ -16,5 +16,9 @@ declare namespace ReactNavigation {
     BeforeStartPageInfo: undefined;
     RecruitPage: undefined;
     RecruitPageInfo: undefined;
+    ProgressPage: undefined;
+    ProgressNotification: undefined;
+    내챌린지: undefined;
+    ProgressDetailTopTab:undefined;
   }
 }

@@ -2,35 +2,35 @@ import React from "react";
 import { Text } from "react-native";
 import styled from "styled-components/native";
 import moment from "moment";
-import { GradientButtons } from "../../../../components/GradientButtons";
+import { GradientButtons } from "../../../../../components/GradientButtons";
 import {
   CalendarIcon,
   ClockIconTwo,
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../../components/TabIcon";
+} from "../../../../../components/TabIcon";
 import { useRecoilValue } from "recoil";
 import {
-  recruitContentInfoAtom,
-  recruitMembersInfoAtom,
-  recruitScheduleInfoAtom,
-  recruitStartDateInfoAtom,
-  recruitTitleInfoAtom,
-  recruitWaitingInfoAtom,
-} from "../../../../../atom";
+  BeforeStartContentInfoAtom,
+  BeforeStartMembersInfoAtom,
+  BeforeStartScheduleInfoAtom,
+  BeforeStartStartDateInfoAtom,
+  BeforeStartTitleInfoAtom,
+  BeforeStartWaitingInfoAtom,
+} from "../../../../../../atom";
 
-export const RecruitPageInfo = () => {
-  const recruitTitleInfo = useRecoilValue(recruitTitleInfoAtom);
-  const recruitContentInfo = useRecoilValue(recruitContentInfoAtom);
-  const recruitStartDateInfo = useRecoilValue(recruitStartDateInfoAtom);
-  const recruitScheduleInfo = useRecoilValue(recruitScheduleInfoAtom);
-  const recruitMembersInfo = useRecoilValue(recruitMembersInfoAtom);
-  const recruitWaitingInfo = useRecoilValue(recruitWaitingInfoAtom);
+export const BeforeStartPageInfo = () => {
+  const BeforeStartTitleInfo = useRecoilValue(BeforeStartTitleInfoAtom);
+  const BeforeStartContentInfo = useRecoilValue(BeforeStartContentInfoAtom);
+  const BeforeStartStartDateInfo = useRecoilValue(BeforeStartStartDateInfoAtom);
+  const BeforeStartScheduleInfo = useRecoilValue(BeforeStartScheduleInfoAtom);
+  const BeforeStartMembersInfo = useRecoilValue(BeforeStartMembersInfoAtom);
+  const BeforeStartWaitingInfo = useRecoilValue(BeforeStartWaitingInfoAtom);
   return (
     <Wrapper>
-      <Title>{recruitTitleInfo}</Title>
-      <Content>{recruitContentInfo}</Content>
+      <Title>{BeforeStartTitleInfo}</Title>
+      <Content>{BeforeStartContentInfo}</Content>
       <Infos>
         <InfoWrapper>
           <IconWrapper>
@@ -47,8 +47,8 @@ export const RecruitPageInfo = () => {
           </IconWrapper>
           <TextWrapper>
             <Text style={{ marginTop: 9 }}>
-              {moment(recruitStartDateInfo).format(`M월 D일`)}~
-              {moment(recruitStartDateInfo).add(14, "days").format(`M월 D일`)}
+              {moment(BeforeStartStartDateInfo).format(`M월 D일`)}~
+              {moment(BeforeStartStartDateInfo).add(14, "days").format(`M월 D일`)}
             </Text>
           </TextWrapper>
         </InfoWrapper>
@@ -57,7 +57,7 @@ export const RecruitPageInfo = () => {
             <ClockIconTwo />
           </IconWrapper>
           <TextWrapper>
-            <Text style={{ marginTop: 9 }}>{recruitScheduleInfo}씩 인증</Text>
+            <Text style={{ marginTop: 9 }}>{BeforeStartScheduleInfo}씩 인증</Text>
           </TextWrapper>
         </InfoWrapper>
         <InfoWrapper>
@@ -66,7 +66,7 @@ export const RecruitPageInfo = () => {
           </IconWrapper>
           <TextWrapper>
             <Text style={{ marginTop: 9 }}>
-              신청 인원 {recruitMembersInfo}명, 대기자 수 {recruitWaitingInfo}명
+              신청 인원 {BeforeStartMembersInfo}명, 대기자 수 {BeforeStartWaitingInfo}명
             </Text>
           </TextWrapper>
         </InfoWrapper>

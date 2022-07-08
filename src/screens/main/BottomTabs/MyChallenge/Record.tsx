@@ -1,12 +1,16 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, Text } from "react-native";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
+import { recieveModalAtom } from "../../../../../atom";
 import { GradientButtons } from "../../../../components/GradientButtons";
+import RecieveModal from "../../../../components/organisms/RecieveModal";
 
 const data = [
   {
     title: "제목1",
-    category: "시사1",
+    category: "시사",
     date: "2022년 6월 15일",
     percentage: "60%",
   },
@@ -16,20 +20,33 @@ const data = [
     date: "2022년 6월 10일",
     percentage: "100%",
   },
+  {
+    title: "제목3",
+    category: "운동",
+    date: "2022년 6월 25일",
+    percentage: "80%",
+  },
 ];
 
 export const Record = () => {
-  const [recordNumber, setRecordNumber] = useState(0);
+  const setModalVisible = useSetRecoilState(recieveModalAtom);
+  const navigation = useNavigation();
+  const goToProgressInfo = () => navigation.navigate("ProgressDetailTopTab");
   return (
     <Wrapper>
       <ScrollView>
         <InfoWrapper>
           <Date>2022년</Date>
-          <Number>{recordNumber}</Number>
+          <Number>{data.length}</Number>
         </InfoWrapper>
         {data.map((item, index) => {
+          const [received, setReceived] = useState(false); //data
+          const 보상받기 = () => {
+            setModalVisible(true);
+            setReceived(true);
+          };
           return (
-            <Box key={index}>
+            <Box key={index} onPress={goToProgressInfo}>
               <Header>
                 <Title>{item.title}</Title>
                 <CategoryButton>
@@ -41,17 +58,19 @@ export const Record = () => {
                   <DateTwo>{item.date}</DateTwo>에{"\n"}
                   <Percentage>{item.percentage}</Percentage>로 종료되었습니다
                 </Left>
-                <GradientButtons
-                  onPress={() => {
-                    console.warn("보상받기");
-                  }}
-                  Title="보상 받기"
-                />
+                {received ? (
+                  <RecieveButton disabled>
+                    <Text style={{ color: "#ffffff" }}>보상 받음</Text>
+                  </RecieveButton>
+                ) : (
+                  <GradientButtons onPress={보상받기} Title="보상 받기" />
+                )}
               </Body>
             </Box>
           );
         })}
       </ScrollView>
+      <RecieveModal />
     </Wrapper>
   );
 };
@@ -73,7 +92,7 @@ const Number = styled.Text`
   font-weight: 400;
   margin-left: 5px;
 `;
-const Box = styled.View`
+const Box = styled.TouchableOpacity`
   background-color: #f6f5fb;
   margin-top: 20px;
   padding: 25px 25px 0 25px;
@@ -111,4 +130,9 @@ const DateTwo = styled.Text`
 const Percentage = styled.Text`
   color: #054de4;
   font-weight: 600;
+`;
+const RecieveButton = styled.TouchableOpacity`
+  padding: 15px 20px;
+  background-color: #bfc7d7;
+  border-radius: 15px;
 `;

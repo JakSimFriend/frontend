@@ -1,29 +1,29 @@
-// 데이터 흐름 구조보고 데이터 하나로 통일하던가 api명세서 보고 동일화해야함
-
 export const progressData = [
   {
+    title: "제목1",
     member: "만두",
-    percentage: 10,
+    Mypercentage: 10,
+    members: [
+      { name: "만두1", percentage: 10 },
+      { name: "예슬1", percentage: 20 },
+      { name: "예레나1", percentage: 30 },
+      { name: "기정1", percentage: 40 },
+      { name: "곰달1", percentage: 50 },
+      { name: "지노1", percentage: 100 },
+    ],
   },
   {
+    title: "제목2",
     member: "예슬",
-    percentage: 20,
-  },
-  {
-    member: "예레나",
-    percentage: 30,
-  },
-  {
-    member: "기정",
-    percentage: 40,
-  },
-  {
-    member: "곰달",
-    percentage: 50,
-  },
-  {
-    member: "지노",
-    percentage: 0,
+    Mypercentage: 30,
+    members: [
+      { name: "만두", percentage: 50 },
+      { name: "예슬", percentage: 40 },
+      { name: "예레나", percentage: 30 },
+      { name: "기정", percentage: 20 },
+      { name: "곰달", percentage: 10 },
+      { name: "지노", percentage: 0 },
+    ],
   },
 ];
 
@@ -87,7 +87,7 @@ export const RecruitData = [
     startDate: "2022-07-10",
     schedule: "1주일에 2회",
     members: 1,
-    waiting:3,
+    waiting: 3,
   },
   {
     title: "모집2",
@@ -95,7 +95,7 @@ export const RecruitData = [
     startDate: "2022-07-10",
     schedule: "2주일에 5회",
     members: 4,
-    waiting:1,
+    waiting: 1,
   },
   {
     title: "모집3",
@@ -103,15 +103,15 @@ export const RecruitData = [
     startDate: "2022-07-21",
     schedule: "1주일에 4회",
     members: 3,
-    waiting:2,
+    waiting: 2,
   },
   {
-     title: "모집4",
+    title: "모집4",
     content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
     startDate: "2022-07-16",
     schedule: "1주일에 3회",
     members: 5,
-    waiting:1,
+    waiting: 1,
   },
 ];
 

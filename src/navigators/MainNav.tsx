@@ -23,14 +23,18 @@ import {
   Detail,
   RecruitPage,
   BeforeStartPage,
+  ProgressPage,
+  ProgressNotification,
+  ProgressDetailTopTab,
 } from "../screens/main";
 import LoggedInNav from "./LoggedInNav";
 import LoggedOutNav from "./LoggedOutNav";
 import { Button, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ArrowLeft from "react-native-vector-icons/AntDesign";
-import { RecruitPageInfo } from "../screens/main/BottomTabs/MyChallenge/RecruitPageInfo";
-import { BeforeStartPageInfo } from "../screens/main/BottomTabs/MyChallenge/BeforeStartPageInfo";
+import { RecruitPageInfo } from "../screens/main/BottomTabs/MyChallenge/Recruit/RecruitPageInfo";
+import { BeforeStartPageInfo } from "../screens/main/BottomTabs/MyChallenge/BeforeStart/BeforeStartPageInfo";
+import Bell from "react-native-vector-icons/AntDesign";
 
 const Stack = createStackNavigator();
 
@@ -46,6 +50,8 @@ const MainNav = () => {
   const goToChallengeOpenTwo = () => navigation.navigate("ChallengeOpenTwo");
   const goToRecruitPageInfo = () => navigation.navigate("RecruitPageInfo");
   const goToBeforeStartPageInfo = () => navigation.navigate("BeforeStartPageInfo");
+  const goToProgressNotification = () => navigation.navigate("ProgressNotification");
+  const goToMyChallenge = () => navigation.navigate("내챌린지");
   const goBack = () => navigation.goBack();
   return (
     <>
@@ -64,6 +70,8 @@ const MainNav = () => {
           ) : (
             <Stack.Screen name="NickName" component={NickName} />
           )}
+
+          {/* 우측 상단 페이지들 */}
           <Stack.Screen
             name="Notifications"
             component={Notifications}
@@ -100,6 +108,17 @@ const MainNav = () => {
               headerShown: false,
             }}
           />
+          <Stack.Screen
+            name="SearchChallenge"
+            component={SearchChallenge}
+            options={{
+              headerShadowVisible: false,
+              headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
           <Stack.Screen name="Setting" component={Setting} />
           <Stack.Screen
             name="Record"
@@ -108,6 +127,55 @@ const MainNav = () => {
               headerTitle: "기록",
               headerTransparent: false,
               headerShadowVisible: false,
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+
+          {/* 내 챌린지 페이지 내부페이지들 */}
+          <Stack.Screen
+            name="ProgressDetailTopTab"
+            component={ProgressDetailTopTab}
+            options={{
+              headerTitle: "제목", //서버데이터
+              headerLeft: () => (
+                <ArrowLeft onPress={goToMyChallenge} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+              headerRight: () => (
+                <TouchableOpacity onPress={goToProgressNotification} style={{ marginRight: 20 }}>
+                  <Text>알림</Text>
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="ProgressNotification"
+            component={ProgressNotification}
+            options={{
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="BeforeStartPage"
+            component={BeforeStartPage}
+            options={{
+              headerRight: () => (
+                <TouchableOpacity onPress={goToBeforeStartPageInfo}>
+                  <Text style={{ color: "#000000", fontSize: 16, marginRight: 15 }}>정보</Text>
+                </TouchableOpacity>
+              ),
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="BeforeStartPageInfo"
+            component={BeforeStartPageInfo}
+            options={{
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
@@ -156,40 +224,8 @@ const MainNav = () => {
               ),
             }}
           />
-          <Stack.Screen
-            name="BeforeStartPage"
-            component={BeforeStartPage}
-            options={{
-              headerRight: () => (
-                <TouchableOpacity onPress={goToBeforeStartPageInfo}>
-                  <Text style={{ color: "#000000", fontSize: 16, marginRight: 15 }}>정보</Text>
-                </TouchableOpacity>
-              ),
-              headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
-              ),
-            }}
-          />
-          <Stack.Screen
-            name="BeforeStartPageInfo"
-            component={BeforeStartPageInfo}
-            options={{
-              headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
-              ),
-            }}
-          />
-          <Stack.Screen
-            name="SearchChallenge"
-            component={SearchChallenge}
-            options={{
-              headerShadowVisible: false,
-              headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
-              headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
-              ),
-            }}
-          />
+
+          {/* 챌린지 개설 페이지들 */}
           <Stack.Screen
             name="Category"
             component={Category}

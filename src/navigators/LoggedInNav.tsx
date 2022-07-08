@@ -28,7 +28,7 @@ const LoggedInNav = () => {
           }}
         ></Tabs.Screen>
         <Tabs.Screen
-          name="내 챌린지"
+          name="내챌린지"
           component={MyChallengeNav}
           options={{
             tabBarIcon: ({ focused }) => <DiamondIcon focused={focused} />,

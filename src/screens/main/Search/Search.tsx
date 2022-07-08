@@ -9,8 +9,8 @@ import moment from "moment";
 
 export const searchData = [
   {
-    title: "제목",
-    category: "시사",
+    title: "제목1",
+    categoryIndex: 3,
     content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
     tags: ["최대4글", "자넘어가", "면잘리게"],
     startDate: "2022-08-01",
@@ -19,7 +19,7 @@ export const searchData = [
   },
   {
     title: "제목2",
-    category: "운동",
+    categoryIndex: 4,
     content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
     tags: ["최대4글", "자넘어가", "면잘리게"],
     startDate: "2022-08-04",
@@ -28,7 +28,7 @@ export const searchData = [
   },
   {
     title: "제목3",
-    category: "예술",
+    categoryIndex: 2,
     content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
     tags: ["최대4글", "자넘어가", "면잘리게"],
     startDate: "2022-08-07",
@@ -37,7 +37,16 @@ export const searchData = [
   },
   {
     title: "제목4",
-    category: "독서",
+    categoryIndex: 5,
+    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
+    tags: ["최대4글", "자넘어가", "면잘리게"],
+    startDate: "2022-09-01",
+    schedule: "1주일에 6회",
+    members: 5,
+  },
+  {
+    title: "제목4",
+    categoryIndex: 5,
     content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
     tags: ["최대4글", "자넘어가", "면잘리게"],
     startDate: "2022-09-01",
@@ -46,7 +55,7 @@ export const searchData = [
   },
   {
     title: "제목5",
-    category: "외국어",
+    categoryIndex: 1,
     content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
     tags: ["최대4글", "자넘어가", "면잘리게"],
     startDate: "2022-10-23",
@@ -58,15 +67,11 @@ export const searchData = [
 //블러처리 추가(마감)
 export const Search = () => {
   const navigation: any = useNavigation();
-  const data = ["전체", "시사", "독서", "외국어", "전공기초", "예술", "습관", "운동", "기타"];
+  const categories = ["전체", "시사", "독서", "외국어", "전공기초", "예술", "습관", "운동", "기타"];
   const [categoryIndex, setCategoryIndex] = useState(0);
-  const [categories, setCategories] = useState([""]);
-  const [searchEmpty, setSearchEmpty] = useState(false); //data(검색 수)
   const [isStarted, setIsStarted] = useState(false); //data(마감<진행중>)
+  const [searchInput, setSearchInput] = useState(""); //data(검색input)
   const goToOpenChallenge = () => navigation.navigate("Category");
-  useEffect(() => {
-    setCategories(data);
-  }, []);
   const DownValue = useState(new Animated.Value(0))[0];
   const goBackHome = () => {
     Animated.timing(DownValue, {
@@ -89,7 +94,11 @@ export const Search = () => {
         }}
       >
         <InputWrapper>
-          <InputBox placeholder="다양한 챌린지를 검색해보세요!" placeholderTextColor={"#6b7ba2"} />
+          <InputBox
+            placeholder="다양한 챌린지를 검색해보세요!"
+            placeholderTextColor={"#6b7ba2"}
+            onChangeText={(text) => setSearchInput(text)}
+          />
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
@@ -114,66 +123,82 @@ export const Search = () => {
           );
         })}
       </CategoryBox>
-      {searchEmpty ? (
-        <>
-          <ScrollView>
-            <EmptyBox>
-              <EmptyBoxText>아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!</EmptyBoxText>
-            </EmptyBox>
-          </ScrollView>
-          <OpenChallenge>
-            <GradientButtons onPress={goToOpenChallenge} Title="도전작심 개설하기" />
-          </OpenChallenge>
-        </>
-      ) : (
-        <ScrollView>
-          {searchData.map((item, index) => {
+      <ScrollView>
+        {/* 검색 필터링 */}
+        {searchData
+          ?.filter((item) => {
+            if (searchInput === "") return item;
+            else if (item.title.toLowerCase().includes(searchInput)) {
+              return item;
+            }
+          })
+          .map((item, index) => {
             return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  navigation.navigate("SearchChallenge", {
-                    title: item.title,
-                    content: item.content,
-                    startDate: item.startDate,
-                    schedule: item.schedule,
-                    members: item.members,
-                  });
-                }}
-              >
-                <View style={isStarted ? styles.startedSearchBox : styles.searchBox}>
-                  <View style={styles.searchHeader}>
-                    <Text style={styles.searchTitle}>{item.title}</Text>
-                    <View style={styles.categoryWrapper}>
-                      <Text style={styles.categoryText}>{item.category}</Text>
+              <>
+                {categoryIndex === 0 || categoryIndex === item.categoryIndex ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("SearchChallenge", {
+                        title: item.title,
+                        content: item.content,
+                        startDate: item.startDate,
+                        schedule: item.schedule,
+                        members: item.members,
+                      });
+                    }}
+                    key={index}
+                  >
+                    <View style={isStarted ? styles.startedSearchBox : styles.searchBox}>
+                      <View style={styles.searchHeader}>
+                        <Text style={styles.searchTitle}>{item.title}</Text>
+                        <View style={styles.categoryWrapper}>
+                          <Text style={styles.categoryText}>{categories[item.categoryIndex]}</Text>
+                        </View>
+                      </View>
+                      <View style={styles.tagWrapper}>
+                        <Text style={styles.tags}>#{item.tags}</Text>
+                      </View>
+                      <View style={styles.infoWrapper}>
+                        <Text style={styles.infoText}>
+                          <HomeCalendar />
+                          <Text> {moment(item.startDate).format(`M월 D일`)}</Text>
+                        </Text>
+                        <Text style={styles.infoText}>
+                          <HomeClock />
+                          <Text> {item.schedule}</Text>
+                        </Text>
+                        <Text style={styles.infoText}>
+                          <HomeUser />
+                          <Text> {item.members}명</Text>
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                  <View style={styles.tagWrapper}>
-                    <Text style={styles.tags}>#{item.tags}</Text>
-                  </View>
-                  <View style={styles.infoWrapper}>
-                    <Text style={styles.infoText}>
-                      <HomeCalendar />
-                      <Text> {moment(item.startDate).format(`M월 D일`)}</Text>
-                    </Text>
-                    <Text style={styles.infoText}>
-                      <HomeClock />
-                      <Text> {item.schedule}</Text>
-                    </Text>
-                    <Text style={styles.infoText}>
-                      <HomeUser />
-                      <Text> {item.members}명</Text>
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
+                  </TouchableOpacity>
+                ) : (
+                  <></>
+                )}
+              </>
             );
           })}
-        </ScrollView>
-      )}
+
+          {/* 카테고리 비었을시 보여줄 컴포넌트 */}
+          {/* <>
+            <ScrollView>
+              <EmptyBox>
+                <EmptyBoxText>
+                  아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!
+                </EmptyBoxText>
+              </EmptyBox>
+            </ScrollView>
+            <OpenChallenge>
+              <GradientButtons onPress={goToOpenChallenge} Title="도전작심 개설하기" />
+            </OpenChallenge>
+          </> */}
+      </ScrollView>
     </Wrapper>
   );
 };
+
 const styles = StyleSheet.create({
   category: {
     color: "#000000",

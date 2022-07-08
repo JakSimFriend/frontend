@@ -7,9 +7,9 @@ import {
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../../components/TabIcon";
+} from "../../../../../components/TabIcon";
 import moment from "moment";
-import ChallengeCancelModal from "../../../../components/organisms/ChallengeCancelModal";
+import ChallengeCancelModal from "../../../../../components/organisms/ChallengeCancelModal";
 
 type RouteParams = {
   route: {

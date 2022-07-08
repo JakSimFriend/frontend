@@ -49,12 +49,12 @@ export const Notifications = () => {
                       </>
                     ) : item.icon === "flag" ? (
                       <>
-                        <Flag name="flag" size={20} color={"#054de4"} />
+                        <Flag name={item.icon} size={20} color={"#054de4"} />
                         <NoticeText>인원 미달로 ㅇㅇㅇㅇ{"\n"}도전작심이 폐지되었어요.</NoticeText>
                       </>
                     ) : (
                       <>
-                        <Clock name="clockcircle" size={20} color={"#054de4"} />
+                        <Clock name={item.icon} size={20} color={"#054de4"} />
 
                         <NoticeText>ㅇㅇㅇㅇ 도전작심 마감이{"\n"}1시간 남았어요!</NoticeText>
                       </>
