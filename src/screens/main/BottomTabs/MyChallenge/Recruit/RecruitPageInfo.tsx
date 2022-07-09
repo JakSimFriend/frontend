@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { StatusBar, Text } from "react-native";
 import styled from "styled-components/native";
 import moment from "moment";
 import { GradientButtons } from "../../../../../components/GradientButtons";
@@ -29,6 +29,7 @@ export const RecruitPageInfo = () => {
   const recruitWaitingInfo = useRecoilValue(recruitWaitingInfoAtom);
   return (
     <Wrapper>
+      <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
       <Title>{recruitTitleInfo}</Title>
       <Content>{recruitContentInfo}</Content>
       <Infos>

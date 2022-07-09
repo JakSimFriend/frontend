@@ -15,12 +15,12 @@ const App = () => {
   });
   return (
     <RecoilRoot>
-      <SafeAreaView style={{flex:1}}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <MainNav />
-        </NavigationContainer>
-      </SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <MainNav />
+          </NavigationContainer>
+        </SafeAreaProvider>
       </SafeAreaView>
     </RecoilRoot>
   );

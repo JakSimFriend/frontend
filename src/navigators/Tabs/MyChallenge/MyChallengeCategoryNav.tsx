@@ -16,8 +16,9 @@ export const MyChallengeCategoryNav = () => {
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          // marginRight: 220,
+          width: "50%",
         },
+        tabBarPressColor: "#ffffff",
       }}
     >
       <Tab.Screen name="진행" component={Progress} />

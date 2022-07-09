@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Animated,
   Modal,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -70,6 +71,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
   };
   return (
     <Wrapper>
+      <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
       <Title>{title}</Title>
       <Content>{content}</Content>
       <Infos>

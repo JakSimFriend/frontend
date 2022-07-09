@@ -29,7 +29,7 @@ export const BeforeStartPageInfo = () => {
   const BeforeStartWaitingInfo = useRecoilValue(BeforeStartWaitingInfoAtom);
   return (
     <Wrapper>
-      <StatusBar barStyle="dark-content" backgroundColor="#b32c2c" />
+      <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
       <Title>{BeforeStartTitleInfo}</Title>
       <Content>{BeforeStartContentInfo}</Content>
       <Infos>

@@ -20,5 +20,6 @@ declare namespace ReactNavigation {
     ProgressNotification: undefined;
     내챌린지: undefined;
     ProgressDetailTopTab:undefined;
+    BirthDay:undefined;
   }
 }

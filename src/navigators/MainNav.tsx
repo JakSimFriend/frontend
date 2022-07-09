@@ -28,11 +28,12 @@ import {
 } from "../screens/main";
 import LoggedInNav from "./LoggedInNav";
 import LoggedOutNav from "./LoggedOutNav";
-import { Button, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ArrowLeft from "react-native-vector-icons/AntDesign";
 import { RecruitPageInfo } from "../screens/main/BottomTabs/MyChallenge/Recruit/RecruitPageInfo";
 import { BeforeStartPageInfo } from "../screens/main/BottomTabs/MyChallenge/BeforeStart/BeforeStartPageInfo";
+import { BirthDay } from "../screens/main/BirthDay";
 
 const Stack = createStackNavigator();
 
@@ -67,25 +68,44 @@ const MainNav = () => {
           {isUser ? (
             <Stack.Screen name="Home" component={LoggedInNav} />
           ) : (
-            <Stack.Screen
-              name="NickName"
-              component={NickName}
-              options={{
-                headerTitle: "회원가입",
-                headerTitleAlign: "center",
-                headerTitleStyle: { fontSize: 15, fontWeight: "900" },
-                headerLeft: () => (
-                  <ArrowLeft
-                    onPress={() => {
-                      setIsLoggedIn(false);
-                    }}
-                    name="arrowleft"
-                    size={25}
-                    style={{ marginLeft: 15 }}
-                  />
-                ),
-              }}
-            />
+            <>
+              <Stack.Screen
+                name="NickName"
+                component={NickName}
+                options={{
+                  headerTitle: "회원가입",
+                  headerTitleAlign: "center",
+                  headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+                  headerLeft: () => (
+                    <ArrowLeft
+                      onPress={() => {
+                        setIsLoggedIn(false);
+                      }}
+                      name="arrowleft"
+                      size={25}
+                      style={{ marginLeft: 15 }}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="BirthDay"
+                component={BirthDay}
+                options={{
+                  headerTitle: "회원가입",
+                  headerTitleAlign: "center",
+                  headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+                  headerLeft: () => (
+                    <ArrowLeft
+                      onPress={goBack}
+                      name="arrowleft"
+                      size={25}
+                      style={{ marginLeft: 15 }}
+                    />
+                  ),
+                }}
+              />
+            </>
           )}
 
           {/* 우측 상단 페이지들 */}
@@ -93,7 +113,7 @@ const MainNav = () => {
             name="Notifications"
             component={Notifications}
             options={{
-              presentation: "card",
+              presentation: "transparentModal",
               headerTitle: "알림",
               headerTitleAlign: "center",
               headerTitleStyle: { fontSize: 15, fontWeight: "900" },
@@ -116,7 +136,7 @@ const MainNav = () => {
             name="Detail"
             component={Detail}
             options={{
-              presentation: "card",
+              presentation: "transparentModal",
               headerTitle: "상세",
               headerTitleAlign: "center",
               headerTitleStyle: { fontSize: 15, fontWeight: "900" },
@@ -140,6 +160,7 @@ const MainNav = () => {
             name="SearchChallenge"
             component={SearchChallenge}
             options={{
+              presentation: "transparentModal",
               headerShadowVisible: false,
               headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
               headerLeft: () => (
@@ -152,6 +173,7 @@ const MainNav = () => {
             name="Record"
             component={Record}
             options={{
+              presentation: "transparentModal",
               headerTitle: "기록",
               headerTitleAlign: "center",
               headerTitleStyle: { fontSize: 15, fontWeight: "900" },
@@ -168,6 +190,7 @@ const MainNav = () => {
             name="ProgressDetailTopTab"
             component={ProgressDetailTopTab}
             options={{
+              presentation: "transparentModal",
               headerTitle: "제목", //서버데이터
               headerTitleAlign: "center",
               headerTitleStyle: { fontSize: 15, fontWeight: "900" },
@@ -190,6 +213,7 @@ const MainNav = () => {
             name="ProgressNotification"
             component={ProgressNotification}
             options={{
+              presentation: "transparentModal",
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
@@ -199,6 +223,7 @@ const MainNav = () => {
             name="BeforeStartPage"
             component={BeforeStartPage}
             options={{
+              presentation: "transparentModal",
               headerRight: () => (
                 <TouchableOpacity onPress={goToBeforeStartPageInfo}>
                   <Text style={{ color: "#054de4", fontSize: 16, marginRight: 15 }}>정보</Text>
@@ -213,6 +238,7 @@ const MainNav = () => {
             name="BeforeStartPageInfo"
             component={BeforeStartPageInfo}
             options={{
+              presentation: "transparentModal",
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
@@ -222,6 +248,7 @@ const MainNav = () => {
             name="RecruitPage"
             component={RecruitPage}
             options={{
+              presentation: "transparentModal",
               headerRight: () => (
                 <TouchableOpacity onPress={goToRecruitPageInfo}>
                   <Text style={{ color: "#054de4", fontSize: 16, marginRight: 15 }}>정보</Text>
@@ -236,6 +263,7 @@ const MainNav = () => {
             name="RecruitPageInfo"
             component={RecruitPageInfo}
             options={{
+              presentation: "transparentModal",
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
               ),
@@ -245,16 +273,18 @@ const MainNav = () => {
             name="RequestPage"
             component={RequestPage}
             options={{
+              presentation: "transparentModal",
               headerShadowVisible: false,
               headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
               headerRight: () => (
-                <Button
+                <TouchableOpacity
                   onPress={() => {
                     setCancelModal(true);
                   }}
-                  title="신청 취소"
-                  color="#054de4"
-                />
+                  style={{ marginRight: 20 }}
+                >
+                  <Text style={{ color: "#054de4" }}>신청 취소</Text>
+                </TouchableOpacity>
               ),
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />

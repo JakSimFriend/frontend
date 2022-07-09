@@ -8,10 +8,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-
 import styled from "styled-components/native";
-import Entypo from "react-native-vector-icons/Entypo";
-import Feather from "react-native-vector-icons/Feather";
+import Feather from "react-native-vector-icons/AntDesign";
 import * as Progress from "react-native-progress";
 import { useSetRecoilState } from "recoil";
 import { nextButtonAtom } from "../../../../atom";
@@ -204,8 +202,7 @@ export const ChallengeOpenOne = () => {
           </View>
           <View style={styles.guideView}>
             <Text style={[styles.guideText, { color: guideColor1 }]}>
-              <Entypo name="dot-single" />
-              최대 10자 이하만 사용할 수 있어요
+              · 최대 10자 이하만 사용할 수 있어요
             </Text>
             <Feather name="check" size={16} color={guideColor1 === BLACK ? RED : guideColor1} />
           </View>
@@ -228,8 +225,7 @@ export const ChallengeOpenOne = () => {
           </View>
           <View style={styles.guideView}>
             <Text style={[styles.guideText, { color: guideColor2 }]}>
-              <Entypo name="dot-single" />
-              어떻게 인증 사진을 찍어야 하는지 알려주시면 좋아요
+              · 어떻게 인증 사진을 찍어야 하는지 알려주시면 좋아요
             </Text>
           </View>
           <TagTitle1>
@@ -288,15 +284,13 @@ export const ChallengeOpenOne = () => {
           </View>
           <View style={styles.lastView}>
             <Text style={[styles.guideText, { color: guideColor3 }]}>
-              <Entypo name="dot-single" />
-              최대 4자 이하만 사용할 수 있어요
+              · 최대 4자 이하만 사용할 수 있어요
             </Text>
             <Feather name="check" size={16} color={guideColor3 === BLACK ? RED : guideColor3} />
           </View>
           <View style={styles.guideView}>
-            <Text style={[styles.guideText, { color: guideColor4 }]}>
-              <Entypo name="dot-single" />
-              영문, 특수문자, 띄어쓰기는 빼주세요
+            <Text style={[styles.guideText, { color: guideColor4, marginBottom:80 }]}>
+              · 영문, 특수문자, 띄어쓰기는 빼주세요
             </Text>
             <Feather name="check" size={16} color={guideColor4 === BLACK ? RED : guideColor4} />
           </View>

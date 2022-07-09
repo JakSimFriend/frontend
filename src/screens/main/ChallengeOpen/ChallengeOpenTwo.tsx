@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 import styled from "styled-components/native";
-import Entypo from "react-native-vector-icons/Entypo";
 import DropDownPicker from "react-native-dropdown-picker";
 import moment from "moment";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -145,20 +144,17 @@ export const ChallengeOpenTwo = () => {
         </View>
         <View style={styles.guideView}>
           <Text style={[styles.guideText, { color: GREY }]}>
-            <Entypo name="dot-single" />
-            도전 작심 기간은 2주 동안으로 고정되어 있어요
+            · 도전 작심 기간은 2주 동안으로 고정되어 있어요
           </Text>
         </View>
         <View style={styles.guideView}>
           <Text style={[styles.guideText, { color: GREY }]}>
-            <Entypo name="dot-single" />
-            시작 날짜까지 4명이 모이지 않으면 시작할 수 없어요
+            · 시작 날짜까지 4명이 모이지 않으면 시작할 수 없어요
           </Text>
         </View>
         <View style={styles.guideView}>
           <Text style={[styles.guideText, { color: GREY }]}>
-            <Entypo name="dot-single" />
-            시작 날짜 이후에는 추가 인원을 받을 수 없어요
+            · 시작 날짜 이후에는 추가 인원을 받을 수 없어요
           </Text>
         </View>
         <VerifyTitle>
@@ -348,7 +344,8 @@ const styles = StyleSheet.create({
   dropDownContainerStyle: {
     width: 110,
     marginTop: 40,
-    borderWidth: 0,
+    borderWidth: 1,
+    borderColor:"#c4c7cc",
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     overflow: "visible",

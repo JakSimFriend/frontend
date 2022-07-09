@@ -169,7 +169,7 @@ const ChallengeBox = styled.View`
   padding: 20px 10px;
   background-color: #f6f5fb;
   border-radius: 12px;
-  margin: 15px 10px 100px 5px;
+  margin: 15px 10px 30px 5px;
 `;
 const ChallengeTitle = styled.Text`
   font-size: 18px;
@@ -219,7 +219,7 @@ const InfoText = styled.Text`
 
 const styles = StyleSheet.create({
   textWrapper: {
-    marginTop: 40,
+    marginTop: 20,
     flexDirection: "row",
     paddingLeft: 10,
   },

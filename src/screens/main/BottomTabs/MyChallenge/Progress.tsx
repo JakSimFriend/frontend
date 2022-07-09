@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Animated,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -42,7 +43,7 @@ import moment from "moment";
 // };
 // type NavigationProps = StackNavigationProp<StackParamList>;
 
-export const Progress = () => {
+export const Progress = React.memo(() => {
   const MYCOLOR = "#5266E8",
     OTHERSCOLOR = "#BFC7D7";
 
@@ -90,10 +91,9 @@ export const Progress = () => {
   };
 
   //바텀시트 이모티콘
-  const emoticons = ["😊", "😄", "🙁", "😂", " 😲", "😘"];
+  const emoticons = ["😊", "😄", "🙁", "😂", "😲", "😘"];
   const emoticonDetail = ["기쁨", "웃음", "불만", "미안", "놀람", "멋져"];
   const [emoticonIndex, setEmoticonIndex] = useState(10);
-
   return (
     <ProgressWrapper>
       <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
@@ -110,13 +110,11 @@ export const Progress = () => {
           <>
             {progressData.map((item, index) => {
               const [isCollapsed, setIsCollapsed] = useState(true); //accordion클릭이벤트
+              const Accordion = () => {
+                setIsCollapsed(!isCollapsed);
+              };
               return (
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    setIsCollapsed(!isCollapsed);
-                  }}
-                  key={index}
-                >
+                <TouchableWithoutFeedback onPress={Accordion} key={index}>
                   <View style={styles.accordionWrapper}>
                     <View style={styles.titleWrapper}>
                       <Text style={styles.accordionTitle}>{item.title}</Text>
@@ -364,7 +362,7 @@ export const Progress = () => {
       <ReactionModal />
     </ProgressWrapper>
   );
-};
+});
 
 const ProgressWrapper = styled.View`
   flex: 1;
@@ -374,7 +372,7 @@ const ChallengeBox = styled.View`
   padding: 20px 10px;
   background-color: #f6f5fb;
   border-radius: 12px;
-  margin: 15px 10px 100px 5px;
+  margin: 15px 10px 30px 5px;
 `;
 const ChallengeTitle = styled.Text`
   font-size: 18px;
@@ -437,7 +435,7 @@ const TextOne = styled.Text`
 
 const styles = StyleSheet.create({
   textWrapper: {
-    marginTop: 40,
+    marginTop: 20,
     flexDirection: "row",
     paddingLeft: 10,
   },
@@ -542,7 +540,7 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    backgroundColor: "#1016474D",
+    backgroundColor: `${Platform.OS === "ios" ? "#1016474D" : "#1016471D"}`,
     justifyContent: "flex-end",
     marginBottom: -280,
   },
@@ -594,13 +592,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 10,
     borderRadius: 15,
-    marginHorizontal: 6,
+    marginHorizontal: 3,
   },
   emoticonSelectedWrapper: {
     backgroundColor: "#054DE4",
     padding: 10,
     borderRadius: 15,
-    marginHorizontal: 6,
+    marginHorizontal: 3,
   },
   emoticon: {
     fontSize: 20,
