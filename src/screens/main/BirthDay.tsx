@@ -24,7 +24,7 @@ export const BirthDay = () => {
     setDatePickerVisibility(false);
   };
   const handleDateConfirm = (date: Date) => {
-    setDate(moment(date).format(`YYYY월-MM-DD`));
+    setDate(moment(date).format(`YYYY년 MM월 DD일`));
     setDateSelected(true);
     hideTimePicker();
   };

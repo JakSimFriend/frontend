@@ -25,6 +25,7 @@ import {
   BeforeStartPage,
   ProgressNotification,
   ProgressDetailTopTab,
+  ProgressCertified,
 } from "../screens/main";
 import LoggedInNav from "./LoggedInNav";
 import LoggedOutNav from "./LoggedOutNav";
@@ -212,6 +213,16 @@ const MainNav = () => {
           <Stack.Screen
             name="ProgressNotification"
             component={ProgressNotification}
+            options={{
+              presentation: "transparentModal",
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="ProgressCertified"
+            component={ProgressCertified}
             options={{
               presentation: "transparentModal",
               headerLeft: () => (

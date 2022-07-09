@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
-import { HomeCalendarBlue, HomeClockBlue, HomeUserBlue, HomeCamera } from "../../../../../components/TabIcon";
+import {
+  HomeCalendarBlue,
+  HomeClockBlue,
+  HomeUserBlue,
+  HomeCamera,
+} from "../../../../../components/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
 import { a } from "../../../../../assets/images";
 import { GradientButtons } from "../../../../../components/GradientButtons";
+import { useNavigation } from "@react-navigation/native";
 
 const DetailInfo = { title: "제목", startDate: "2022-07-05", schedule: "1주일에 2회", members: 5 };
 const markedDate = [
@@ -22,10 +28,11 @@ const markedDate = [
 // startDate이 오늘 이후인 data만 fetch
 export const ProgressPage = () => {
   const [certified, setCertified] = useState(false); //data
+  const navigation = useNavigation();
+  const goToCertifiedPage = () => navigation.navigate("ProgressCertified");
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
-
         {/* 캘린더 */}
         <Calendar
           firstDay={1}
@@ -131,12 +138,7 @@ export const ProgressPage = () => {
         </OpenChallenge>
       ) : (
         <OpenChallenge>
-          <GradientButtons
-            onPress={() => {
-              console.warn("인증 페이지로 이동하기~~");
-            }}
-            Title="사진으로 인증하기"
-          />
+          <GradientButtons onPress={goToCertifiedPage} Title="사진으로 인증하기" />
         </OpenChallenge>
       )}
     </Wrapper>
