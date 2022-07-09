@@ -7,12 +7,10 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Modal,
 } from "react-native";
 import styled from "styled-components/native";
 import { useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserAtom } from "../../../atom";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { isUserAtom } from "../../../atom";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import NickNameModal1 from "../../components/organisms/NickNameModal1";
@@ -77,8 +75,6 @@ export const NickName = () => {
     setGuideColor3(GREY); // 닉네임 value 변경되는 경우 중복 확인 다시.
   };
 
-  const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-
   const [modalVisible1, setModalVisible1] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -112,11 +108,8 @@ export const NickName = () => {
 
   return (
     <Wrapper>
-      <TouchableOpacity onPress={() => setIsLoggedIn(false)}>
-        <Ionicons name="arrow-back" size={24} color={BLACK} />
-      </TouchableOpacity>
       <ScrollView>
-        <Text style={styles.title}>닉네임을 적어주세요</Text>
+        <Text style={styles.title}>닉네임을 적어주세요!</Text>
         <Text style={styles.title2}>친구들이 보게 될 닉네임이에요</Text>
         <View style={styles.nickNameView}>
           <TextInput
@@ -216,15 +209,15 @@ function checkGuide2(currentNickName: string) {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 80px 25px 0 25px;
+  padding: 0px 25px;
 `;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 34,
+    fontSize: 30,
     color: "#101647",
     fontWeight: "400",
-    marginTop: 62,
+    marginTop: 72,
   },
   title2: {
     fontSize: 17,

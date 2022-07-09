@@ -111,7 +111,7 @@ export const ProgressNotification = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 100px 25px 0 25px;
+  padding: 50px 25px 0 25px;
 `;
 const EmptyText = styled.Text`
   font-size: 16px;

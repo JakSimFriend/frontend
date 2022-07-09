@@ -19,7 +19,11 @@ export const Challenges = () => {
       ) : (
         <>
           <ChallegeHeader>추천 챌린지</ChallegeHeader>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={{ marginLeft: 15 }}
+          >
             {ChallengeData[categoryIndex].map((item, index) => {
               //선택된 categoryindex에 따라 challenge데이터 불러오기:
               const Members = [1, 2, 3, 4, 5, 6];
@@ -75,7 +79,7 @@ export const Challenges = () => {
 };
 
 const ChallegeHeader = styled.Text`
-  margin: 5px 0 0 12px;
+  margin: 5px 0 0 18px;
   font-size: 20px;
   font-weight: 600;
 `;
@@ -83,8 +87,7 @@ const ChallengeBox = styled.View`
   padding: 20px 10px;
   background-color: #f6f5fb;
   border-radius: 12px;
-  margin: 15px 10px 100px 5px;
-  width: 45%;
+  margin: 15px 10px 0px 5px;
 `;
 const ChallengeTitle = styled.Text`
   font-size: 18px;
@@ -96,7 +99,7 @@ const ChallengeCategory = styled.View`
   border-radius: 15px;
   padding: 8px 0;
   margin: 6px 0;
-  width: 50px;
+  width: 50%;
 `;
 const ChallengeCategoryText = styled.Text`
   text-align: center;

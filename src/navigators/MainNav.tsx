@@ -41,6 +41,7 @@ const Stack = createStackNavigator();
 const MainNav = () => {
   const isUser = useRecoilValue(isUserAtom);
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
+  const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const nextButtonDisable = useRecoilValue(nextButtonAtom);
   const submitButtonDisable = useRecoilValue(submitButtonAtom);
   const setModalVisible = useSetRecoilState(createdModalAtom);
@@ -68,7 +69,23 @@ const MainNav = () => {
           {isUser ? (
             <Stack.Screen name="Home" component={LoggedInNav} />
           ) : (
-            <Stack.Screen name="NickName" component={NickName} />
+            <Stack.Screen
+              name="NickName"
+              component={NickName}
+              options={{
+                headerTitle: "회원가입",
+                headerLeft: () => (
+                  <ArrowLeft
+                    onPress={() => {
+                      setIsLoggedIn(false);
+                    }}
+                    name="arrowleft"
+                    size={25}
+                    style={{ marginLeft: 15 }}
+                  />
+                ),
+              }}
+            />
           )}
 
           {/* 우측 상단 페이지들 */}
@@ -105,7 +122,13 @@ const MainNav = () => {
             component={Search}
             options={{
               presentation: "transparentModal",
-              headerShown: false,
+              headerTintColor: "#000000",
+              headerShadowVisible: false,
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
+              headerShown: true,
+              headerTransparent: false,
             }}
           />
           <Stack.Screen
@@ -140,7 +163,12 @@ const MainNav = () => {
             options={{
               headerTitle: "제목", //서버데이터
               headerLeft: () => (
-                <ArrowLeft onPress={goToMyChallenge} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <ArrowLeft
+                  onPress={goToMyChallenge}
+                  name="arrowleft"
+                  size={25}
+                  style={{ marginLeft: 15 }}
+                />
               ),
               headerRight: () => (
                 <TouchableOpacity onPress={goToProgressNotification} style={{ marginRight: 20 }}>

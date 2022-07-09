@@ -12,5 +12,5 @@ export const ProgressDetailTopTab = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding-top: 80px;
+  padding-top: 50px;
 `;

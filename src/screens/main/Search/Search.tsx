@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
-import { BackIcon, SearchIcon } from "../../../components/TabIcon";
+import { SearchIcon } from "../../../components/TabIcon";
 import { GradientButtons } from "../../../components/GradientButtons";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../components/TabIcon";
 import moment from "moment";
@@ -73,21 +73,8 @@ export const Search = () => {
   const [searchInput, setSearchInput] = useState(""); //data(검색input)
   const goToOpenChallenge = () => navigation.navigate("Category");
   const DownValue = useState(new Animated.Value(0))[0];
-  const goBackHome = () => {
-    Animated.timing(DownValue, {
-      toValue: 70,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-    setTimeout(() => {
-      navigation.goBack();
-    }, 100);
-  };
   return (
     <Wrapper>
-      <BackButton onPress={goBackHome}>
-        <BackIcon />
-      </BackButton>
       <Animated.View
         style={{
           top: DownValue,
@@ -134,7 +121,7 @@ export const Search = () => {
           })
           .map((item, index) => {
             return (
-              <>
+              <View key={index}>
                 {categoryIndex === 0 || categoryIndex === item.categoryIndex ? (
                   <TouchableOpacity
                     onPress={() => {
@@ -146,7 +133,6 @@ export const Search = () => {
                         members: item.members,
                       });
                     }}
-                    key={index}
                   >
                     <View style={isStarted ? styles.startedSearchBox : styles.searchBox}>
                       <View style={styles.searchHeader}>
@@ -177,12 +163,12 @@ export const Search = () => {
                 ) : (
                   <></>
                 )}
-              </>
+              </View>
             );
           })}
 
-          {/* 카테고리 비었을시 보여줄 컴포넌트 */}
-          {/* <>
+        {/* 카테고리 비었을시 보여줄 컴포넌트 */}
+        {/* <>
             <ScrollView>
               <EmptyBox>
                 <EmptyBoxText>
@@ -268,11 +254,6 @@ const styles = StyleSheet.create({
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  margin-top: 50px;
-`;
-const BackButton = styled.TouchableOpacity`
-  padding-left: 18px;
-  width: 50px;
 `;
 const InputWrapper = styled.TouchableOpacity`
   align-items: flex-start;

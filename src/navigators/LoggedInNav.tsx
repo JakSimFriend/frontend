@@ -13,7 +13,7 @@ const LoggedInNav = () => {
         initialRouteName="홈"
         screenOptions={{
           headerTitle: () => false,
-          headerTransparent: Platform.OS === "android" ? true : false,
+          headerShown: false,
           tabBarActiveTintColor: "#054DE4",
           tabBarInactiveTintColor: "#647498",
           tabBarStyle: { backgroundColor: "#ffffff" },

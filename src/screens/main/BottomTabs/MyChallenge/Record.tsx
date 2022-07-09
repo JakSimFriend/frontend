@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { ScrollView, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
 import { recieveModalAtom } from "../../../../../atom";
@@ -10,7 +10,7 @@ import RecieveModal from "../../../../components/organisms/RecieveModal";
 const data = [
   {
     title: "제목1",
-    category: "시사",
+    category: "전공 기초",
     date: "2022년 6월 15일",
     percentage: "60%",
   },
@@ -63,7 +63,9 @@ export const Record = () => {
                     <Text style={{ color: "#ffffff" }}>보상 받음</Text>
                   </RecieveButton>
                 ) : (
-                  <GradientButtons onPress={보상받기} Title="보상 받기" />
+                  <View style={{ marginLeft: 20 }}>
+                    <GradientButtons onPress={보상받기} Title="보상 받기" />
+                  </View>
                 )}
               </Body>
             </Box>
@@ -95,7 +97,7 @@ const Number = styled.Text`
 const Box = styled.TouchableOpacity`
   background-color: #f6f5fb;
   margin-top: 20px;
-  padding: 25px 25px 0 25px;
+  padding: 25px 25px 15px 25px;
   border-radius: 15px;
 `;
 const Header = styled.View`
@@ -107,10 +109,12 @@ const Title = styled.Text`
   font-weight: 600;
 `;
 const CategoryButton = styled.View`
-  padding: 5px 14px;
+  padding: 6px 0;
   background-color: #ffffff;
   border-radius: 15px;
-  margin: -3px 0 0 20px;
+  margin-left: 20px;
+  width: 30%;
+  align-items: center;
 `;
 const Category = styled.Text`
   color: #6f81a9;

@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 import styled from "styled-components/native";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -155,13 +163,10 @@ export const ChallengeOpenOne = () => {
     }
   };
 
-  const infoRef = useRef<TextInput | null>(null);
-  const tagOneRef = useRef<TextInput | null>(null);
-  const tagTwoRef = useRef<TextInput | null>(null);
-  const tagThreeRef = useRef<TextInput | null>(null);
-  // const onNext = (nextOne: RefObject<HTMLInputElement>): void => {
-  //   nextOne.current?.focus();
-  // };
+  const infoRef = useRef<TextInput | any>(null);
+  const tagOneRef = useRef<TextInput | any>(null);
+  const tagTwoRef = useRef<TextInput | any>(null);
+  const tagThreeRef = useRef<TextInput | any>(null);
   useEffect(() => {
     nextButtonDisable(true);
   }, []);
@@ -177,7 +182,7 @@ export const ChallengeOpenOne = () => {
         }}
         keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
       >
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.header}>도전작심을 설명해주세요</Text>
           <SubTitle>제목</SubTitle>
           <View style={styles.textInputView}>
@@ -233,10 +238,10 @@ export const ChallengeOpenOne = () => {
           <TagTitle2>다른 작심친구들이 도전작심에 대해 알기 쉬워질 거에요</TagTitle2>
           <Tag>태그</Tag>
           <View style={styles.textInputView}>
-            <TextInput
+            <TagsTextInput
               ref={tagOneRef}
               placeholderTextColor={GREY}
-              style={[styles.tagsTextInput, { borderColor: borderColor3 }]}
+              style={{ borderColor: borderColor3 }}
               value={tag1}
               onChangeText={setTag1}
               onChange={(e) => {
@@ -249,10 +254,10 @@ export const ChallengeOpenOne = () => {
               autoCorrect={false}
               spellCheck={false}
             />
-            <TextInput
+            <TagsTextInput
               ref={tagTwoRef}
               placeholderTextColor={GREY}
-              style={[styles.tagsTextInput, { borderColor: borderColor4 }]}
+              style={{ borderColor: borderColor4 }}
               value={tag2}
               onChangeText={setTag2}
               onChange={(e) => {
@@ -265,10 +270,10 @@ export const ChallengeOpenOne = () => {
               autoCorrect={false}
               spellCheck={false}
             />
-            <TextInput
+            <TagsTextInput
               ref={tagThreeRef}
               placeholderTextColor={GREY}
-              style={[styles.tagsTextInput, { borderColor: borderColor5 }]}
+              style={{ borderColor: borderColor5 }}
               value={tag3}
               onChangeText={setTag3}
               onChange={(e) => {
@@ -309,7 +314,7 @@ const checkGuide = (tags: string) => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 0 25px;
+  padding: 0 5%;
 `;
 const SubTitle = styled.Text`
   color: grey;
@@ -333,7 +338,14 @@ const Tag = styled.Text`
   font-size: 15px;
   margin-top: 30px;
 `;
-
+const TagsTextInput = styled.TextInput`
+  margin: 10px 5px 0 0;
+  padding: 15px;
+  background-color: #f5f5fb;
+  border-radius: 10px;
+  border-width: 1px;
+  width: 30%;
+`;
 const styles = StyleSheet.create({
   progressBar: {
     marginHorizontal: -25,
@@ -349,6 +361,7 @@ const styles = StyleSheet.create({
   textInputView: {
     flexDirection: "row",
     marginBottom: 10,
+    justifyContent: "center",
   },
   titleTextInput: {
     paddingHorizontal: 16,
@@ -368,17 +381,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     flex: 1,
-  },
-  tagsTextInput: {
-    marginTop: 10,
-    marginRight: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    color: "#101647",
-    backgroundColor: "#F5F5FB",
-    borderRadius: 10,
-    borderWidth: 1,
-    width: 100,
   },
   guideView: {
     flexDirection: "row",

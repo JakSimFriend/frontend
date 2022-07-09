@@ -1,7 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StateCategoryNav } from "./StateCategoryNav";
-import { State } from "../../../screens/main";
+import { MyState, State } from "../../../screens/main";
 import { useNavigation } from "@react-navigation/native";
 import { Text, TouchableOpacity } from "react-native";
 
@@ -21,7 +20,7 @@ export const StateNav = () => {
     >
       <Stack.Screen
         name="State"
-        component={State}
+        component={MyState}
         options={{
           headerTitle: "현황",
           headerRight: () => (
@@ -31,7 +30,6 @@ export const StateNav = () => {
           ),
         }}
       />
-      <Stack.Screen name="StateCategoryNav" component={StateCategoryNav} />
     </Stack.Navigator>
   );
 };

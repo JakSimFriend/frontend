@@ -95,7 +95,7 @@ export const RecruitPageInfo = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #f6f5fb;
-  padding: 100px 20px 0 20px;
+  padding: 50px 20px 0 20px;
 `;
 const Title = styled.Text`
   font-size: 22px;

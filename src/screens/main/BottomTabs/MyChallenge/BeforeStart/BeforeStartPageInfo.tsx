@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { StatusBar, Text } from "react-native";
 import styled from "styled-components/native";
 import moment from "moment";
 import { GradientButtons } from "../../../../../components/GradientButtons";
@@ -29,6 +29,7 @@ export const BeforeStartPageInfo = () => {
   const BeforeStartWaitingInfo = useRecoilValue(BeforeStartWaitingInfoAtom);
   return (
     <Wrapper>
+      <StatusBar barStyle="dark-content" backgroundColor="#b32c2c" />
       <Title>{BeforeStartTitleInfo}</Title>
       <Content>{BeforeStartContentInfo}</Content>
       <Infos>
@@ -95,7 +96,7 @@ export const BeforeStartPageInfo = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #f6f5fb;
-  padding: 100px 20px 0 20px;
+  padding: 50px 20px 0 20px;
 `;
 const Title = styled.Text`
   font-size: 22px;

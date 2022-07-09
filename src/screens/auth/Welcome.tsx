@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, SafeAreaView, View } from "react-native";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
 import { isLoggedInAtom } from "../../../atom";
@@ -15,12 +15,20 @@ const Welcome = () => {
 
   return (
     <Wrapper>
-      <Title>어서오세요!</Title>
-      <SubTitle>작심친구입니다!</SubTitle>
-      <Detail>함께 챌린지할 친구를 찾아봐요!</Detail>
-      <GradientButtons onPress={onDone} Title="카카오 계정으로 시작하기" />
-      <GradientButtons onPress={onDone} Title="구글 계정으로 시작하기" />
-      <GradientButtons onPress={onDone} Title="애플 계정으로 시작하기" />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Title>어서오세요!</Title>
+        <SubTitle>작심친구입니다!</SubTitle>
+        <Detail>함께 챌린지할 친구를 찾아봐요!</Detail>
+        <ButtonWrapper>
+          <GradientButtons onPress={onDone} Title="카카오 계정으로 시작하기" />
+          <View style={{ marginTop: 10 }}>
+            <GradientButtons onPress={onDone} Title="구글 계정으로 시작하기" />
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <GradientButtons onPress={onDone} Title="애플 계정으로 시작하기" />
+          </View>
+        </ButtonWrapper>
+      </SafeAreaView>
     </Wrapper>
   );
 };
@@ -44,4 +52,11 @@ const Detail = styled.Text`
   padding-top: 20px;
   padding-bottom: 200px;
   /* padding-bottom: ${Platform.OS === "ios" ? 250 : 150}; */
+`;
+const ButtonWrapper = styled.View`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  align-self: center;
+  margin-bottom: 20%;
 `;

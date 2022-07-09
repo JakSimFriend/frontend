@@ -34,7 +34,7 @@ export const Home = React.memo(() => {
         duration: 200,
         useNativeDriver: false,
       }).start();
-    }, 250);
+    }, 400);
   };
 
   // 카테고리 애니메이션
@@ -107,19 +107,19 @@ export const Home = React.memo(() => {
 const HomeWrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding-left: 15px;
   height: 100%;
 `;
 const Title = styled.Text`
   color: #000000;
   font-size: 20px;
   font-weight: 400;
-  margin: 10px 0 0 15px;
+  margin: 10px 0px 0 25px;
 `;
 const InputWrapper = styled.TouchableOpacity`
   align-items: flex-start;
   flex-direction: row;
   margin-top: 30px;
+  margin-left: 10px;
 `;
 const InputBox = styled.View`
   background-color: #f6f5fb;
@@ -139,5 +139,5 @@ const OpenChallenge = styled.View`
   width: 70%;
   position: absolute;
   bottom: 0;
+  margin-bottom: 20px;
 `;
-

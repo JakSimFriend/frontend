@@ -72,7 +72,6 @@ const InfoWrapper = styled.View`
   justify-content: center;
   flex-direction: row;
   margin-top: 25px;
-  margin-left: 10px;
 `;
 const StatTitle = styled.Text`
   font-size: 18px;
@@ -95,7 +94,6 @@ const Categories = styled.View`
 const Left = styled.View`
   flex-direction: row;
 `;
-
 const ImageWrapper = styled.View`
   padding: 10px;
   border-radius: 10px;
@@ -112,12 +110,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    marginTop: 10,
+    marginTop: 20,
   },
   text: {
     color: "#ffffff",
     marginBottom: 5,
-    marginRight: 30,
   },
   number: {
     fontSize: 45,

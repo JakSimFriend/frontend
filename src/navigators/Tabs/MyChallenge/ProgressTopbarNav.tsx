@@ -17,8 +17,7 @@ export const ProgressTopbarNav = () => {
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          marginRight: 230,
-          marginTop: 10,
+          // marginRight: 230,
         },
       }}
     >

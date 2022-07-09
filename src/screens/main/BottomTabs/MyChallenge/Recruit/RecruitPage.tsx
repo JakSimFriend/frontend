@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import styled from "styled-components/native";
-import { HomeCalendar, HomeClock, HomeUser, HomeCameraBlue } from "../../../../../components/TabIcon";
+import {
+  HomeCalendar,
+  HomeClock,
+  HomeUser,
+  HomeCameraBlue,
+} from "../../../../../components/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
@@ -142,10 +147,11 @@ export const RecruitPage = ({ route }: RouteParams) => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 80px 25px 0 25px;
+  padding: 50px 4% 0 4%;
 `;
 const Waitings = styled.View`
   flex-direction: row;
+  padding: 0;
 `;
 const WaitingWrapper = styled.View`
   background-color: #f6f5fb;

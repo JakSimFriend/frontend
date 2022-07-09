@@ -146,7 +146,7 @@ export const ProgressPage = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 0 25px;
+  padding: 0 4%;
 `;
 const Friends = styled.View`
   flex-direction: column;

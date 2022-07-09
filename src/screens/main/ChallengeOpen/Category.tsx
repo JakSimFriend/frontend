@@ -10,9 +10,9 @@ export const Category = () => {
       <Progress.Bar style={styles.progressBar} progress={0} width={390} height={2} />
       <Title>도전작심 카테고리를 골라주세요</Title>
       <SubTitle>한 카테고리만 선택해 주세요!</SubTitle>
-      
+
       {/* 헤더 나중에 홈화면 헤더랑 분리해야함 */}
-      <CategoryHeader /> 
+      <CategoryHeader />
     </Wrapper>
   );
 };
@@ -20,15 +20,16 @@ export const Category = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding-left: 18px;
 `;
 const Title = styled.Text`
   font-size: 20px;
   margin-top: 35px;
   font-weight: 600;
+  margin-left: 7%;
 `;
 const SubTitle = styled.Text`
   margin-top: 10px;
+  margin-left: 7%;
   font-size: 12px;
 `;
 const styles = StyleSheet.create({

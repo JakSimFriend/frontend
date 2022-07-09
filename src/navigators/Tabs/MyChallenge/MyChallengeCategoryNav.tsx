@@ -16,7 +16,7 @@ export const MyChallengeCategoryNav = () => {
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          marginRight: 220,
+          // marginRight: 220,
         },
       }}
     >

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Dimensions,
   Platform,
   Pressable,
   StyleSheet,
@@ -89,17 +90,16 @@ export const ChallengeOpenTwo = () => {
   useEffect(() => {
     submitButtonDisable(true);
   }, []);
-
+  const Width = Dimensions.get("window").width;
   // CreatedModalVisible
   const modalVisible = useRecoilValue(createdModalAtom);
-
   return (
     <TouchableWithoutFeedback onPress={hideDropDown}>
       <Wrapper>
-        <Progress.Bar style={styles.progressBar} progress={endProgress} width={390} height={2} />
+        <Progress.Bar style={styles.progressBar} progress={endProgress} width={Width} height={2} />
         <Text style={styles.title}>도전작심 시간을 정해주세요</Text>
         <Text style={styles.subTitle}>모집 기간을 고려해서 정해주세요</Text>
-        <View style={styles.textInputView}>
+        <View style={styles.textInputOneView}>
           {Platform.OS === "ios" ? (
             <TouchableOpacity
               onPress={() => {
@@ -109,10 +109,13 @@ export const ChallengeOpenTwo = () => {
             >
               <TextInput
                 value={startDate}
-                style={styles.startInput}
+                style={[styles.startInput, { width: "100%" }]}
                 placeholder="시작 날짜"
                 placeholderTextColor={"#6F81A9"}
                 editable={false}
+                onSubmitEditing={() => {
+                  console.warn("끝");
+                }}
               />
             </TouchableOpacity>
           ) : (
@@ -248,7 +251,7 @@ export const ChallengeOpenTwo = () => {
           mode="time"
           onConfirm={handleTimeConfirm}
           onCancel={hideTimePicker}
-          modalStyleIOS={{ marginBottom: 250, paddingHorizontal: 40 }}
+          modalStyleIOS={{ marginBottom: "50%", paddingHorizontal: "5%" }}
           locale="en_GB"
           confirmTextIOS="시간 설정하기"
         />
@@ -261,7 +264,7 @@ export const ChallengeOpenTwo = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 0px 25px;
+  padding: 0px 5%;
 `;
 const VerifyTitle = styled.Text`
   margin-top: 40px;
@@ -272,10 +275,9 @@ const VerifyBlue = styled.Text`
   font-weight: 300;
   color: blue;
 `;
-
 const styles = StyleSheet.create({
   progressBar: {
-    marginHorizontal: -25,
+    marginHorizontal: -20,
     borderColor: "#fff",
   },
   title: {
@@ -291,29 +293,34 @@ const styles = StyleSheet.create({
   textInputView: {
     flexDirection: "row",
     marginBottom: 10,
-    width: 115,
+    width: "35%",
+  },
+  textInputOneView: {
+    justifyContent: "center",
+    flexDirection: "row",
+    marginBottom: 10,
   },
   startInput: {
+    textAlign: "center",
     paddingVertical: 15,
-    paddingHorizontal: 10,
+    paddingHorizontal: "12%",
     color: "#101647",
     backgroundColor: "#F5F5FB",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     borderWidth: 0.2,
     marginBottom: 20,
-    width: 170,
   },
   endInput: {
+    textAlign: "center",
     paddingVertical: 15,
-    paddingHorizontal: 10,
+    paddingHorizontal: "12%",
     color: "#101647",
     backgroundColor: "#BFC7D7",
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
     borderWidth: 0.2,
     marginBottom: 20,
-    width: 170,
   },
   guideView: {
     flexDirection: "row",
