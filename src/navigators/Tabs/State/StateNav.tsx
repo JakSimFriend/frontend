@@ -23,9 +23,11 @@ export const StateNav = () => {
         component={MyState}
         options={{
           headerTitle: "현황",
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontSize: 15, fontWeight: "900" },
           headerRight: () => (
             <TouchableOpacity onPress={goToDetail}>
-              <Text>상세</Text>
+              <Text style={{ color: "#054de4" }}>상세</Text>
             </TouchableOpacity>
           ),
         }}

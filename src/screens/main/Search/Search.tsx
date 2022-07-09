@@ -258,7 +258,7 @@ const Wrapper = styled.View`
 const InputWrapper = styled.TouchableOpacity`
   align-items: flex-start;
   flex-direction: row;
-  margin-top: 15px;
+  margin-top: 5px;
   padding-left: 10px;
 `;
 const InputBox = styled.TextInput`

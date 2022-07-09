@@ -22,7 +22,7 @@ export const Challenges = () => {
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            style={{ marginLeft: 15 }}
+            style={{ marginLeft: 15, marginBottom: 80 }}
           >
             {ChallengeData[categoryIndex].map((item, index) => {
               //선택된 categoryindex에 따라 challenge데이터 불러오기:

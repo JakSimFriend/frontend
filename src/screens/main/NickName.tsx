@@ -108,7 +108,7 @@ export const NickName = () => {
 
   return (
     <Wrapper>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>닉네임을 적어주세요!</Text>
         <Text style={styles.title2}>친구들이 보게 될 닉네임이에요</Text>
         <View style={styles.nickNameView}>

@@ -14,7 +14,7 @@ import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIco
 import { BeforeStartData, progressData } from "./ChallengeData";
 import Collapsible from "react-native-collapsible";
 import * as ProgressBar from "react-native-progress";
-import Entypo from "react-native-vector-icons/Entypo";
+import Arrow from "react-native-vector-icons/FontAwesome";
 import { GradientButtons } from "../../../../components/GradientButtons";
 import ReactionModal from "../../../../components/organisms/ReactionModal";
 import { useSetRecoilState } from "recoil";
@@ -122,9 +122,9 @@ export const Progress = () => {
                       <Text style={styles.accordionTitle}>{item.title}</Text>
                       <View style={styles.dropdownButton}>
                         {!isCollapsed ? (
-                          <Entypo name="chevron-up" size={20} />
+                          <Arrow name="chevron-up" size={15} />
                         ) : (
-                          <Entypo name="chevron-down" size={20} />
+                          <Arrow name="chevron-down" size={15} />
                         )}
                       </View>
                     </View>
@@ -146,10 +146,7 @@ export const Progress = () => {
                       const icon = [a, b, c, d, e, f];
                       return (
                         <View key={index}>
-                          <Collapsible
-                            collapsed={isCollapsed}
-                            style={styles.innerDataWrapper}
-                          >
+                          <Collapsible collapsed={isCollapsed} style={styles.innerDataWrapper}>
                             <View style={styles.innerData}>
                               <View style={styles.pictureWrapper}>
                                 <Logo

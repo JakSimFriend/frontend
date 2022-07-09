@@ -23,7 +23,6 @@ import {
   Detail,
   RecruitPage,
   BeforeStartPage,
-  ProgressPage,
   ProgressNotification,
   ProgressDetailTopTab,
 } from "../screens/main";
@@ -34,7 +33,6 @@ import { useNavigation } from "@react-navigation/native";
 import ArrowLeft from "react-native-vector-icons/AntDesign";
 import { RecruitPageInfo } from "../screens/main/BottomTabs/MyChallenge/Recruit/RecruitPageInfo";
 import { BeforeStartPageInfo } from "../screens/main/BottomTabs/MyChallenge/BeforeStart/BeforeStartPageInfo";
-import Bell from "react-native-vector-icons/AntDesign";
 
 const Stack = createStackNavigator();
 
@@ -74,6 +72,8 @@ const MainNav = () => {
               component={NickName}
               options={{
                 headerTitle: "회원가입",
+                headerTitleAlign: "center",
+                headerTitleStyle: { fontSize: 15, fontWeight: "900" },
                 headerLeft: () => (
                   <ArrowLeft
                     onPress={() => {
@@ -95,14 +95,17 @@ const MainNav = () => {
             options={{
               presentation: "card",
               headerTitle: "알림",
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerRight: () => (
-                <Button
+                <TouchableOpacity
                   onPress={() => {
                     console.warn("전부삭제~");
                   }}
-                  title="전부 삭제"
-                  color="#054de4"
-                />
+                  style={{ marginRight: 20 }}
+                >
+                  <Text style={{ color: "#054de4" }}>전부 삭제</Text>
+                </TouchableOpacity>
               ),
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
@@ -115,6 +118,8 @@ const MainNav = () => {
             options={{
               presentation: "card",
               headerTitle: "상세",
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
             }}
           />
           <Stack.Screen
@@ -148,6 +153,8 @@ const MainNav = () => {
             component={Record}
             options={{
               headerTitle: "기록",
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerTransparent: false,
               headerShadowVisible: false,
               headerLeft: () => (
@@ -162,6 +169,8 @@ const MainNav = () => {
             component={ProgressDetailTopTab}
             options={{
               headerTitle: "제목", //서버데이터
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerLeft: () => (
                 <ArrowLeft
                   onPress={goToMyChallenge}
@@ -172,7 +181,7 @@ const MainNav = () => {
               ),
               headerRight: () => (
                 <TouchableOpacity onPress={goToProgressNotification} style={{ marginRight: 20 }}>
-                  <Text>알림</Text>
+                  <Text style={{ color: "#054de4" }}>알림</Text>
                 </TouchableOpacity>
               ),
             }}
@@ -192,7 +201,7 @@ const MainNav = () => {
             options={{
               headerRight: () => (
                 <TouchableOpacity onPress={goToBeforeStartPageInfo}>
-                  <Text style={{ color: "#000000", fontSize: 16, marginRight: 15 }}>정보</Text>
+                  <Text style={{ color: "#054de4", fontSize: 16, marginRight: 15 }}>정보</Text>
                 </TouchableOpacity>
               ),
               headerLeft: () => (
@@ -215,7 +224,7 @@ const MainNav = () => {
             options={{
               headerRight: () => (
                 <TouchableOpacity onPress={goToRecruitPageInfo}>
-                  <Text style={{ color: "#000000", fontSize: 16, marginRight: 15 }}>정보</Text>
+                  <Text style={{ color: "#054de4", fontSize: 16, marginRight: 15 }}>정보</Text>
                 </TouchableOpacity>
               ),
               headerLeft: () => (
@@ -260,10 +269,14 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerTitle: "도전작심 개설",
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerTransparent: false,
               headerTintColor: "#000000",
               headerRight: () => (
-                <Button onPress={goToChallengeOpenOne} title="다음" color="#000000" />
+                <TouchableOpacity onPress={goToChallengeOpenOne} style={{ marginRight: 20 }}>
+                  <Text style={{ color: "#054de4" }}>다음</Text>
+                </TouchableOpacity>
               ),
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
@@ -276,15 +289,18 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerTitle: "도전작심 개설",
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerTransparent: false,
               headerTintColor: "#000000",
               headerRight: () => (
-                <Button
-                  disabled={nextButtonDisable}
+                <TouchableOpacity
                   onPress={goToChallengeOpenTwo}
-                  title="다음"
-                  color={nextButtonDisable ? "#9a9797" : "#000000"}
-                />
+                  disabled={nextButtonDisable}
+                  style={{ marginRight: 20 }}
+                >
+                  <Text style={[{ color: nextButtonDisable ? "#9a9797" : "#054de4" }]}>다음</Text>
+                </TouchableOpacity>
               ),
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
@@ -297,17 +313,20 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerTitle: "도전작심 개설",
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerTransparent: false,
               headerTintColor: "#000000",
               headerRight: () => (
-                <Button
-                  disabled={submitButtonDisable}
+                <TouchableOpacity
                   onPress={() => {
                     setModalVisible(true);
                   }}
-                  title="완료"
-                  color={submitButtonDisable ? "#9a9797" : "#000000"}
-                />
+                  disabled={submitButtonDisable}
+                  style={{ marginRight: 20 }}
+                >
+                  <Text style={[{ color: submitButtonDisable ? "#9a9797" : "#054de4" }]}>완료</Text>
+                </TouchableOpacity>
               ),
               headerLeft: () => (
                 <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />

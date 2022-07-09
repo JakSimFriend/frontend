@@ -23,9 +23,12 @@ export const MyChallengeNav = () => {
         name="MyChallenge"
         component={MyChallenge}
         options={{
+          headerTitle: "내 도전",
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontSize: 15, fontWeight: "900" },
           headerRight: () => (
             <TouchableOpacity onPress={goToRecord}>
-              <Text>기록</Text>
+              <Text style={{ color: "#054de4" }}>기록</Text>
             </TouchableOpacity>
           ),
         }}

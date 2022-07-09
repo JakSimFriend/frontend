@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Animated, ScrollView } from "react-native";
+import { Animated, ScrollView, StatusBar } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 import { SearchIcon } from "../../../components/TabIcon";
@@ -55,6 +55,7 @@ export const Home = React.memo(() => {
   };
   return (
     <HomeWrapper>
+      <StatusBar barStyle={"dark-content"}></StatusBar>
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}

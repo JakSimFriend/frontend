@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
-import { HomeCalendar, HomeClock, HomeUser, HomeCameraBlue } from "../../../../../components/TabIcon";
+import { HomeCalendarBlue, HomeClockBlue, HomeUserBlue, HomeCamera } from "../../../../../components/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
@@ -74,19 +74,19 @@ export const ProgressPage = () => {
         <View style={styles.infoBox}>
           <View style={styles.infoWrapper}>
             <Text style={styles.textColor}>
-              <HomeCalendar /> {moment(DetailInfo.startDate).format(`M월 D일`)} ~{" "}
+              <HomeCalendarBlue /> {moment(DetailInfo.startDate).format(`M월 D일`)} ~{" "}
               {moment(DetailInfo.startDate).add(14, "days").format(`M월 D일`)}
             </Text>
             <Text style={styles.textBottomColor}>
-              <HomeClock /> {DetailInfo.schedule}
+              <HomeClockBlue /> {DetailInfo.schedule}
             </Text>
           </View>
           <View style={styles.infoWrapper}>
             <Text style={styles.textColor}>
-              <HomeUser /> {DetailInfo.members} 명
+              <HomeUserBlue /> {DetailInfo.members} 명
             </Text>
             <Text style={styles.textBottomColor}>
-              <HomeCameraBlue /> 11시 30분 마감
+              <HomeCamera /> 11시 30분 마감
             </Text>
           </View>
         </View>

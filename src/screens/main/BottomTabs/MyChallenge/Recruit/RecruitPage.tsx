@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import styled from "styled-components/native";
 import {
-  HomeCalendar,
-  HomeClock,
-  HomeUser,
-  HomeCameraBlue,
+  HomeCalendarBlue,
+  HomeClockBlue,
+  HomeUserBlue,
+  HomeCamera,
 } from "../../../../../components/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
@@ -72,19 +72,19 @@ export const RecruitPage = ({ route }: RouteParams) => {
         <View style={styles.infoBox}>
           <View style={styles.infoWrapper}>
             <Text style={{ color: "#6F81A9" }}>
-              <HomeCalendar /> {moment(startDate).format(`M월 D일`)} ~{" "}
+              <HomeCalendarBlue /> {moment(startDate).format(`M월 D일`)} ~{" "}
               {moment(startDate).add(14, "days").format(`M월 D일`)}
             </Text>
             <Text style={{ marginTop: 10, color: "#6F81A9" }}>
-              <HomeClock /> {schedule}
+              <HomeClockBlue /> {schedule}
             </Text>
           </View>
           <View style={styles.infoWrapper}>
             <Text style={{ color: "#6F81A9" }}>
-              <HomeUser /> {members} 명
+              <HomeUserBlue /> {members} 명
             </Text>
             <Text style={{ color: "#6F81A9", marginTop: 10 }}>
-              <HomeCameraBlue /> 11시 30분 마감
+              <HomeCamera /> 11시 30분 마감
             </Text>
           </View>
         </View>

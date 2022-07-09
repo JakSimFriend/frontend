@@ -13,7 +13,9 @@ export const HomeNav = () => {
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerTitle: () => false,
+        headerTitle: "홈",
+        headerTitleAlign: "center",
+        headerTitleStyle: { fontSize: 15, fontWeight: "900" },
         headerShadowVisible: false,
         headerRightContainerStyle: { paddingRight: 20 },
       }}
