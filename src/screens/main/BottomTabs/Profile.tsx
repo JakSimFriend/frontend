@@ -68,8 +68,6 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
   const [scrollViewContentHeight, setScrollViewContentHeight] = useState(0);
 
-  console.log(scrollViewHeight, scrollViewContentHeight)
-
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView style={{ flex: 1 }} bounces={false} onLayout={(e) => { setScrollViewHeight(e.nativeEvent.layout.height); }}>
@@ -144,7 +142,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
           </View>
         </View>
       </ScrollView>
-      <View style={{ position: 'absolute', backgroundColor: '#fff', bottom: 0, height: 200, width: '100%', zIndex: -1 }} />
+      {/* <View style={{ position: 'absolute', backgroundColor: '#fff', bottom: 0, height: 200, width: '100%', zIndex: -1 }} /> */}
       <ProfileModal visible={modalVisible} setVisible={setModalVisible} />
     </SafeAreaView>
   );
