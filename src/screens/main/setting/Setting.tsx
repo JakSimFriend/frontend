@@ -4,11 +4,13 @@ import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "re
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import LogoutModal from "../../../components/organisms/LogoutModal";
+import WithdrawalModal from "../../../components/organisms/WithdrawalModal";
 import { SettingNavParamList } from "../../../navigators/SettingNav";
 
 export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) => {
   const [switchEnable, setSwitchEnable] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -84,7 +86,7 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
           <Ionicons name='chevron-forward' color='#101647' size={18} />
         </TouchableOpacity>
         <View style={{ height: 1, width: '100%', backgroundColor: '#F5F5FB', marginTop: 10 }} />
-        <TouchableOpacity style={styles.row} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity style={styles.row} onPress={() => setLogoutModalVisible(true)}>
           <View style={styles.leftView}>
             <View style={styles.iconView}>
               <Ionicons name='log-out-outline' color='#101647' size={24} />
@@ -94,7 +96,7 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
           <Ionicons name='chevron-forward' color='#101647' size={18} />
         </TouchableOpacity>
         <View style={{ height: 1, width: '100%', backgroundColor: '#F5F5FB', marginTop: 10 }} />
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity style={styles.row} onPress={() => setWithdrawalModalVisible(true)}>
           <View style={styles.leftView}>
             <View style={styles.iconView}>
               <Ionicons name='person-remove-outline' color='#101647' size={24} />
@@ -105,7 +107,8 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
         </TouchableOpacity>
         <View style={{ height: 1, width: '100%', backgroundColor: '#F5F5FB', marginTop: 10 }} />
       </ScrollView>
-      <LogoutModal visible={modalVisible} setVisible={setModalVisible} />
+      <LogoutModal visible={logoutModalVisible} setVisible={setLogoutModalVisible} />
+      <WithdrawalModal visible={withdrawalModalVisible} setVisible={setWithdrawalModalVisible} />
     </SafeAreaView>
   );
 };
