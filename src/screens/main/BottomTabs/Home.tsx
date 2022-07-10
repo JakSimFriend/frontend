@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Animated, ScrollView } from "react-native";
+import { Animated, ScrollView, StatusBar } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 import { SearchIcon } from "../../../components/TabIcon";
@@ -24,7 +24,7 @@ export const Home = React.memo(() => {
   const upValue = useState(new Animated.Value(0))[0];
   const MoveSearchBarUp = () => {
     Animated.timing(upValue, {
-      toValue: 75,
+      toValue: 70,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -34,10 +34,28 @@ export const Home = React.memo(() => {
         duration: 200,
         useNativeDriver: false,
       }).start();
+    }, 400);
+  };
+
+  // 카테고리 애니메이션
+  const iconValue = useState(new Animated.Value(0))[0];
+  const MoveIconUp = () => {
+    Animated.timing(iconValue, {
+      toValue: 40,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+    setTimeout(() => {
+      Animated.timing(iconValue, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
     }, 250);
   };
   return (
     <HomeWrapper>
+      <StatusBar barStyle={"dark-content"}></StatusBar>
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
@@ -65,11 +83,23 @@ export const Home = React.memo(() => {
             </SearchIconWrapper>
           </InputWrapper>
         </Animated.View>
-        <CategoryHeader />
+        <Animated.View
+          style={{
+            bottom: iconValue,
+          }}
+        >
+          <CategoryHeader />
+        </Animated.View>
         <Challenges />
       </ScrollView>
       <OpenChallenge>
-        <GradientButtons onPress={goToOpenChallenge} Title="챌린지 개설하기" />
+        <GradientButtons
+          onPress={() => {
+            MoveIconUp();
+            goToOpenChallenge();
+          }}
+          Title="도전작심 개설하기"
+        />
       </OpenChallenge>
     </HomeWrapper>
   );
@@ -77,7 +107,6 @@ export const Home = React.memo(() => {
 
 const HomeWrapper = styled.View`
   flex: 1;
-  padding-left: 18px;
   background-color: #ffffff;
   height: 100%;
 `;
@@ -85,12 +114,13 @@ const Title = styled.Text`
   color: #000000;
   font-size: 20px;
   font-weight: 400;
-  margin: 10px 0 0 15px;
+  margin: 10px 0px 0 25px;
 `;
 const InputWrapper = styled.TouchableOpacity`
   align-items: flex-start;
   flex-direction: row;
   margin-top: 30px;
+  margin-left: 10px;
 `;
 const InputBox = styled.View`
   background-color: #f6f5fb;
@@ -110,5 +140,5 @@ const OpenChallenge = styled.View`
   width: 70%;
   position: absolute;
   bottom: 0;
+  margin-bottom: 20px;
 `;
-

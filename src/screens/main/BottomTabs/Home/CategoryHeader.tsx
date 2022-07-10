@@ -53,20 +53,19 @@ const styles = StyleSheet.create({
   categorySelectedBackground: {
     backgroundColor: "#054DE4",
   },
-  wrapper: {
-    backgroundColor: "red",
-  },
 });
 
 const CategoryBox = styled.View`
   flex-direction: row;
   margin: 30px 0;
   flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 10px;
 `;
 const CategoryButtons = styled.TouchableOpacity`
-  margin: 0 32px 10px 5px;
+  margin-bottom: 10px;
+  width: 25%;
   border-radius: 10px;
-  width: 15%;
   justify-content: center;
   align-items: center;
 `;

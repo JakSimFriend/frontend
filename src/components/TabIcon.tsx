@@ -3,12 +3,14 @@ import Home from "react-native-vector-icons/Ionicons";
 import Diamond from "react-native-vector-icons/MaterialCommunityIcons";
 import Clock from "react-native-vector-icons/AntDesign";
 import User from "react-native-vector-icons/FontAwesome";
-import ClockTwo from "react-native-vector-icons/Feather";
-import CalendarTwo from "react-native-vector-icons/Feather";
-import UserTwo from "react-native-vector-icons/Feather";
-import Search from "react-native-vector-icons/EvilIcons";
+import ClockTwo from "react-native-vector-icons/AntDesign"; //
+import CalendarTwo from "react-native-vector-icons/AntDesign"; //
+import UserTwo from "react-native-vector-icons/AntDesign"; //
+import Search from "react-native-vector-icons/AntDesign";
+import Camera from "react-native-vector-icons/AntDesign"; //
 import Back from "react-native-vector-icons/Ionicons";
-
+import Flag from "react-native-vector-icons/FontAwesome";
+import Calendar from "react-native-vector-icons/Ionicons";
 type TabBarIconProps = {
   focused: boolean;
 };
@@ -50,18 +52,44 @@ export const UserIcon = ({ focused }: TabBarIconProps) => {
   );
 };
 export const HomeClock = () => {
-  return <ClockTwo name="clock" size={15} />;
+  return <ClockTwo name="clockcircleo" size={17} />;
+};
+export const HomeClockBlue = () => {
+  return <ClockTwo name="clockcircleo" size={17} color={"#054de4"} />;
 };
 export const HomeCalendar = () => {
-  return <CalendarTwo name="calendar" size={15} />;
+  return <CalendarTwo name="calendar" size={17} />;
+};
+export const HomeCalendarBlue = () => {
+  return <CalendarTwo name="calendar" size={17} color={"#054de4"} />;
 };
 export const HomeUser = () => {
-  return <UserTwo name="users" size={15} />;
+  return <UserTwo name="user" size={15} />;
+};
+export const HomeUserBlue = () => {
+  return <UserTwo name="user" size={15} color={"#054de4"} />;
+};
+export const HomeCamera = () => {
+  return <Camera name="camerao" size={15} color={"#054de4"} />;
 };
 export const SearchIcon = () => {
-  return <Search name="search" size={30} />;
+  return <Search name="search1" size={25} />;
 };
 export const BackIcon = () => {
   return <Back name="arrow-back" size={30} />;
 };
-
+export const FlagIcon = () => {
+  return <Flag name="flag" size={20} color={"#054de4"} />;
+};
+export const CalendarIcon = () => {
+  return <Calendar name="calendar" size={22} color={"#054de4"} />;
+};
+export const ClockIconTwo = () => {
+  return <Clock name="clockcircle" size={20} color={"#054de4"} />;
+};
+export const DiamondIconTwo = () => {
+  return <Diamond name="diamond" size={20} color={"#054de4"} />;
+};
+export const UserIconTwo = () => {
+  return <User name="user" size={25} color={"#054de4"} style={{ paddingHorizontal: 1 }} />;
+};

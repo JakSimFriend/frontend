@@ -7,14 +7,12 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Modal,
+  StatusBar,
 } from "react-native";
 import styled from "styled-components/native";
 import { useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserAtom } from "../../../atom";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Entypo from "react-native-vector-icons/Entypo";
-import Feather from "react-native-vector-icons/Feather";
+import { isUserAtom } from "../../../atom";
+import Feather from "react-native-vector-icons/AntDesign";
 import NickNameModal1 from "../../components/organisms/NickNameModal1";
 import NickNameModal2 from "../../components/organisms/NickNameModal2";
 import NickNameModal3 from "../../components/organisms/NickNameModal3";
@@ -22,10 +20,6 @@ import NickNameModal4 from "../../components/organisms/NickNameModal4";
 
 export const NickName = () => {
   const navigation = useNavigation();
-  const setIsUser = useSetRecoilState(isUserAtom);
-  const jakSimStart = () => {
-    setIsUser(true);
-  };
 
   const GREY = "#6F81A9",
     BLACK = "#101647",
@@ -77,8 +71,6 @@ export const NickName = () => {
     setGuideColor3(GREY); // 닉네임 value 변경되는 경우 중복 확인 다시.
   };
 
-  const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-
   const [modalVisible1, setModalVisible1] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -112,11 +104,9 @@ export const NickName = () => {
 
   return (
     <Wrapper>
-      <TouchableOpacity onPress={() => setIsLoggedIn(false)}>
-        <Ionicons name="arrow-back" size={24} color={BLACK} />
-      </TouchableOpacity>
-      <ScrollView>
-        <Text style={styles.title}>닉네임을 적어주세요</Text>
+      <StatusBar barStyle={"default"}></StatusBar>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>닉네임을 적어주세요!</Text>
         <Text style={styles.title2}>친구들이 보게 될 닉네임이에요</Text>
         <View style={styles.nickNameView}>
           <TextInput
@@ -139,22 +129,19 @@ export const NickName = () => {
         </View>
         <View style={styles.guideView}>
           <Text style={[styles.guideText, { color: guideColor1 }]}>
-            <Entypo name="dot-single" />
-            최대 8자 이하만 사용할 수 있어요
+            · 최대 8자 이하만 사용할 수 있어요
           </Text>
           <Feather name="check" size={16} color={guideColor1 == BLACK ? RED : guideColor1} />
         </View>
         <View style={styles.guideView}>
           <Text style={[styles.guideText, { color: guideColor2 }]}>
-            <Entypo name="dot-single" />
-            영문, 특수문자, 띄어쓰기는 빼주세요
+            · 영문, 특수문자, 띄어쓰기는 빼주세요
           </Text>
           <Feather name="check" size={16} color={guideColor2 == BLACK ? RED : guideColor2} />
         </View>
         <View style={styles.guideView}>
           <Text style={[styles.guideText, { color: guideColor3 }]}>
-            <Entypo name="dot-single" />
-            중복 닉네임은 쓸 수 없어요
+            · 중복 닉네임은 쓸 수 없어요
           </Text>
           <Feather name="check" size={16} color={guideColor3 == BLACK ? RED : guideColor3} />
         </View>
@@ -185,19 +172,20 @@ export const NickName = () => {
         </View>
         <View style={styles.guideView}>
           <Text style={[styles.guideText, { color: guideColor4 }]}>
-            <Entypo name="dot-single" />
-            작심친구에 있는 닉네임이어야 해요
+            · 작심친구에 있는 닉네임이어야 해요
           </Text>
           <Feather name="check" size={16} color={guideColor4 == BLACK ? RED : guideColor4} />
         </View>
       </ScrollView>
       <TouchableOpacity
         style={[styles.submitButton, { backgroundColor: buttonColor1 == BLACK ? BLUE : "#F5F5FB" }]}
-        onPress={jakSimStart}
+        onPress={() => {
+          navigation.navigate("BirthDay");
+        }}
         disabled={buttonColor1 != BLACK}
       >
         <Text style={[styles.submitButtonText, { color: buttonColor1 == BLACK ? "#fff" : GREY }]}>
-          작심하러 갈게요
+          다음으로
         </Text>
       </TouchableOpacity>
       <NickNameModal1 visible={modalVisible1} setVisible={setModalVisible1} nickName={nickName} />
@@ -216,15 +204,15 @@ function checkGuide2(currentNickName: string) {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 80px 25px 0 25px;
+  padding: 0px 25px;
 `;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 34,
+    fontSize: 30,
     color: "#101647",
     fontWeight: "400",
-    marginTop: 62,
+    marginTop: 72,
   },
   title2: {
     fontSize: 17,

@@ -1,6 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Profile } from "../../screens/main";
+import ProfileEdit from "../../screens/main/ProfileEdit";
+import SettingNav from "../SettingNav";
 
 export type ProfileNavParamList = {
   Profile: undefined,

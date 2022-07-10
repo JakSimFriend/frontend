@@ -1,27 +1,29 @@
 import React from "react";
-import { Tier, MyState } from "../../../screens/main";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { StatInfoNav } from "./StatInfoNav";
+import { ProgressInfoNav } from "./ProgressInfoNav";
 
 const Tab = createMaterialTopTabNavigator();
 
-export const StateCategoryNav = () => {
+export const ProgressTopbarNav = () => {
   return (
     <Tab.Navigator
-      initialRouteName="내 현황"
+      initialRouteName="정보"
       screenOptions={{
         swipeEnabled: false,
         tabBarActiveTintColor: "#000000",
-        tabBarInactiveTintColor: "#B2B1B0",
+        tabBarInactiveTintColor: "#BFC7D7",
         tabBarIndicatorStyle: { backgroundColor: "#fff" },
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          marginEnd: 165,
+          width: "50%",
         },
+        tabBarPressColor: "#ffffff",
       }}
     >
-      <Tab.Screen name="내 현황" component={MyState} />
-      <Tab.Screen name=" 티어" component={Tier} />
+      <Tab.Screen name="정보" component={ProgressInfoNav} options={{}} />
+      <Tab.Screen name="정산" component={StatInfoNav} />
     </Tab.Navigator>
   );
 };

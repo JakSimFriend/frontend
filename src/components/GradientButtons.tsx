@@ -21,7 +21,6 @@ export const GradientButtons = ({ Title, onPress }: ButtonProps) => {
 const styles = StyleSheet.create({
   linearGradient: {
     padding: 5,
-    marginBottom: 20,
     borderRadius: 13,
   },
 });
