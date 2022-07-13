@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, SafeAreaView, View } from "react-native";
+import { Platform, SafeAreaView, StatusBar, View } from "react-native";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
 import { isLoggedInAtom } from "../../../atom";
@@ -15,6 +15,7 @@ const Welcome = () => {
 
   return (
     <Wrapper>
+      <StatusBar barStyle={"dark-content"} />
       <SafeAreaView style={{ flex: 1 }}>
         <Title>어서오세요!</Title>
         <SubTitle>작심친구입니다!</SubTitle>

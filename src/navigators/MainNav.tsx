@@ -16,7 +16,7 @@ import {
   Notifications,
   Search,
   SearchChallenge,
-  // Setting, 
+  // Setting,
   NickName,
   Record,
   RequestPage,
@@ -71,8 +71,19 @@ const MainNav = () => {
           {isUser ? (
             <>
               <Stack.Screen name="Home" component={LoggedInNav} />
-              <Stack.Screen name="ProfileEdit" component={ProfileEdit} options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS }} />
-              <Stack.Screen name="SettingNav" component={SettingNav} options={{ headerShown: false }} />
+              <Stack.Screen
+                name="ProfileEdit"
+                component={ProfileEdit}
+                options={{
+                  headerShown: false,
+                  cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                }}
+              />
+              <Stack.Screen
+                name="SettingNav"
+                component={SettingNav}
+                options={{ headerShown: false }}
+              />
             </>
           ) : (
             <>
@@ -156,7 +167,10 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerTintColor: "#000000",
               headerShadowVisible: false,
-              headerShown: false
+              headerTransparent: false,
+              headerLeft: () => (
+                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+              ),
             }}
           />
           <Stack.Screen

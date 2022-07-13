@@ -104,6 +104,7 @@ const GradientWrapper = styled.View`
   width: 80%;
   position: absolute;
   bottom: 0;
+  margin-bottom: 20px;
 `;
 const StartButton = styled.TouchableOpacity`
   margin-top: 40px;
@@ -115,6 +116,7 @@ const StartButton = styled.TouchableOpacity`
   width: 80%;
   position: absolute;
   bottom: 0;
+  margin-bottom: 20px;
 `;
 const styles = StyleSheet.create({
   dropDownBox: {
