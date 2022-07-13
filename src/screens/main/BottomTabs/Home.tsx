@@ -1,11 +1,19 @@
-import React, { useRef, useState } from "react";
-import { Animated, ScrollView, StatusBar } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, ScrollView, StatusBar, Text, View } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 import { SearchIcon } from "../../../components/TabIcon";
 import { CategoryHeader } from "./Home/CategoryHeader";
 import { Challenges } from "./Home/Challenges";
 import { GradientButtons } from "../../../components/GradientButtons";
+import auth from "@react-native-firebase/auth";
+import {
+  appleAuth,
+  appleAuthAndroid,
+  AppleButton,
+} from "@invertase/react-native-apple-authentication";
+import { v4 as uuid } from "uuid";
+import{ KakaoLogin } from "../../auth/KakaoLogin";
 
 export const Home = React.memo(() => {
   const navigation = useNavigation();
@@ -24,7 +32,7 @@ export const Home = React.memo(() => {
   const upValue = useState(new Animated.Value(0))[0];
   const MoveSearchBarUp = () => {
     Animated.timing(upValue, {
-      toValue: 70,
+      toValue: 78,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -53,6 +61,64 @@ export const Home = React.memo(() => {
       }).start();
     }, 250);
   };
+
+  // xcode()=>ios 13버전으로 애플로그인 확인(시뮬레이터 문제이므로 바꾸면 될것) + 안드로이드 apple login 세팅 마치기 
+  // 카카오 로그인 
+  // 알림, 공유
+  // 광고
+  // 나머지 서버
+  async function onAppleButtonPress() {
+    // Start the sign-in request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+
+    // Ensure Apple returned a user identityToken
+    if (!appleAuthRequestResponse.identityToken) {
+      throw "Apple Sign-In failed - no identify token returned";
+    }
+
+    // Create a Firebase credential from the response
+    const { identityToken, nonce } = appleAuthRequestResponse;
+    const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+
+    // Sign the user in with the credential
+    return auth().signInWithCredential(appleCredential);
+  }
+  async function onAppleAndroidButtonPress() {
+    // Generate secure, random values for state and nonce
+    const rawNonce = uuid();
+    const state = uuid();
+
+    // Configure the request
+    appleAuthAndroid.configure({
+      // The Service ID you registered with Apple
+      clientId: "org.reactjs.native.jaksimfriend",
+
+      // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
+      // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
+      redirectUri: "https://jaksimfriend.site/users/apple-login",
+
+      // The type of response requested - code, id_token, or both.
+      responseType: appleAuthAndroid.ResponseType.ALL,
+
+      // The amount of user information requested from Apple.
+      scope: appleAuthAndroid.Scope.ALL,
+
+      // Random nonce value that will be SHA256 hashed before sending to Apple.
+      nonce: rawNonce,
+
+      // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
+      state,
+    });
+
+    // Open the browser window for user sign in
+    const response = await appleAuthAndroid.signIn();
+
+    // Send the authorization code to your backend for verification
+  }
+
   return (
     <HomeWrapper>
       <StatusBar barStyle={"dark-content"}></StatusBar>
@@ -90,6 +156,25 @@ export const Home = React.memo(() => {
         >
           <CategoryHeader />
         </Animated.View>
+        <KakaoLogin />
+        {appleAuthAndroid.isSupported && (
+          <AppleButton
+            buttonStyle={AppleButton.Style.WHITE}
+            buttonType={AppleButton.Type.SIGN_IN}
+            onPress={() => onAppleAndroidButtonPress()}
+          />
+        )}
+        <AppleButton
+          buttonStyle={AppleButton.Style.WHITE}
+          buttonType={AppleButton.Type.SIGN_IN}
+          style={{
+            width: 160,
+            height: 45,
+            borderWidth: 1,
+            borderColor: "#000000",
+          }}
+          onPress={() => onAppleButtonPress().then(() => console.log("Apple sign-in complete!"))}
+        />
         <Challenges />
       </ScrollView>
       <OpenChallenge>
