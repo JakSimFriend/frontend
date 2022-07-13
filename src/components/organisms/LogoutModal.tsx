@@ -3,12 +3,12 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSetRecoilState } from "recoil";
 import { isLoggedInAtom } from "../../../atom";
 
-export interface LogoutModal4Props {
+export interface LogoutModalProps {
     visible: boolean;
     setVisible: (value: (value: boolean) => boolean) => void;
 }
 
-export default function LogoutModal({ visible, setVisible }: LogoutModal4Props) {
+export default function LogoutModal({ visible, setVisible }: LogoutModalProps) {
     const setIsLoggedIn = useSetRecoilState(isLoggedInAtom)
 
     return (
