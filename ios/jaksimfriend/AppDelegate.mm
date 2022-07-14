@@ -4,6 +4,8 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <RNKakaoLogins.h>
+
 #import "RNSplashScreen.h"
 #import <React/RCTAppSetupUtils.h>
 
@@ -27,7 +29,14 @@
 #endif
 
 @implementation AppDelegate
-
+- (BOOL)application:(UIApplication *)app
+   openURL:(NSURL *)url
+   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+   if ([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
+      return [RNKakaoLogins handleOpenUrl: url];
+   }
+   return NO;
+  }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
