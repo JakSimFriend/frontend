@@ -9,6 +9,15 @@ export const isUserAtom = atom<boolean>({
   key: `isUser${uuid()}`,
   default: false,
 });
+export const userIndexAtom = atom<number>({
+  key: `isUser${uuid()}`,
+  default: 0,
+});
+export const jwtAtom = atom<string>({
+  key: `jwt${uuid()}`,
+  default: "",
+});
+
 export const tierAtom = atom<string>({
   key: `tier${uuid()}`,
   default: "다이아몬드",

@@ -10,17 +10,50 @@ import {
   StatusBar,
 } from "react-native";
 import styled from "styled-components/native";
-import { useSetRecoilState } from "recoil";
-import { isUserAtom } from "../../../atom";
 import Feather from "react-native-vector-icons/AntDesign";
 import NickNameModal1 from "../../components/organisms/NickNameModal1";
 import NickNameModal2 from "../../components/organisms/NickNameModal2";
 import NickNameModal3 from "../../components/organisms/NickNameModal3";
 import NickNameModal4 from "../../components/organisms/NickNameModal4";
+import axios from "axios";
+import { userIndexAtom } from "../../../atom";
+import { useRecoilValue } from "recoil";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const NickName = () => {
   const navigation = useNavigation();
-
+  const [userIndex, setUserIndex] = useState(0);
+  AsyncStorage.getItem("userIdx", (err, result: any) => {
+    setUserIndex(parseInt(result));
+  });
+  const postNickName = () => {
+    axios
+      .post("https://jaksimfriend.site/users/nickname", {
+        userIdx: userIndex,
+        nickName: nickName,
+        recommendedIdx: 1,
+      })
+      .then(function (response) {
+        console.warn(response.data);
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
+  };
+  const checkNickName = () => {
+    axios
+      .post("https://jaksimfriend.site/users/nickname/check", {
+        userIdx: userIndex,
+        nickName: nickName,
+      })
+      .then(function (response) {
+        console.warn(response.data);
+      })
+      .catch(function (error) {
+        console.warn(error);
+        // 여기에 기존 프론트 중복 닉네임 쓸 수 없어요 적용하면됨
+      });
+  };
   const GREY = "#6F81A9",
     BLACK = "#101647",
     RED = "#D75858",
@@ -122,7 +155,10 @@ export const NickName = () => {
           <TouchableOpacity
             style={[styles.nickNameButton, { backgroundColor: buttonColor1 }]}
             disabled={buttonColor1 == BLUE ? false : true}
-            onPress={onPress1}
+            onPress={() => {
+              onPress1();
+              checkNickName();
+            }}
           >
             <Text style={styles.nickNameButtonText}>중복 확인</Text>
           </TouchableOpacity>
@@ -180,6 +216,7 @@ export const NickName = () => {
       <TouchableOpacity
         style={[styles.submitButton, { backgroundColor: buttonColor1 == BLACK ? BLUE : "#F5F5FB" }]}
         onPress={() => {
+          postNickName();
           navigation.navigate("BirthDay");
         }}
         disabled={buttonColor1 != BLACK}

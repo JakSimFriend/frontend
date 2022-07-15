@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
 import { isUserAtom } from "../../../atom";
 import { GradientButtons } from "../../components/GradientButtons";
 import moment from "moment";
 import DateTimePicker from "react-native-modal-datetime-picker";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const BirthDay = () => {
   const setIsUser = useSetRecoilState(isUserAtom);
-  const jakSimStart = () => {
-    setIsUser(true);
-  };
 
   const GREY = "#6F81A9";
   const [dateSelected, setDateSelected] = useState(false);
@@ -31,6 +30,28 @@ export const BirthDay = () => {
   useEffect(() => {
     showTimePicker();
   }, []);
+
+  const [userIndex, setUserIndex] = useState(0);
+  AsyncStorage.getItem("userIdx", (err, result: any) => {
+    setUserIndex(parseInt(result));
+  });
+  const postBirthDay = () => {
+    axios
+      .post("https://jaksimfriend.site/users/birth", {
+        userIdx: userIndex,
+        birth: "2000-05-05",
+      })
+      .then(function (response) {
+        console.warn(response.data);
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
+  };
+  const jakSimStart = () => {
+    setIsUser(true);
+    postBirthDay();
+  };
   return (
     <Wrapper>
       <Title>생년월일을 적어주세요!</Title>

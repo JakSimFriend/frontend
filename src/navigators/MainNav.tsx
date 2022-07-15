@@ -16,7 +16,6 @@ import {
   Notifications,
   Search,
   SearchChallenge,
-  // Setting,
   NickName,
   Record,
   RequestPage,
@@ -26,6 +25,9 @@ import {
   ProgressNotification,
   ProgressDetailTopTab,
   ProgressCertified,
+  BirthDay,
+  BeforeStartPageInfo,
+  RecruitPageInfo,
 } from "../screens/main";
 import SettingNav from "./SettingNav";
 import LoggedInNav from "./LoggedInNav";
@@ -33,9 +35,8 @@ import LoggedOutNav from "./LoggedOutNav";
 import { Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ArrowLeft from "react-native-vector-icons/AntDesign";
-import { RecruitPageInfo } from "../screens/main/BottomTabs/MyChallenge/Recruit/RecruitPageInfo";
-import { BeforeStartPageInfo } from "../screens/main/BottomTabs/MyChallenge/BeforeStart/BeforeStartPageInfo";
-import { BirthDay } from "../screens/main/BirthDay";
+import { unlink } from "@react-native-seoul/kakao-login";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileEdit from "../screens/main/ProfileEdit";
 
 const Stack = createStackNavigator();
@@ -56,6 +57,13 @@ const MainNav = () => {
   const goToProgressNotification = () => navigation.navigate("ProgressNotification");
   const goToMyChallenge = () => navigation.navigate("내챌린지");
   const goBack = () => navigation.goBack();
+  const kakaoSignOut = async (): Promise<void> => {
+    const message = await unlink();
+    console.warn(message);
+    AsyncStorage.removeItem("jwt");
+    AsyncStorage.removeItem("userIdx");
+    setIsLoggedIn(false);
+  };
   return (
     <>
       {isLoggedIn ? (
@@ -96,9 +104,7 @@ const MainNav = () => {
                   headerTitleStyle: { fontSize: 15, fontWeight: "900" },
                   headerLeft: () => (
                     <ArrowLeft
-                      onPress={() => {
-                        setIsLoggedIn(false);
-                      }}
+                      onPress={kakaoSignOut}
                       name="arrowleft"
                       size={25}
                       style={{ marginLeft: 15 }}

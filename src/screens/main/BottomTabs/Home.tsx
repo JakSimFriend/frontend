@@ -13,11 +13,13 @@ import {
   AppleButton,
 } from "@invertase/react-native-apple-authentication";
 import { v4 as uuid } from "uuid";
-import{ KakaoLogin } from "../../auth/KakaoLogin";
+import { KakaoLogin } from "../../auth/KakaoLogin";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const Home = React.memo(() => {
   const navigation = useNavigation();
-  const [userName, setUserName] = useState("유저"); //서버데이터
+  const [userName, setUserName] = useState("유저");
   const goToSearch = () => navigation.navigate("Search");
   const goToOpenChallenge = () => navigation.navigate("Category");
 
@@ -27,7 +29,6 @@ export const Home = React.memo(() => {
   if (isFocused) {
     scrollViewRef.current?.scrollTo({ x: 5, y: 5, animated: false });
   }
-
   // 검색바 애니메이션
   const upValue = useState(new Animated.Value(0))[0];
   const MoveSearchBarUp = () => {
@@ -61,9 +62,8 @@ export const Home = React.memo(() => {
       }).start();
     }, 250);
   };
-
-  // xcode()=>ios 13버전으로 애플로그인 확인(시뮬레이터 문제이므로 바꾸면 될것) + 안드로이드 apple login 세팅 마치기 
-  // 카카오 로그인 
+  // xcode()=>ios 13버전으로 애플로그인 확인(시뮬레이터 문제이므로 바꾸면 될것) + 안드로이드 apple login 세팅 마치기
+  // 카카오 로그인
   // 알림, 공유
   // 광고
   // 나머지 서버
@@ -118,6 +118,21 @@ export const Home = React.memo(() => {
 
     // Send the authorization code to your backend for verification
   }
+  useEffect(() => {
+    // nickname정보 가져오기
+    // 바로 못 불러옴
+    AsyncStorage.getItem("userIdx", (err, result: any) => {
+      const userIdx = parseInt(result);
+      axios
+        .get(`https://jaksimfriend.site/profiles/${userIdx}`)
+        .then(function (response) {
+          setUserName(response.data.result[0].nickName);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
 
   return (
     <HomeWrapper>
@@ -157,7 +172,7 @@ export const Home = React.memo(() => {
           <CategoryHeader />
         </Animated.View>
         <KakaoLogin />
-        {appleAuthAndroid.isSupported && (
+        {/* {appleAuthAndroid.isSupported && (
           <AppleButton
             buttonStyle={AppleButton.Style.WHITE}
             buttonType={AppleButton.Type.SIGN_IN}
@@ -174,7 +189,7 @@ export const Home = React.memo(() => {
             borderColor: "#000000",
           }}
           onPress={() => onAppleButtonPress().then(() => console.log("Apple sign-in complete!"))}
-        />
+        /> */}
         <Challenges />
       </ScrollView>
       <OpenChallenge>
