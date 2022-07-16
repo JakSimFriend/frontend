@@ -1,6 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styled from "styled-components/native";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -95,7 +103,13 @@ export const Request = () => {
             {RequestData.map((item, index) => {
               return (
                 <ChallengeBox key={index}>
+                  <Image
+                    source={require("../../../../assets/Art.png")}
+                    blurRadius={10}
+                    style={{ backgroundColor: "#000000", width: 100, height: 300 }}
+                  />
                   <TouchableOpacity
+                    activeOpacity={0}
                     onPress={() => {
                       navigation.navigate("RequestPage", {
                         title: item.title,
@@ -170,6 +184,7 @@ const ChallengeBox = styled.View`
   background-color: #f6f5fb;
   border-radius: 12px;
   margin: 15px 10px 30px 5px;
+  z-index: 1000000;
 `;
 const ChallengeTitle = styled.Text`
   font-size: 18px;

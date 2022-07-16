@@ -9,7 +9,7 @@ import {
 } from "@react-native-seoul/kakao-login";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
-import { isLoggedInAtom } from "../../../atom";
+import { isLoggedInAtom, isUserAtom } from "../../../atom";
 import { GradientButtons } from "../../components/GradientButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -68,16 +68,17 @@ export const KakaoLogin = () => {
 
   return (
     <View>
-      {/* <Button title="카카오프로필정보 불러오기" onPress={getKakaoProfile} />
       <Button title="프로필홈 정보 불러오기" onPress={getProfile} />
+      {/* <Button title="카카오프로필정보 불러오기" onPress={getKakaoProfile} /> */}
       <Button title="챌린지 정보 보여주기" onPress={showChallenges} />
-      <Button title="챌린지 개설하기post" onPress={createChallenge} /> */}
+      <Button title="챌린지 개설하기post" onPress={createChallenge} />
     </View>
   );
 };
 
 export const KakaoSignIn = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
+  const setIsUser = useSetRecoilState(isUserAtom);
 
   const signInWithKakao = async (): Promise<void> => {
     const token: KakaoOAuthToken = await login();
@@ -91,15 +92,25 @@ export const KakaoSignIn = () => {
           },
         },
       )
-      .then(function (response) {
+      .then(async function (response) {
         AsyncStorage.multiSet([
           ["jwt", response.data.result.jwt],
           ["userIdx", JSON.stringify(response.data.result.userIdx)],
         ]);
 
         axios.defaults.headers.common["X-ACCESS-TOKEN"] = response.data.result.jwt;
-        console.warn(response.data.result.jwt);
-        setIsLoggedIn(true);
+
+        await axios
+          .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
+          .then(function (response) {
+            if (response.data.result[0].nickName?.length > 0) {
+              setIsUser(true);
+            }
+            setIsLoggedIn(true);
+          })
+          .catch(function (error) {
+            console.warn(error);
+          });
       })
       .catch(function (error) {
         console.warn(error);
@@ -109,6 +120,8 @@ export const KakaoSignIn = () => {
   return <GradientButtons onPress={signInWithKakao} Title="카카오 계정으로 시작하기" />;
 };
 
+// 닉네임 설정 후 바로 안뜨고
+// 로그아웃한다음 다른 계정으로 로그인하면 닉네임페이지가 아예안뜸(isuser가 true인듯)
 export const LogOutWithKakao = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
 

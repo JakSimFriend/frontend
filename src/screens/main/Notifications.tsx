@@ -1,9 +1,10 @@
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect } from "react";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import Bells from "react-native-vector-icons/MaterialCommunityIcons";
 import Flag from "react-native-vector-icons/FontAwesome";
 import Clock from "react-native-vector-icons/AntDesign";
+import messaging from '@react-native-firebase/messaging';
 
 const data = [
   {
@@ -30,6 +31,13 @@ const data = [
 ];
 
 export const Notifications = () => {
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.warn('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
   return (
     <Wrapper>
       {data.length === 0 ? (

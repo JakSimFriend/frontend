@@ -96,6 +96,7 @@ export const BirthDay = () => {
         </StartButton>
       )}
 
+   {/* modal picker에서 community피커예시로 변경 */}
       <DateTimePicker
         isVisible={isDatePickerVisible}
         mode="date"

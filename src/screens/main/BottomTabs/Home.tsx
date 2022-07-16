@@ -119,8 +119,6 @@ export const Home = React.memo(() => {
     // Send the authorization code to your backend for verification
   }
   useEffect(() => {
-    // nickname정보 가져오기
-    // 바로 못 불러옴
     AsyncStorage.getItem("userIdx", (err, result: any) => {
       const userIdx = parseInt(result);
       axios
@@ -172,7 +170,7 @@ export const Home = React.memo(() => {
           <CategoryHeader />
         </Animated.View>
         <KakaoLogin />
-        {/* {appleAuthAndroid.isSupported && (
+        {appleAuthAndroid.isSupported && (
           <AppleButton
             buttonStyle={AppleButton.Style.WHITE}
             buttonType={AppleButton.Type.SIGN_IN}
@@ -189,7 +187,7 @@ export const Home = React.memo(() => {
             borderColor: "#000000",
           }}
           onPress={() => onAppleButtonPress().then(() => console.log("Apple sign-in complete!"))}
-        /> */}
+        />
         <Challenges />
       </ScrollView>
       <OpenChallenge>

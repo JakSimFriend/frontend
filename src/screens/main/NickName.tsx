@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
+  AppState,
 } from "react-native";
 import styled from "styled-components/native";
 import Feather from "react-native-vector-icons/AntDesign";
@@ -16,13 +17,47 @@ import NickNameModal2 from "../../components/organisms/NickNameModal2";
 import NickNameModal3 from "../../components/organisms/NickNameModal3";
 import NickNameModal4 from "../../components/organisms/NickNameModal4";
 import axios from "axios";
-import { userIndexAtom } from "../../../atom";
-import { useRecoilValue } from "recoil";
+import { isLoggedInAtom, isUserAtom, userIndexAtom } from "../../../atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { unlink } from "@react-native-seoul/kakao-login";
 
 export const NickName = () => {
   const navigation = useNavigation();
   const [userIndex, setUserIndex] = useState(0);
+  AsyncStorage.getItem("userIdx", (err, result: any) => {
+    setUserIndex(parseInt(result));
+  });
+  const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
+  const setIsUser = useSetRecoilState(isUserAtom);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextState) => {
+      if (nextState === "background") {
+        const kakaoSignOut = async (): Promise<void> => {
+          const message = await unlink();
+          console.log(message);
+          AsyncStorage.removeItem("jwt");
+          AsyncStorage.removeItem("userIdx");
+          await signOutPatch();
+          setIsLoggedIn(false);
+          setIsUser(false);
+        };
+        kakaoSignOut();
+      }
+    });
+    return () => subscription.remove();
+  }, []);
+  const signOutPatch = () => {
+    axios
+      .patch(`https://jaksimfriend.site/users/${userIndex}/delete`)
+      .then(function (response) {
+        console.warn(response.data.result);
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
+  };
   AsyncStorage.getItem("userIdx", (err, result: any) => {
     setUserIndex(parseInt(result));
   });

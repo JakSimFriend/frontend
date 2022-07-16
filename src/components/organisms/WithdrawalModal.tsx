@@ -15,7 +15,7 @@ import { useSetRecoilState } from "recoil";
 import { isLoggedInAtom, isUserAtom } from "../../../atom";
 import { unlink } from "@react-native-seoul/kakao-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import axios from "axios";
 export interface WithdrawalModalProps {
   visible: boolean;
   setVisible: (value: (value: boolean) => boolean) => void;
@@ -28,6 +28,10 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
   const upValue = new Animated.Value(-500);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserAtom);
+  const [userIndex, setUserIndex] = useState(0);
+  AsyncStorage.getItem("userIdx", (err, result: any) => {
+    setUserIndex(parseInt(result));
+  });
 
   const sheetUp = () => {
     Animated.timing(upValue, {
@@ -77,8 +81,20 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
     console.log(message);
     AsyncStorage.removeItem("jwt");
     AsyncStorage.removeItem("userIdx");
+    await signOutPatch();
     setIsLoggedIn(false);
     setIsUser(false);
+  };
+
+  const signOutPatch = () => {
+    axios
+      .patch(`https://jaksimfriend.site/users/${userIndex}/delete`)
+      .then(function (response) {
+        console.warn(response.data.result);
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
   };
 
   return (

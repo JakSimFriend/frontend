@@ -38,6 +38,7 @@ import ArrowLeft from "react-native-vector-icons/AntDesign";
 import { unlink } from "@react-native-seoul/kakao-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileEdit from "../screens/main/ProfileEdit";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Stack = createStackNavigator();
 
@@ -120,12 +121,14 @@ const MainNav = () => {
                   headerTitleAlign: "center",
                   headerTitleStyle: { fontSize: 15, fontWeight: "900" },
                   headerLeft: () => (
-                    <ArrowLeft
-                      onPress={goBack}
-                      name="arrowleft"
-                      size={25}
-                      style={{ marginLeft: 15 }}
-                    />
+                    <TouchableOpacity>
+                      <ArrowLeft
+                        onPress={goBack}
+                        name="arrowleft"
+                        size={25}
+                        style={{ marginLeft: 15 }}
+                      />
+                    </TouchableOpacity>
                   ),
                 }}
               />
@@ -175,7 +178,9 @@ const MainNav = () => {
               headerShadowVisible: false,
               headerTransparent: false,
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -187,7 +192,9 @@ const MainNav = () => {
               headerShadowVisible: false,
               headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -218,12 +225,9 @@ const MainNav = () => {
               headerTitleAlign: "center",
               headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerLeft: () => (
-                <ArrowLeft
-                  onPress={goToMyChallenge}
-                  name="arrowleft"
-                  size={25}
-                  style={{ marginLeft: 15 }}
-                />
+                <TouchableOpacity onPress={goToMyChallenge}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
               headerRight: () => (
                 <TouchableOpacity onPress={goToProgressNotification} style={{ marginRight: 20 }}>
@@ -238,7 +242,9 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -248,7 +254,9 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -263,7 +271,9 @@ const MainNav = () => {
                 </TouchableOpacity>
               ),
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -273,7 +283,9 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -288,7 +300,9 @@ const MainNav = () => {
                 </TouchableOpacity>
               ),
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -298,7 +312,9 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -320,7 +336,9 @@ const MainNav = () => {
                 </TouchableOpacity>
               ),
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -342,7 +360,9 @@ const MainNav = () => {
                 </TouchableOpacity>
               ),
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -366,7 +386,9 @@ const MainNav = () => {
                 </TouchableOpacity>
               ),
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -392,7 +414,9 @@ const MainNav = () => {
                 </TouchableOpacity>
               ),
               headerLeft: () => (
-                <ArrowLeft onPress={goBack} name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
               ),
             }}
           />

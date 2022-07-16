@@ -32,14 +32,14 @@ const Welcome = () => {
         getJwt();
 
         // userIdx 불러오기(가져다가 쓰기)
-        AsyncStorage.getItem("userIdx", (err, result: any) => {
+        AsyncStorage.getItem("jwt", (err, result: any) => {
           console.warn(parseInt(result));
         });
 
         setIsLoggedIn(true);
         setIsUser(true);
       } else {
-        console.warn("토큰 없엉");
+        // console.warn("토큰 없엉");
       }
     });
   }, []);
