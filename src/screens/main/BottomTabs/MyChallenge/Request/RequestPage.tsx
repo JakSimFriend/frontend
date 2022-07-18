@@ -27,7 +27,6 @@ export const RequestPage = ({ route }: RouteParams) => {
   const { title, content, startDate, schedule, members } = route.params;
   return (
     <Wrapper>
-      <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Title>{title}</Title>
         <Content>{content}</Content>

@@ -32,6 +32,7 @@ export const NickName = () => {
   const setIsUser = useSetRecoilState(isUserAtom);
 
   useEffect(() => {
+    // 닉네임에서 앱 닫을 시 = 백버튼 누른것과 동일하게 signOut
     const subscription = AppState.addEventListener("change", (nextState) => {
       if (nextState === "background") {
         const kakaoSignOut = async (): Promise<void> => {

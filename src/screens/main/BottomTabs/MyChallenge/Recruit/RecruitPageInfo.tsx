@@ -1,5 +1,5 @@
 import React from "react";
-import { StatusBar, Text } from "react-native";
+import { SafeAreaView, StatusBar, Text } from "react-native";
 import styled from "styled-components/native";
 import moment from "moment";
 import { GradientButtons } from "../../../../../components/GradientButtons";
@@ -28,75 +28,77 @@ export const RecruitPageInfo = () => {
   const recruitMembersInfo = useRecoilValue(recruitMembersInfoAtom);
   const recruitWaitingInfo = useRecoilValue(recruitWaitingInfoAtom);
   return (
-    <Wrapper>
-      <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
-      <Title>{recruitTitleInfo}</Title>
-      <Content>{recruitContentInfo}</Content>
-      <Infos>
-        <InfoWrapper>
-          <IconWrapper>
-            <FlagIcon />
-          </IconWrapper>
-          <TextWrapper>
-            <TopText>완주시 최대</TopText>
-            <Text>2,000 캐시와 1,000 경험치</Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <CalendarIcon />
-          </IconWrapper>
-          <TextWrapper>
-            <Text style={{ marginTop: 9 }}>
-              {moment(recruitStartDateInfo).format(`M월 D일`)}~
-              {moment(recruitStartDateInfo).add(14, "days").format(`M월 D일`)}
-            </Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <ClockIconTwo />
-          </IconWrapper>
-          <TextWrapper>
-            <Text style={{ marginTop: 9 }}>{recruitScheduleInfo}씩 인증</Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <UserIconTwo />
-          </IconWrapper>
-          <TextWrapper>
-            <Text style={{ marginTop: 9 }}>
-              신청 인원 {recruitMembersInfo}명, 대기자 수 {recruitWaitingInfo}명
-            </Text>
-          </TextWrapper>
-        </InfoWrapper>
-        <InfoWrapper>
-          <IconWrapper>
-            <DiamondIconTwo />
-          </IconWrapper>
-          <TextWrapper>
-            <TopText>팀원 평균</TopText>
-            <Text>상위 50%</Text>
-          </TextWrapper>
-        </InfoWrapper>
-      </Infos>
-      <OpenChallenge>
-        <GradientButtons
-          onPress={() => {
-            console.warn("공유할래용");
-          }}
-          Title="공유할래요"
-        />
-      </OpenChallenge>
-    </Wrapper>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
+      <Wrapper>
+        <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
+        <Title>{recruitTitleInfo}</Title>
+        <Content>{recruitContentInfo}</Content>
+        <Infos>
+          <InfoWrapper>
+            <IconWrapper>
+              <FlagIcon />
+            </IconWrapper>
+            <TextWrapper>
+              <TopText>완주시 최대</TopText>
+              <Text>2,000 캐시와 1,000 경험치</Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <CalendarIcon />
+            </IconWrapper>
+            <TextWrapper>
+              <Text style={{ marginTop: 9 }}>
+                {moment(recruitStartDateInfo).format(`M월 D일`)}~
+                {moment(recruitStartDateInfo).add(14, "days").format(`M월 D일`)}
+              </Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <ClockIconTwo />
+            </IconWrapper>
+            <TextWrapper>
+              <Text style={{ marginTop: 9 }}>{recruitScheduleInfo}씩 인증</Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <UserIconTwo />
+            </IconWrapper>
+            <TextWrapper>
+              <Text style={{ marginTop: 9 }}>
+                신청 인원 {recruitMembersInfo}명, 대기자 수 {recruitWaitingInfo}명
+              </Text>
+            </TextWrapper>
+          </InfoWrapper>
+          <InfoWrapper>
+            <IconWrapper>
+              <DiamondIconTwo />
+            </IconWrapper>
+            <TextWrapper>
+              <TopText>팀원 평균</TopText>
+              <Text>상위 50%</Text>
+            </TextWrapper>
+          </InfoWrapper>
+        </Infos>
+        <OpenChallenge>
+          <GradientButtons
+            onPress={() => {
+              console.warn("공유할래용");
+            }}
+            Title="공유할래요"
+          />
+        </OpenChallenge>
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 
 const Wrapper = styled.View`
   flex: 1;
   background-color: #f6f5fb;
-  padding: 50px 20px 0 20px;
+  padding: 50px 4% 0 4%;
 `;
 const Title = styled.Text`
   font-size: 22px;

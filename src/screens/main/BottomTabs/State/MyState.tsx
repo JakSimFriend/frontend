@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styled from "styled-components/native";
 import { Wrapper } from "../../../../styles/styles";
@@ -8,53 +8,55 @@ import { StatData } from "./StatData";
 export const MyState = () => {
   const [categoryEmpty, setCategoryEmpty] = useState(false); // data
   return (
-    <Wrapper>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <LinearGradient style={styles.blueBox} colors={["#947BEA", "#1151E5"]}>
-          <UpBox>
-            <SeasonTitle>시즌 1</SeasonTitle>
-            <ChallengeText>2022/06/01 ~ 2022/08/30</ChallengeText>
-            <ChallengeText>기간동안 만료한 챌린지만 합산됩니다</ChallengeText>
-          </UpBox>
-          <InfoWrapper>
-            <View>
-              <Text style={styles.text}>평균 달성률</Text>
-              <Text style={styles.text}>
-                <Text style={styles.number}>20</Text>%
-              </Text>
-            </View>
-          </InfoWrapper>
-        </LinearGradient>
-        <Text style={styles.expTitle}>누적 경험치</Text>
-        <Text style={styles.expNumber}>4,0000 EXP</Text>
-        <StatTitle>카테고리 통계</StatTitle>
-        {categoryEmpty ? (
-          <>
-            <View style={styles.EmptyView}>
-              <Text style={styles.EmptyText}>완료한 도전작심이 없어요</Text>
-            </View>
-          </>
-        ) : (
-          <>
-            {StatData.map((item, index) => {
-              return (
-                <Categories key={index}>
-                  <Left>
-                    <ImageWrapper style={styles.categoryBackground}>
-                      <Logo resizeMode="contain" source={item.category} />
-                    </ImageWrapper>
-                    <Text style={styles.categoryText}>{item.categoryTitle}</Text>
-                  </Left>
-                  <TextWrapper>
-                    <Text style={styles.EXP}>{item.exp}EXP</Text>
-                  </TextWrapper>
-                </Categories>
-              );
-            })}
-          </>
-        )}
-      </ScrollView>
-    </Wrapper>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
+      <Wrapper>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <LinearGradient style={styles.blueBox} colors={["#947BEA", "#1151E5"]}>
+            <UpBox>
+              <SeasonTitle>시즌 1</SeasonTitle>
+              <ChallengeText>2022/06/01 ~ 2022/08/30</ChallengeText>
+              <ChallengeText>기간동안 만료한 챌린지만 합산됩니다</ChallengeText>
+            </UpBox>
+            <InfoWrapper>
+              <View>
+                <Text style={styles.text}>평균 달성률</Text>
+                <Text style={styles.text}>
+                  <Text style={styles.number}>20</Text>%
+                </Text>
+              </View>
+            </InfoWrapper>
+          </LinearGradient>
+          <Text style={styles.expTitle}>누적 경험치</Text>
+          <Text style={styles.expNumber}>4,0000 EXP</Text>
+          <StatTitle>카테고리 통계</StatTitle>
+          {categoryEmpty ? (
+            <>
+              <View style={styles.EmptyView}>
+                <Text style={styles.EmptyText}>완료한 도전작심이 없어요</Text>
+              </View>
+            </>
+          ) : (
+            <>
+              {StatData.map((item, index) => {
+                return (
+                  <Categories key={index}>
+                    <Left>
+                      <ImageWrapper style={styles.categoryBackground}>
+                        <Logo resizeMode="contain" source={item.category} />
+                      </ImageWrapper>
+                      <Text style={styles.categoryText}>{item.categoryTitle}</Text>
+                    </Left>
+                    <TextWrapper>
+                      <Text style={styles.EXP}>{item.exp}EXP</Text>
+                    </TextWrapper>
+                  </Categories>
+                );
+              })}
+            </>
+          )}
+        </ScrollView>
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 

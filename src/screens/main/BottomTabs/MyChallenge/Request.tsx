@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   Image,
   ImageBackground,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -37,132 +38,134 @@ type NavigationProps = StackNavigationProp<StackParamList>;
 export const Request = () => {
   const navigation = useNavigation<NavigationProps>();
   return (
-    <RequestWrapper>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 모집 중 */}
-        <View style={styles.textWrapper}>
-          <Text style={styles.title}>모집 중</Text>
-          <Text style={styles.number}>{RecruitData.length}</Text>
-        </View>
-        {RecruitData.length === 0 ? (
-          <View style={styles.emptyBox}>
-            <Text style={styles.emptyText}>모집하고 있는 도전작심이 없어요</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
+      <RequestWrapper>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* 모집 중 */}
+          <View style={styles.textWrapper}>
+            <Text style={styles.title}>모집 중</Text>
+            <Text style={styles.number}>{RecruitData.length}</Text>
           </View>
-        ) : (
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {RecruitData.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  style={styles.recruitBox}
-                  key={index}
-                  onPress={() => {
-                    navigation.navigate("RecruitPage", {
-                      title: item.title,
-                      content: item.content,
-                      startDate: item.startDate,
-                      schedule: item.schedule,
-                      members: item.members,
-                      waiting: item.waiting,
-                    });
-                  }}
-                >
-                  <RecruitWrapper>
-                    <Text style={styles.recruitTitle}>{item.title}</Text>
-                    <View style={styles.recruitInfo}>
-                      <HomeCalendar />
-                      <RecruitText>
-                        D-
-                        {Math.ceil(
-                          moment.duration({ from: new Date(), to: item.startDate }).asDays(),
-                        )}
-                      </RecruitText>
-                      <HomeUser />
-                      <RecruitText>{item.members}명</RecruitText>
-                    </View>
-                    <View style={styles.newInfo}>
-                      <Text style={styles.newInfoText}>신규 신청이 {item.waiting}건 있어요!</Text>
-                    </View>
-                  </RecruitWrapper>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        )}
-
-        {/* 신청 중 */}
-        <View style={styles.textWrapper}>
-          <Text style={styles.title}>신청 중</Text>
-          <Text style={styles.number}>{RequestData.length}</Text>
-        </View>
-        {RequestData.length === 0 ? (
-          <View style={styles.emptyBox}>
-            <Text style={styles.emptyText}>신청한 도전작심이 없어요</Text>
-          </View>
-        ) : (
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {RequestData.map((item, index) => {
-              return (
-                <ChallengeBox key={index}>
-                  <Image
-                    source={require("../../../../assets/Art.png")}
-                    blurRadius={10}
-                    style={{ backgroundColor: "#000000", width: 100, height: 300 }}
-                  />
+          {RecruitData.length === 0 ? (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyText}>모집하고 있는 도전작심이 없어요</Text>
+            </View>
+          ) : (
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              {RecruitData.map((item, index) => {
+                return (
                   <TouchableOpacity
-                    activeOpacity={0}
+                    style={styles.recruitBox}
+                    key={index}
                     onPress={() => {
-                      navigation.navigate("RequestPage", {
+                      navigation.navigate("RecruitPage", {
                         title: item.title,
                         content: item.content,
                         startDate: item.startDate,
                         schedule: item.schedule,
                         members: item.members,
+                        waiting: item.waiting,
                       });
                     }}
                   >
-                    {item.approve ? (
-                      <ChallengeCategory>
-                        <ChallengeCategoryText>승인</ChallengeCategoryText>
-                      </ChallengeCategory>
-                    ) : (
-                      <ChallengeCategoryTwo>
-                        <ChallengeCategoryTextTwo>승인 대기</ChallengeCategoryTextTwo>
-                      </ChallengeCategoryTwo>
-                    )}
-                    <ChallengeTitle>{item.title}</ChallengeTitle>
-                    <ChallengeTags>{item.tags}</ChallengeTags>
-                    <DateWrapper>
-                      <HomeCalendar />
-                      <InfoText>
-                        D-
-                        {Math.ceil(
-                          moment.duration({ from: new Date(), to: item.startDate }).asDays(),
-                        )}
-                      </InfoText>
-                    </DateWrapper>
-                    <ScheduleWrapper>
-                      <HomeClock />
-                      <InfoText>{item.schedule}</InfoText>
-                    </ScheduleWrapper>
-                    <MembersWrapper>
-                      <HomeUser />
-                      <InfoText>{item.members}명</InfoText>
-                    </MembersWrapper>
-                    {item.members < 4 ? (
-                      <View style={styles.moreMembersButton}>
-                        <Text>{4 - item.members}명 더 필요해요</Text>
+                    <RecruitWrapper>
+                      <Text style={styles.recruitTitle}>{item.title}</Text>
+                      <View style={styles.recruitInfo}>
+                        <HomeCalendar />
+                        <RecruitText>
+                          D
+                          {Math.ceil(
+                            moment.duration({ from: new Date(), to: item.startDate }).asDays(),
+                          )}
+                        </RecruitText>
+                        <HomeUser />
+                        <RecruitText>{item.members}명</RecruitText>
                       </View>
-                    ) : (
-                      <></>
-                    )}
+                      <View style={styles.newInfo}>
+                        <Text style={styles.newInfoText}>신규 신청이 {item.waiting}건 있어요!</Text>
+                      </View>
+                    </RecruitWrapper>
                   </TouchableOpacity>
-                </ChallengeBox>
-              );
-            })}
-          </ScrollView>
-        )}
-      </ScrollView>
-    </RequestWrapper>
+                );
+              })}
+            </ScrollView>
+          )}
+
+          {/* 신청 중 */}
+          <View style={styles.textWrapper}>
+            <Text style={styles.title}>신청 중</Text>
+            <Text style={styles.number}>{RequestData.length}</Text>
+          </View>
+          {RequestData.length === 0 ? (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyText}>신청한 도전작심이 없어요</Text>
+            </View>
+          ) : (
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              {RequestData.map((item, index) => {
+                return (
+                  <ChallengeBox key={index}>
+                    <Image
+                      source={require("../../../../assets/Art.png")}
+                      blurRadius={30}
+                      style={{ backgroundColor: "#000000", width: 100, height: 300 }}
+                    />
+                    <TouchableOpacity
+                      activeOpacity={0}
+                      onPress={() => {
+                        navigation.navigate("RequestPage", {
+                          title: item.title,
+                          content: item.content,
+                          startDate: item.startDate,
+                          schedule: item.schedule,
+                          members: item.members,
+                        });
+                      }}
+                    >
+                      {item.approve ? (
+                        <ChallengeCategory>
+                          <ChallengeCategoryText>승인</ChallengeCategoryText>
+                        </ChallengeCategory>
+                      ) : (
+                        <ChallengeCategoryTwo>
+                          <ChallengeCategoryTextTwo>승인 대기</ChallengeCategoryTextTwo>
+                        </ChallengeCategoryTwo>
+                      )}
+                      <ChallengeTitle>{item.title}</ChallengeTitle>
+                      <ChallengeTags>{item.tags}</ChallengeTags>
+                      <DateWrapper>
+                        <HomeCalendar />
+                        <InfoText>
+                          D-
+                          {Math.ceil(
+                            moment.duration({ from: new Date(), to: item.startDate }).asDays(),
+                          )}
+                        </InfoText>
+                      </DateWrapper>
+                      <ScheduleWrapper>
+                        <HomeClock />
+                        <InfoText>{item.schedule}</InfoText>
+                      </ScheduleWrapper>
+                      <MembersWrapper>
+                        <HomeUser />
+                        <InfoText>{item.members}명</InfoText>
+                      </MembersWrapper>
+                      {item.members < 4 ? (
+                        <View style={styles.moreMembersButton}>
+                          <Text>{4 - item.members}명 더 필요해요</Text>
+                        </View>
+                      ) : (
+                        <></>
+                      )}
+                    </TouchableOpacity>
+                  </ChallengeBox>
+                );
+              })}
+            </ScrollView>
+          )}
+        </ScrollView>
+      </RequestWrapper>
+    </SafeAreaView>
   );
 };
 

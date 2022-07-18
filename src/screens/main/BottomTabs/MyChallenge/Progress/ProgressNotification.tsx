@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import Camera from "react-native-vector-icons/MaterialCommunityIcons";
 import CameraOff from "react-native-vector-icons/MaterialCommunityIcons";
@@ -45,66 +45,68 @@ export const ProgressNotification = () => {
     setModalOneVisible(true);
   };
   return (
-    <Wrapper>
-      {data.length === 0 ? (
-        <EmptyText>확인하실 알림이 없어요</EmptyText>
-      ) : (
-        <>
-          <Text>5월 5일</Text>
-          {data.map((item, index) => {
-            return (
-              <View key={index}>
-                <NoticeBox>
-                  <NoticeIcon>
-                    {item.icon === "happy" ? (
-                      <Left>
-                        <Happy name={item.icon} size={25} color={"#054de4"} />
-                        <NoticeText>
-                          ㅇㅇㅇㅇ님이{"\n"}만두님께{"\n"}멋져요 리액션을 남기셨어요
-                        </NoticeText>
-                      </Left>
-                    ) : item.icon === "camera-off" ? (
-                      <Left>
-                        <CameraOff name={item.icon} size={25} color={"#054de4"} />
-                        <NoticeText>만두님의{"\n"}인증이 신고되었어요</NoticeText>
-                      </Left>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <Wrapper>
+        {data.length === 0 ? (
+          <EmptyText>확인하실 알림이 없어요</EmptyText>
+        ) : (
+          <>
+            <Text>5월 5일</Text>
+            {data.map((item, index) => {
+              return (
+                <View key={index}>
+                  <NoticeBox>
+                    <NoticeIcon>
+                      {item.icon === "happy" ? (
+                        <Left>
+                          <Happy name={item.icon} size={25} color={"#054de4"} />
+                          <NoticeText>
+                            ㅇㅇㅇㅇ님이{"\n"}만두님께{"\n"}멋져요 리액션을 남기셨어요
+                          </NoticeText>
+                        </Left>
+                      ) : item.icon === "camera-off" ? (
+                        <Left>
+                          <CameraOff name={item.icon} size={25} color={"#054de4"} />
+                          <NoticeText>만두님의{"\n"}인증이 신고되었어요</NoticeText>
+                        </Left>
+                      ) : (
+                        <Left>
+                          <Camera name={item.icon} size={25} color={"#054de4"} />
+                          <NoticeText>만두님이{"\n"}도전작심을 인증하셨어요</NoticeText>
+                        </Left>
+                      )}
+                      <DeleteButton onPress={Delete}>
+                        <DeleteText>X</DeleteText>
+                      </DeleteButton>
+                    </NoticeIcon>
+                    {item.icon === "camera" ? (
+                      <DownBox>
+                        <TouchableOpacity>
+                          <Logo resizeMode="contain" source={a} />
+                        </TouchableOpacity>
+                        <View style={{ flexDirection: "row" }}>
+                          <AlarmWrapper onPress={Report}>
+                            <Alarm name="alarm-light" size={25} color={"#054de4"} />
+                          </AlarmWrapper>
+                          <ReactionButton>
+                            <ReactionButtonText>리액션 하기</ReactionButtonText>
+                          </ReactionButton>
+                        </View>
+                      </DownBox>
                     ) : (
-                      <Left>
-                        <Camera name={item.icon} size={25} color={"#054de4"} />
-                        <NoticeText>만두님이{"\n"}도전작심을 인증하셨어요</NoticeText>
-                      </Left>
+                      <></>
                     )}
-                    <DeleteButton onPress={Delete}>
-                      <DeleteText>X</DeleteText>
-                    </DeleteButton>
-                  </NoticeIcon>
-                  {item.icon === "camera" ? (
-                    <DownBox>
-                      <TouchableOpacity>
-                        <Logo resizeMode="contain" source={a} />
-                      </TouchableOpacity>
-                      <View style={{ flexDirection: "row" }}>
-                        <AlarmWrapper onPress={Report}>
-                          <Alarm name="alarm-light" size={25} color={"#054de4"} />
-                        </AlarmWrapper>
-                        <ReactionButton>
-                          <ReactionButtonText>리액션 하기</ReactionButtonText>
-                        </ReactionButton>
-                      </View>
-                    </DownBox>
-                  ) : (
-                    <></>
-                  )}
-                </NoticeBox>
-                <Time>오후 {item.time}</Time>
-              </View>
-            );
-          })}
-        </>
-      )}
+                  </NoticeBox>
+                  <Time>오후 {item.time}</Time>
+                </View>
+              );
+            })}
+          </>
+        )}
+      </Wrapper>
       <ReportModalOne />
       <ReportModalTwo />
-    </Wrapper>
+    </SafeAreaView>
   );
 };
 

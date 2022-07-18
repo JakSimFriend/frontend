@@ -3,6 +3,7 @@ import {
   Animated,
   Modal,
   Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -95,269 +96,273 @@ export const Progress = React.memo(() => {
   const emoticonDetail = ["기쁨", "웃음", "불만", "미안", "놀람", "멋져"];
   const [emoticonIndex, setEmoticonIndex] = useState(10);
   return (
-    <ProgressWrapper>
-      <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
-        {/* 진행 중 */}
-        <View style={styles.textWrapper}>
-          <Text style={styles.title}>진행 중</Text>
-          <Text style={styles.number}>{onProgress}</Text>
-        </View>
-        {onProgress === 0 ? (
-          <View style={styles.emptyBox}>
-            <Text style={styles.emptyText}>진행하고 있는 도전작심이 없어요</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
+      <ProgressWrapper>
+        <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
+          {/* 진행 중 */}
+          <View style={styles.textWrapper}>
+            <Text style={styles.title}>진행 중</Text>
+            <Text style={styles.number}>{onProgress}</Text>
           </View>
-        ) : (
-          <>
-            {progressData.map((item, index) => {
-              const [isCollapsed, setIsCollapsed] = useState(true); //accordion클릭이벤트
-              const Accordion = () => {
-                setIsCollapsed(!isCollapsed);
-              };
-              return (
-                <TouchableWithoutFeedback onPress={Accordion} key={index}>
-                  <View style={styles.accordionWrapper}>
-                    <View style={styles.titleWrapper}>
-                      <Text style={styles.accordionTitle}>{item.title}</Text>
-                      <View style={styles.dropdownButton}>
-                        {!isCollapsed ? (
-                          <Arrow name="chevron-up" size={15} />
-                        ) : (
-                          <Arrow name="chevron-down" size={15} />
-                        )}
-                      </View>
-                    </View>
-
-                    {/* accordion 외부내용 */}
-                    <Collapsible collapsed={!isCollapsed}>
-                      <Text style={styles.accordionMyState}>내 달성률 {item.Mypercentage}%</Text>
-                      <ProgressBar.Bar
-                        progress={item.Mypercentage / 100}
-                        width={330}
-                        height={12}
-                        borderRadius={30}
-                        color={MYCOLOR}
-                      />
-                    </Collapsible>
-
-                    {/* accordion 내부내용 */}
-                    {item.members.map((items, index) => {
-                      const icon = [a, b, c, d, e, f];
-                      return (
-                        <Collapsible
-                          key={index}
-                          collapsed={isCollapsed}
-                          style={styles.innerDataWrapper}
-                        >
-                          <View style={styles.innerData}>
-                            <View style={styles.pictureWrapper}>
-                              <Logo
-                                style={styles.picture}
-                                resizeMode="contain"
-                                source={icon[index]}
-                              />
-                              <TouchableOpacity onPress={ShowBottomSheet}>
-                                <View style={styles.reactionButton}>
-                                  <Logo resizeMode="contain" source={Emo} />
-                                </View>
-                              </TouchableOpacity>
-                            </View>
-                            <View>
-                              <Text style={styles.innerTitle}>
-                                {items.name}
-                                <Text style={styles.innerPercentage}> {items.percentage}%</Text>
-                              </Text>
-                              <ProgressBar.Bar
-                                progress={items.percentage / 100}
-                                width={250}
-                                height={12}
-                                borderRadius={30}
-                                color={OTHERSCOLOR}
-                              />
-                            </View>
-                          </View>
-                        </Collapsible>
-                      );
-                    })}
-
-                    {/* 바깥 버튼 */}
-                    <View style={styles.accordionButtons}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          // 1.프롭스(진행중 정보페이지에서 axios로 받아오면됨)
-                          navigation.navigate("ProgressDetailTopTab", {
-                            title: "item.title",
-                            startDate: "2022-07-05",
-                            schedule: "item.schedule",
-                            members: 5,
-                          });
-                        }}
-                        style={styles.detailButton}
-                      >
-                        <Text style={styles.detailButtonText}>상세 보기</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.completedButton}
-                        onPress={() => {
-                          console.warn("인증하기");
-                        }}
-                      >
-                        <Text style={styles.completedButtonText}>인증하기</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              );
-            })}
-          </>
-        )}
-
-        {/* 시작 전 */}
-        <View style={styles.textWrapper}>
-          <Text style={styles.title}>시작 전</Text>
-          <Text style={styles.number}>{BeforeStartData.length}</Text>
-        </View>
-        {BeforeStartData.length === 0 ? (
-          <View style={styles.emptyBox}>
-            <Text style={styles.emptyText}>시작을 기다리는 도전작심이 없어요</Text>
-          </View>
-        ) : (
-          <>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              {BeforeStartData.map((item, index) => {
-                const Members = [1, 2, 3, 4, 5, 6];
-                const selected = Members.slice(0, item.members);
-                const common = Members.concat(selected);
-                const Others = common.filter(function (v) {
-                  return common.indexOf(v) == common.lastIndexOf(v);
-                });
-                const todayDate = moment(new Date()).format("YYYY-MM-DD");
+          {onProgress === 0 ? (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyText}>진행하고 있는 도전작심이 없어요</Text>
+            </View>
+          ) : (
+            <>
+              {progressData.map((item, index) => {
+                const [isCollapsed, setIsCollapsed] = useState(true); //accordion클릭이벤트
+                const Accordion = () => {
+                  setIsCollapsed(!isCollapsed);
+                };
                 return (
-                  <View key={index}>
-                    {/* 아직 시작전인 챌린지들만 띄우기 */}
-                    {item.startDate > todayDate ? (
-                      <ChallengeBox>
+                  <TouchableWithoutFeedback onPress={Accordion} key={index}>
+                    <View style={styles.accordionWrapper}>
+                      <View style={styles.titleWrapper}>
+                        <Text style={styles.accordionTitle}>{item.title}</Text>
+                        <View style={styles.dropdownButton}>
+                          {!isCollapsed ? (
+                            <Arrow name="chevron-up" size={15} />
+                          ) : (
+                            <Arrow name="chevron-down" size={15} />
+                          )}
+                        </View>
+                      </View>
+
+                      {/* accordion 외부내용 */}
+                      <Collapsible collapsed={!isCollapsed}>
+                        <Text style={styles.accordionMyState}>내 달성률 {item.Mypercentage}%</Text>
+                        <ProgressBar.Bar
+                          progress={item.Mypercentage / 100}
+                          width={330}
+                          height={12}
+                          borderRadius={30}
+                          color={MYCOLOR}
+                        />
+                      </Collapsible>
+
+                      {/* accordion 내부내용 */}
+                      {item.members.map((items, index) => {
+                        const icon = [a, b, c, d, e, f];
+                        return (
+                          <Collapsible
+                            key={index}
+                            collapsed={isCollapsed}
+                            style={styles.innerDataWrapper}
+                          >
+                            <View style={styles.innerData}>
+                              <View style={styles.pictureWrapper}>
+                                <Logo
+                                  style={styles.picture}
+                                  resizeMode="contain"
+                                  source={icon[index]}
+                                />
+                                <TouchableOpacity onPress={ShowBottomSheet}>
+                                  <View style={styles.reactionButton}>
+                                    <Logo resizeMode="contain" source={Emo} />
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                              <View>
+                                <Text style={styles.innerTitle}>
+                                  {items.name}
+                                  <Text style={styles.innerPercentage}> {items.percentage}%</Text>
+                                </Text>
+                                <ProgressBar.Bar
+                                  progress={items.percentage / 100}
+                                  width={250}
+                                  height={12}
+                                  borderRadius={30}
+                                  color={OTHERSCOLOR}
+                                />
+                              </View>
+                            </View>
+                          </Collapsible>
+                        );
+                      })}
+
+                      {/* 바깥 버튼 */}
+                      <View style={styles.accordionButtons}>
                         <TouchableOpacity
                           onPress={() => {
-                            navigation.navigate("BeforeStartPage", {
-                              title: item.title,
-                              content: item.content,
-                              startDate: item.startDate,
-                              schedule: item.schedule,
-                              members: item.members,
-                              waiting: item.waiting,
+                            // 1.프롭스(진행중 정보페이지에서 axios로 받아오면됨)
+                            navigation.navigate("ProgressDetailTopTab", {
+                              title: "item.title",
+                              startDate: "2022-07-05",
+                              schedule: "item.schedule",
+                              members: 5,
                             });
                           }}
+                          style={styles.detailButton}
                         >
-                          <ChallengeCategory>
-                            <ChallengeCategoryText>{item.category}</ChallengeCategoryText>
-                          </ChallengeCategory>
-                          <ChallengeTitle>{item.title}</ChallengeTitle>
-                          <ChallengeTags>{item.tags}</ChallengeTags>
-                          <DateWrapper>
-                            <HomeCalendar />
-                            <InfoText>
-                              D-
-                              {Math.ceil(
-                                moment.duration({ from: new Date(), to: item.startDate }).asDays(),
-                              )}
-                            </InfoText>
-                          </DateWrapper>
-                          <ScheduleWrapper>
-                            <HomeClock />
-                            <InfoText>{item.schedule}</InfoText>
-                          </ScheduleWrapper>
-                          <MembersWrapper>
-                            <HomeUser />
-                            {/* 선택된맴버수 예시:4명 */}
-                            {Members.slice(0, item.members).map((item, index) => {
-                              return (
-                                <SelectedWrapper key={index}>
-                                  <ButtonText>{item}</ButtonText>
-                                </SelectedWrapper>
-                              );
-                            })}
-                            {/* 전체 맴버수 예시:6명 */}
-                            {Others.map((item, index) => {
-                              return (
-                                <NonSelectedWrapper key={index}>
-                                  <ButtonText>{item}</ButtonText>
-                                </NonSelectedWrapper>
-                              );
-                            })}
-                          </MembersWrapper>
+                          <Text style={styles.detailButtonText}>상세 보기</Text>
                         </TouchableOpacity>
-                      </ChallengeBox>
-                    ) : (
-                      <></>
-                    )}
-                  </View>
+                        <TouchableOpacity
+                          style={styles.completedButton}
+                          onPress={() => {
+                            console.warn("인증하기");
+                          }}
+                        >
+                          <Text style={styles.completedButtonText}>인증하기</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </TouchableWithoutFeedback>
                 );
               })}
-            </ScrollView>
-          </>
-        )}
-      </ScrollView>
+            </>
+          )}
 
-      {/* 바텀 모달 시트 */}
-      <Modal visible={bottomSheetVisible} transparent={true}>
-        <TouchableWithoutFeedback onPress={HideBottomSheet}>
-          <View style={styles.background}>
-            <Animated.View
-              style={{
-                marginBottom: upValue,
-              }}
-            >
-              <TouchableWithoutFeedback>
-                <View style={styles.container}>
-                  <View style={styles.pictureWrapper}>
-                    <View style={styles.picture}></View>
-                    <View>
-                      <TextOne>
-                        <Text style={styles.text1Name}>{progressData[0].member}</Text>
-                        님에게{"\n"}
-                        <View style={styles.text2}>
-                          {reactionType.length > 2 ? (
-                            <View style={styles.reactionSelectTextWrapper}>
-                              <Text style={styles.reactionSelectText}>{reactionType}</Text>
-                            </View>
-                          ) : (
-                            <Text style={styles.reactionSelectedText}>{reactionType}</Text>
-                          )}
-                          <Text style={styles.text3}>리액션을 보낼게요</Text>
-                        </View>
-                      </TextOne>
-                    </View>
-                  </View>
-                  <View style={styles.reactionBox}>
-                    {emoticons.map((item, index) => {
-                      return (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setEmoticonIndex(index);
-                            setReactionType(emoticonDetail[index]);
-                          }}
-                          key={index}
-                          style={
-                            emoticonIndex === index
-                              ? styles.emoticonSelectedWrapper
-                              : styles.emoticonWrapper
-                          }
-                        >
-                          <Text style={styles.emoticon}>{item}</Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-                  <GradientButtons onPress={SelectReaction} Title="보낼래요" />
-                </View>
-              </TouchableWithoutFeedback>
-            </Animated.View>
+          {/* 시작 전 */}
+          <View style={styles.textWrapper}>
+            <Text style={styles.title}>시작 전</Text>
+            <Text style={styles.number}>{BeforeStartData.length}</Text>
           </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-      {/* 리액션 전송 모달 팝업 */}
-      <ReactionModal />
-    </ProgressWrapper>
+          {BeforeStartData.length === 0 ? (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyText}>시작을 기다리는 도전작심이 없어요</Text>
+            </View>
+          ) : (
+            <>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                {BeforeStartData.map((item, index) => {
+                  const Members = [1, 2, 3, 4, 5, 6];
+                  const selected = Members.slice(0, item.members);
+                  const common = Members.concat(selected);
+                  const Others = common.filter(function (v) {
+                    return common.indexOf(v) == common.lastIndexOf(v);
+                  });
+                  const todayDate = moment(new Date()).format("YYYY-MM-DD");
+                  return (
+                    <View key={index}>
+                      {/* 아직 시작전인 챌린지들만 띄우기 */}
+                      {item.startDate > todayDate ? (
+                        <ChallengeBox>
+                          <TouchableOpacity
+                            onPress={() => {
+                              navigation.navigate("BeforeStartPage", {
+                                title: item.title,
+                                content: item.content,
+                                startDate: item.startDate,
+                                schedule: item.schedule,
+                                members: item.members,
+                                waiting: item.waiting,
+                              });
+                            }}
+                          >
+                            <ChallengeCategory>
+                              <ChallengeCategoryText>{item.category}</ChallengeCategoryText>
+                            </ChallengeCategory>
+                            <ChallengeTitle>{item.title}</ChallengeTitle>
+                            <ChallengeTags>{item.tags}</ChallengeTags>
+                            <DateWrapper>
+                              <HomeCalendar />
+                              <InfoText>
+                                D-
+                                {Math.ceil(
+                                  moment
+                                    .duration({ from: new Date(), to: item.startDate })
+                                    .asDays(),
+                                )}
+                              </InfoText>
+                            </DateWrapper>
+                            <ScheduleWrapper>
+                              <HomeClock />
+                              <InfoText>{item.schedule}</InfoText>
+                            </ScheduleWrapper>
+                            <MembersWrapper>
+                              <HomeUser />
+                              {/* 선택된맴버수 예시:4명 */}
+                              {Members.slice(0, item.members).map((item, index) => {
+                                return (
+                                  <SelectedWrapper key={index}>
+                                    <ButtonText>{item}</ButtonText>
+                                  </SelectedWrapper>
+                                );
+                              })}
+                              {/* 전체 맴버수 예시:6명 */}
+                              {Others.map((item, index) => {
+                                return (
+                                  <NonSelectedWrapper key={index}>
+                                    <ButtonText>{item}</ButtonText>
+                                  </NonSelectedWrapper>
+                                );
+                              })}
+                            </MembersWrapper>
+                          </TouchableOpacity>
+                        </ChallengeBox>
+                      ) : (
+                        <></>
+                      )}
+                    </View>
+                  );
+                })}
+              </ScrollView>
+            </>
+          )}
+        </ScrollView>
+
+        {/* 바텀 모달 시트 */}
+        <Modal visible={bottomSheetVisible} transparent={true}>
+          <TouchableWithoutFeedback onPress={HideBottomSheet}>
+            <View style={styles.background}>
+              <Animated.View
+                style={{
+                  marginBottom: upValue,
+                }}
+              >
+                <TouchableWithoutFeedback>
+                  <View style={styles.container}>
+                    <View style={styles.pictureWrapper}>
+                      <View style={styles.picture}></View>
+                      <View>
+                        <TextOne>
+                          <Text style={styles.text1Name}>{progressData[0].member}</Text>
+                          님에게{"\n"}
+                          <View style={styles.text2}>
+                            {reactionType.length > 2 ? (
+                              <View style={styles.reactionSelectTextWrapper}>
+                                <Text style={styles.reactionSelectText}>{reactionType}</Text>
+                              </View>
+                            ) : (
+                              <Text style={styles.reactionSelectedText}>{reactionType}</Text>
+                            )}
+                            <Text style={styles.text3}>리액션을 보낼게요</Text>
+                          </View>
+                        </TextOne>
+                      </View>
+                    </View>
+                    <View style={styles.reactionBox}>
+                      {emoticons.map((item, index) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => {
+                              setEmoticonIndex(index);
+                              setReactionType(emoticonDetail[index]);
+                            }}
+                            key={index}
+                            style={
+                              emoticonIndex === index
+                                ? styles.emoticonSelectedWrapper
+                                : styles.emoticonWrapper
+                            }
+                          >
+                            <Text style={styles.emoticon}>{item}</Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                    <GradientButtons onPress={SelectReaction} Title="보낼래요" />
+                  </View>
+                </TouchableWithoutFeedback>
+              </Animated.View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+        {/* 리액션 전송 모달 팝업 */}
+        <ReactionModal />
+      </ProgressWrapper>
+    </SafeAreaView>
   );
 });
 

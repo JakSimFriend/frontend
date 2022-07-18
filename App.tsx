@@ -5,7 +5,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RecoilRoot } from "recoil";
 import MainNav from "./src/navigators/MainNav";
 import "react-native-gesture-handler";
-import { SafeAreaView } from "react-native";
 
 const App = () => {
   useEffect(() => {
@@ -15,13 +14,11 @@ const App = () => {
   });
   return (
     <RecoilRoot>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <MainNav />
-          </NavigationContainer>
-        </SafeAreaProvider>
-      </SafeAreaView>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <MainNav />
+        </NavigationContainer>
+      </SafeAreaProvider>
     </RecoilRoot>
   );
 };

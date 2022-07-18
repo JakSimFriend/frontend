@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { MyState, State } from "../../../screens/main";
+import { MyState } from "../../../screens/main";
 import { useNavigation } from "@react-navigation/native";
 import { Text, TouchableOpacity } from "react-native";
 
