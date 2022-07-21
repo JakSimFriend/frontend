@@ -90,10 +90,10 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
     axios
       .patch(`https://jaksimfriend.site/users/${userIndex}/delete`)
       .then(function (response) {
-        console.warn(response.data.result);
+        console.log(response.data.result);
       })
       .catch(function (error) {
-        console.warn(error);
+        console.log(error);
       });
   };
 

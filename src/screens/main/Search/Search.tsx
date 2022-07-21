@@ -1,78 +1,60 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styled from "styled-components/native";
 import { SearchIcon } from "../../../components/TabIcon";
 import { GradientButtons } from "../../../components/GradientButtons";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../components/TabIcon";
-import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-export const searchData = [
-  {
-    title: "제목1",
-    categoryIndex: 3,
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    tags: ["최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-08-01",
-    schedule: "1주일에 2회",
-    members: 5,
-  },
-  {
-    title: "제목2",
-    categoryIndex: 4,
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    tags: ["최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-08-04",
-    schedule: "2주일에 2회",
-    members: 2,
-  },
-  {
-    title: "제목3",
-    categoryIndex: 2,
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    tags: ["최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-08-07",
-    schedule: "1주일에 4회",
-    members: 3,
-  },
-  {
-    title: "제목4",
-    categoryIndex: 5,
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    tags: ["최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-09-01",
-    schedule: "1주일에 6회",
-    members: 5,
-  },
-  {
-    title: "제목4",
-    categoryIndex: 5,
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    tags: ["최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-09-01",
-    schedule: "1주일에 6회",
-    members: 5,
-  },
-  {
-    title: "제목5",
-    categoryIndex: 1,
-    content: "설명설명설명설명설명설명설명설명설명설명설명설명설명설명",
-    tags: ["최대4글", "자넘어가", "면잘리게"],
-    startDate: "2022-10-23",
-    schedule: "2주일에 2회",
-    members: 1,
-  },
-];
-
-//블러처리 추가(마감)
 export const Search = () => {
   const navigation: any = useNavigation();
-  const categories = ["전체", "시사", "독서", "외국어", "전공기초", "예술", "습관", "운동", "기타"];
+  const categories = [
+    "전체",
+    "시사",
+    "독서",
+    "외국어",
+    "전공 기초",
+    "예술",
+    "습관",
+    "운동",
+    "기타",
+  ];
+  const [categoryName, setCategoryName] = useState("전체");
   const [categoryIndex, setCategoryIndex] = useState(0);
-  const [isStarted, setIsStarted] = useState(false); //data(마감<진행중>)
-  const [searchInput, setSearchInput] = useState(""); //data(검색input)
+  const [categoryEmpty, setCategoryEmpty] = useState(false);
+  const [searchInput, setSearchInput] = useState(""); // (검색input)
   const goToOpenChallenge = () => navigation.navigate("Category");
   const DownValue = useState(new Animated.Value(0))[0];
+
+  const [searchDatas, setSearchDatas]: any = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/searches/${categoryIndex}/${userIdx}`)
+        .then(function (response) {
+          setSearchDatas(response.data.result[0]);
+          setCategoryEmpty(false);
+          if (response.data.result === undefined) {
+            setCategoryEmpty(true);
+          }
+        })
+        .catch(function (error) {
+          setCategoryEmpty(true);
+        });
+    });
+  }, [categoryIndex]);
+
   return (
     <Wrapper>
       <Animated.View
@@ -97,90 +79,172 @@ export const Search = () => {
             <TouchableOpacity
               key={index}
               onPress={() => {
+                setCategoryName(item);
                 setCategoryIndex(index);
               }}
-              style={
-                categoryIndex === index ? styles.categoryBorderSelected : styles.categoryBorder
-              }
+              style={categoryName === item ? styles.categoryBorderSelected : styles.categoryBorder}
             >
-              <Category style={categoryIndex === index ? styles.categorySelected : styles.category}>
+              <Category style={categoryName === item ? styles.categorySelected : styles.category}>
                 {item}
               </Category>
             </TouchableOpacity>
           );
         })}
       </CategoryBox>
-      <ScrollView>
-        {/* 검색 필터링 */}
-        {searchData
-          ?.filter((item) => {
-            if (searchInput === "") return item;
-            else if (item.title.toLowerCase().includes(searchInput)) {
-              return item;
-            }
-          })
-          .map((item, index) => {
-            return (
-              <View key={index}>
-                {categoryIndex === 0 || categoryIndex === item.categoryIndex ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("SearchChallenge", {
-                        title: item.title,
-                        content: item.content,
-                        startDate: item.startDate,
-                        schedule: item.schedule,
-                        members: item.members,
-                      });
-                    }}
-                  >
-                    <View style={isStarted ? styles.startedSearchBox : styles.searchBox}>
-                      <View style={styles.searchHeader}>
-                        <Text style={styles.searchTitle}>{item.title}</Text>
-                        <View style={styles.categoryWrapper}>
-                          <Text style={styles.categoryText}>{categories[item.categoryIndex]}</Text>
-                        </View>
-                      </View>
-                      <View style={styles.tagWrapper}>
-                        <Text style={styles.tags}>#{item.tags}</Text>
-                      </View>
-                      <View style={styles.infoWrapper}>
-                        <Text style={styles.infoText}>
-                          <HomeCalendar />
-                          <Text> {moment(item.startDate).format(`M월 D일`)}</Text>
-                        </Text>
-                        <Text style={styles.infoText}>
-                          <HomeClock />
-                          <Text> {item.schedule}</Text>
-                        </Text>
-                        <Text style={styles.infoText}>
-                          <HomeUser />
-                          <Text> {item.members}명</Text>
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <></>
-                )}
-              </View>
-            );
-          })}
 
-        {/* 카테고리 비었을시 보여줄 컴포넌트 */}
-        {/* <>
-            <ScrollView>
-              <EmptyBox>
-                <EmptyBoxText>
-                  아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!
-                </EmptyBoxText>
-              </EmptyBox>
-            </ScrollView>
-            <OpenChallenge>
-              <GradientButtons onPress={goToOpenChallenge} Title="도전작심 개설하기" />
-            </OpenChallenge>
-          </> */}
+      <ScrollView>
+        {/* 모집중 검색 필터링 */}
+        {categoryEmpty ? (
+          <></>
+        ) : (
+          <>
+            {searchDatas.recruitments
+              ?.filter((item: any) => {
+                if (searchInput === "") return item;
+                else if (item.title.toLowerCase().includes(searchInput)) {
+                  return item;
+                }
+              })
+              .map((item: any, index: number) => {
+                return (
+                  <View key={index}>
+                    {categoryName === "전체" || categoryName === item.categoryName ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("SearchChallenge", {
+                            title: item.title,
+                            schedule: item.certification,
+                            members: item.accept,
+                            challengeIdx: item.challengeIdx,
+                          });
+                        }}
+                      >
+                        <View style={styles.searchBox}>
+                          <View style={{ paddingVertical: 20, paddingHorizontal: 30 }}>
+                            <View style={styles.searchHeader}>
+                              <Text style={styles.searchTitle}>{item.title}</Text>
+                              <View style={styles.categoryWrapper}>
+                                <Text style={styles.categoryText}>{item.categoryName}</Text>
+                              </View>
+                            </View>
+                            <View style={styles.tagWrapper}>
+                              <Text style={styles.tags}>
+                                {item.tags[2] ? `#${item.tags[2]}` : ""}{" "}
+                                {item.tags[1] ? `#${item.tags[1]}` : ""}{" "}
+                                {item.tags[0] ? `#${item.tags[0]}` : ""}
+                              </Text>
+                            </View>
+                            <View style={styles.infoWrapper}>
+                              <Text style={styles.infoText}>
+                                <HomeCalendar />
+                                <Text> {item.startDate}</Text>
+                              </Text>
+                              <Text style={styles.infoText}>
+                                <HomeClock />
+                                <Text> {item.certification}</Text>
+                              </Text>
+                              <Text style={styles.infoText}>
+                                <HomeUser />
+                                <Text> {item.accept}명</Text>
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    ) : (
+                      <></>
+                    )}
+                  </View>
+                );
+              })}
+
+            {searchDatas.ends
+              ?.filter((item: any) => {
+                if (searchInput === "") return item;
+                else if (item.title.toLowerCase().includes(searchInput)) {
+                  return item;
+                }
+              })
+              .map((item: any, index: number) => {
+                return (
+                  <View key={index}>
+                    {categoryName === "전체" || categoryName === item.categoryName ? (
+                      <>
+                        <View style={styles.searchBox}>
+                          <ImageBackground
+                            source={require("../../../assets/Book.png")}
+                            blurRadius={20}
+                            style={{
+                              position: "absolute",
+                              zIndex: 1,
+                              width: "100%",
+                              height: "100%",
+                              justifyContent: "center",
+                            }}
+                            borderRadius={15}
+                          >
+                            <Text
+                              style={{
+                                color: "#ffffff",
+                                textAlign: "center",
+                                fontSize: 25,
+                                fontWeight: "600",
+                              }}
+                            >
+                              마감
+                            </Text>
+                          </ImageBackground>
+                          <View style={{ paddingVertical: 20, paddingHorizontal: 30 }}>
+                            <View style={styles.searchHeader}>
+                              <Text style={styles.searchTitle}>{item.title}</Text>
+                              <View style={styles.categoryWrapper}>
+                                <Text style={styles.categoryText}>{item.categoryName}</Text>
+                              </View>
+                            </View>
+                            <View style={styles.tagWrapper}>
+                              <Text style={styles.tags}>#{item.tags}</Text>
+                            </View>
+                            <View style={styles.infoWrapper}>
+                              <Text style={styles.infoText}>
+                                <HomeCalendar />
+                                <Text> {item.startDate}</Text>
+                              </Text>
+                              <Text style={styles.infoText}>
+                                <HomeClock />
+                                <Text> {item.certification}</Text>
+                              </Text>
+                              <Text style={styles.infoText}>
+                                <HomeUser />
+                                <Text> {item.accept}명</Text>
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </View>
+                );
+              })}
+          </>
+        )}
+
+        {categoryEmpty ? (
+          <EmptyBox>
+            <EmptyBoxText>아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!</EmptyBoxText>
+          </EmptyBox>
+        ) : (
+          <></>
+        )}
       </ScrollView>
+      {categoryEmpty ? (
+        <OpenChallenge>
+          <GradientButtons onPress={goToOpenChallenge} Title="도전작심 개설하기" />
+        </OpenChallenge>
+      ) : (
+        <></>
+      )}
     </Wrapper>
   );
 };
@@ -202,17 +266,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     paddingBottom: 10,
   },
-  startedSearchBox: {
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    backgroundColor: "#f6f5fb",
-    borderRadius: 15,
-    margin: 20,
-    // 블러처리 추가
-  },
   searchBox: {
-    paddingVertical: 20,
-    paddingHorizontal: 30,
     backgroundColor: "#f6f5fb",
     borderRadius: 15,
     margin: 20,

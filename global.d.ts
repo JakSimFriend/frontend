@@ -22,5 +22,8 @@ declare namespace ReactNavigation {
     ProgressDetailTopTab:undefined;
     BirthDay:undefined;
     ProgressCertified:undefined;
+    HomeChallengeInfo:undefined;
+    ProgressPageInfo:undefined;
   }
 }
+declare module 'react-query';

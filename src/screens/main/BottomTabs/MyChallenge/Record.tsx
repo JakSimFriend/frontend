@@ -1,11 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
 import { recieveModalAtom } from "../../../../../atom";
 import { GradientButtons } from "../../../../components/GradientButtons";
 import RecieveModal from "../../../../components/organisms/RecieveModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const data = [
   {
@@ -32,6 +34,22 @@ export const Record = () => {
   const setModalVisible = useSetRecoilState(recieveModalAtom);
   const navigation = useNavigation();
   const goToProgressInfo = () => navigation.navigate("ProgressDetailTopTab");
+
+  const [recordData, setRecordData]: any = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/my-challenges/${userIdx}/record`)
+        .then(function (response) {
+          console.warn(response.data.result);
+          setRecordData(response.data);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
   return (
     <Wrapper>
       <ScrollView>
@@ -39,38 +57,44 @@ export const Record = () => {
           <Date>2022년</Date>
           <Number>{data.length}</Number>
         </InfoWrapper>
-        {data.map((item, index) => {
-          const [received, setReceived] = useState(false); //data
-          const 보상받기 = () => {
-            setModalVisible(true);
-            setReceived(true);
-          };
-          return (
-            <Box key={index} onPress={goToProgressInfo}>
-              <Header>
-                <Title>{item.title}</Title>
-                <CategoryButton>
-                  <Category>{item.category}</Category>
-                </CategoryButton>
-              </Header>
-              <Body>
-                <Left>
-                  <DateTwo>{item.date}</DateTwo>에{"\n"}
-                  <Percentage>{item.percentage}</Percentage>로 종료되었습니다
-                </Left>
-                {received ? (
-                  <RecieveButton disabled>
-                    <Text style={{ color: "#ffffff" }}>보상 받음</Text>
-                  </RecieveButton>
-                ) : (
-                  <View style={{ marginLeft: 20 }}>
-                    <GradientButtons onPress={보상받기} Title="보상 받기" />
-                  </View>
-                )}
-              </Body>
-            </Box>
-          );
-        })}
+        {recordData === undefined ? (
+          "undefined"
+        ) : (
+          <>
+            {data.map((item, index) => {
+              const [received, setReceived] = useState(false); //data
+              const 보상받기 = () => {
+                setModalVisible(true);
+                setReceived(true);
+              };
+              return (
+                <Box key={index} onPress={goToProgressInfo}>
+                  <Header>
+                    <Title>{item.title}</Title>
+                    <CategoryButton>
+                      <Category>{item.category}</Category>
+                    </CategoryButton>
+                  </Header>
+                  <Body>
+                    <Left>
+                      <DateTwo>{item.date}</DateTwo>에{"\n"}
+                      <Percentage>{item.percentage}</Percentage>로 종료되었습니다
+                    </Left>
+                    {received ? (
+                      <RecieveButton disabled>
+                        <Text style={{ color: "#ffffff" }}>보상 받음</Text>
+                      </RecieveButton>
+                    ) : (
+                      <View style={{ marginLeft: 20 }}>
+                        <GradientButtons onPress={보상받기} Title="보상 받기" />
+                      </View>
+                    )}
+                  </Body>
+                </Box>
+              );
+            })}
+          </>
+        )}
       </ScrollView>
       <RecieveModal />
     </Wrapper>

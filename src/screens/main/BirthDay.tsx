@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
 import { isUserAtom } from "../../../atom";
 import { GradientButtons } from "../../components/GradientButtons";
@@ -16,6 +16,7 @@ export const BirthDay = () => {
   const [dateSelected, setDateSelected] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState("");
+  const [dateInfo, setDateInfo] = useState("");
   const showTimePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -24,6 +25,7 @@ export const BirthDay = () => {
   };
   const handleDateConfirm = (date: Date) => {
     setDate(moment(date).format(`YYYY년 MM월 DD일`));
+    setDateInfo(moment(date).format(`YYYY-MM-DD`));
     setDateSelected(true);
     hideTimePicker();
   };
@@ -39,73 +41,75 @@ export const BirthDay = () => {
     axios
       .post("https://jaksimfriend.site/users/birth", {
         userIdx: userIndex,
-        birth: "2000-05-05",
+        birth: dateInfo,
       })
       .then(function (response) {
-        console.warn(response.data);
+        console.log(response.data);
       })
       .catch(function (error) {
-        console.warn(error);
+        console.log(error);
       });
   };
   const jakSimStart = () => {
-    setIsUser(true);
     postBirthDay();
+    setIsUser(true);
   };
   return (
-    <Wrapper>
-      <Title>생년월일을 적어주세요!</Title>
-      <SubTitle>작심친구에서 맞춤 서비스를 제공해드려요!</SubTitle>
-      <View>
-        {Platform.OS === "ios" ? (
-          <TextInput
-            placeholderTextColor={GREY}
-            style={styles.dropDownBox}
-            placeholder="생년월일"
-            value={date}
-            onChangeText={setDate}
-            onPressIn={() => {
-              showTimePicker();
-            }}
-            editable={false}
-          />
-        ) : (
-          <Pressable
-            onPress={() => {
-              showTimePicker();
-            }}
-          >
+    <SafeAreaView style={{ flex: 1, backgroundColor:"#ffffff" }}>
+      <Wrapper>
+        <Title>생년월일을 적어주세요!</Title>
+        <SubTitle>작심친구에서 맞춤 서비스를 제공해드려요!</SubTitle>
+        <View>
+          {Platform.OS === "ios" ? (
             <TextInput
               placeholderTextColor={GREY}
               style={styles.dropDownBox}
               placeholder="생년월일"
               value={date}
               onChangeText={setDate}
+              onPressIn={() => {
+                showTimePicker();
+              }}
               editable={false}
             />
-          </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => {
+                showTimePicker();
+              }}
+            >
+              <TextInput
+                placeholderTextColor={GREY}
+                style={styles.dropDownBox}
+                placeholder="생년월일"
+                value={date}
+                onChangeText={setDate}
+                editable={false}
+              />
+            </Pressable>
+          )}
+        </View>
+        {dateSelected ? (
+          <GradientWrapper>
+            <GradientButtons onPress={jakSimStart} Title="작심하러 갈게요" />
+          </GradientWrapper>
+        ) : (
+          <StartButton onPress={jakSimStart} disabled>
+            <Text style={{ color: "#6F81A9" }}>작심하러 갈게요</Text>
+          </StartButton>
         )}
-      </View>
-      {dateSelected ? (
-        <GradientWrapper>
-          <GradientButtons onPress={jakSimStart} Title="작심하러 갈게요" />
-        </GradientWrapper>
-      ) : (
-        <StartButton onPress={jakSimStart} disabled>
-          <Text style={{ color: "#6F81A9" }}>작심하러 갈게요</Text>
-        </StartButton>
-      )}
 
-   {/* modal picker에서 community피커예시로 변경 */}
-      <DateTimePicker
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleDateConfirm}
-        onCancel={hideTimePicker}
-        modalStyleIOS={{ marginBottom: "50%", paddingHorizontal: "5%" }}
-        confirmTextIOS="확인"
-      />
-    </Wrapper>
+        {/* modal picker에서 community피커예시로 변경 */}
+        <DateTimePicker
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleDateConfirm}
+          onCancel={hideTimePicker}
+          modalStyleIOS={{ marginBottom: "50%", paddingHorizontal: "5%" }}
+          confirmTextIOS="확인"
+        />
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 const Wrapper = styled.View`

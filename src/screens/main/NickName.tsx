@@ -9,6 +9,7 @@ import {
   ScrollView,
   StatusBar,
   AppState,
+  SafeAreaView,
 } from "react-native";
 import styled from "styled-components/native";
 import Feather from "react-native-vector-icons/AntDesign";
@@ -17,21 +18,21 @@ import NickNameModal2 from "../../components/organisms/NickNameModal2";
 import NickNameModal3 from "../../components/organisms/NickNameModal3";
 import NickNameModal4 from "../../components/organisms/NickNameModal4";
 import axios from "axios";
-import { isLoggedInAtom, isUserAtom, userIndexAtom } from "../../../atom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isLoggedInAtom, isUserAtom } from "../../../atom";
+import { useSetRecoilState } from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { unlink } from "@react-native-seoul/kakao-login";
 
 export const NickName = () => {
   const navigation = useNavigation();
   const [userIndex, setUserIndex] = useState(0);
-  AsyncStorage.getItem("userIdx", (err, result: any) => {
-    setUserIndex(parseInt(result));
-  });
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserAtom);
 
   useEffect(() => {
+    AsyncStorage.getItem("userIdx", (err, result: any) => {
+      setUserIndex(parseInt(result));
+    });
     // 닉네임에서 앱 닫을 시 = 백버튼 누른것과 동일하게 signOut
     const subscription = AppState.addEventListener("change", (nextState) => {
       if (nextState === "background") {
@@ -40,7 +41,7 @@ export const NickName = () => {
           console.log(message);
           AsyncStorage.removeItem("jwt");
           AsyncStorage.removeItem("userIdx");
-          await signOutPatch();
+          signOutPatch();
           setIsLoggedIn(false);
           setIsUser(false);
         };
@@ -49,31 +50,32 @@ export const NickName = () => {
     });
     return () => subscription.remove();
   }, []);
+
+  //회원 탈퇴 API
   const signOutPatch = () => {
     axios
       .patch(`https://jaksimfriend.site/users/${userIndex}/delete`)
       .then(function (response) {
-        console.warn(response.data.result);
+        console.log(response);
       })
       .catch(function (error) {
-        console.warn(error);
+        console.log(error);
       });
   };
-  AsyncStorage.getItem("userIdx", (err, result: any) => {
-    setUserIndex(parseInt(result));
-  });
+
   const postNickName = () => {
     axios
       .post("https://jaksimfriend.site/users/nickname", {
         userIdx: userIndex,
         nickName: nickName,
+        // 추천인
         recommendedIdx: 1,
       })
       .then(function (response) {
-        console.warn(response.data);
+        console.log(response.data);
       })
       .catch(function (error) {
-        console.warn(error);
+        console.log(error);
       });
   };
   const checkNickName = () => {
@@ -86,8 +88,24 @@ export const NickName = () => {
         console.warn(response.data);
       })
       .catch(function (error) {
-        console.warn(error);
         // 여기에 기존 프론트 중복 닉네임 쓸 수 없어요 적용하면됨
+        console.warn(error);
+      });
+  };
+  //추천인 확인
+  const checkUser = () => {
+    axios
+      .post(`https://jaksimfriend.site/users/check`, {
+        userIdx: userIndex,
+        nickName: nickName2,
+      })
+      .then(function (response) {
+        console.warn(response.data);
+        //result code : 1000이면 포인트 1000 지급, 에러뜨면 해당 콘솔 및 반응띄우기
+      })
+      .catch(function (error) {
+        console.warn(error);
+        //에러 코드에 따라
       });
   };
   const GREY = "#6F81A9",
@@ -172,100 +190,112 @@ export const NickName = () => {
   };
 
   return (
-    <Wrapper>
-      <StatusBar barStyle={"default"}></StatusBar>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>닉네임을 적어주세요!</Text>
-        <Text style={styles.title2}>친구들이 보게 될 닉네임이에요</Text>
-        <View style={styles.nickNameView}>
-          <TextInput
-            placeholder="닉네임"
-            placeholderTextColor={GREY}
-            style={[styles.nickNameTextInput, { borderColor: nickNameColor }]}
-            value={nickName}
-            onChangeText={setNickName}
-            onChange={(e) => {
-              onChangeNickName(e.nativeEvent.text);
-            }}
-          />
-          <TouchableOpacity
-            style={[styles.nickNameButton, { backgroundColor: buttonColor1 }]}
-            disabled={buttonColor1 == BLUE ? false : true}
-            onPress={() => {
-              onPress1();
-              checkNickName();
-            }}
-          >
-            <Text style={styles.nickNameButtonText}>중복 확인</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.guideView}>
-          <Text style={[styles.guideText, { color: guideColor1 }]}>
-            · 최대 8자 이하만 사용할 수 있어요
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <Wrapper>
+        <StatusBar barStyle={"default"}></StatusBar>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={styles.title}>닉네임을 적어주세요!</Text>
+          <Text style={styles.title2}>친구들이 보게 될 닉네임이에요</Text>
+          <View style={styles.nickNameView}>
+            <TextInput
+              placeholder="닉네임"
+              placeholderTextColor={GREY}
+              style={[styles.nickNameTextInput, { borderColor: nickNameColor }]}
+              value={nickName}
+              onChangeText={setNickName}
+              onChange={(e) => {
+                onChangeNickName(e.nativeEvent.text);
+              }}
+            />
+            <TouchableOpacity
+              style={[styles.nickNameButton, { backgroundColor: buttonColor1 }]}
+              disabled={buttonColor1 == BLUE ? false : true}
+              onPress={() => {
+                onPress1();
+                checkNickName();
+              }}
+            >
+              <Text style={styles.nickNameButtonText}>중복 확인</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.guideView}>
+            <Text style={[styles.guideText, { color: guideColor1 }]}>
+              · 최대 8자 이하만 사용할 수 있어요
+            </Text>
+            <Feather name="check" size={16} color={guideColor1 == BLACK ? RED : guideColor1} />
+          </View>
+          <View style={styles.guideView}>
+            <Text style={[styles.guideText, { color: guideColor2 }]}>
+              · 영문, 특수문자, 띄어쓰기는 빼주세요
+            </Text>
+            <Feather name="check" size={16} color={guideColor2 == BLACK ? RED : guideColor2} />
+          </View>
+          <View style={styles.guideView}>
+            <Text style={[styles.guideText, { color: guideColor3 }]}>
+              · 중복 닉네임은 쓸 수 없어요
+            </Text>
+            <Feather name="check" size={16} color={guideColor3 == BLACK ? RED : guideColor3} />
+          </View>
+          <Text style={styles.title3}>
+            추천인의 닉네임을 입력해주세요 <Text style={{ color: BLUE }}>{"(선택 사항)"}</Text>
           </Text>
-          <Feather name="check" size={16} color={guideColor1 == BLACK ? RED : guideColor1} />
-        </View>
-        <View style={styles.guideView}>
-          <Text style={[styles.guideText, { color: guideColor2 }]}>
-            · 영문, 특수문자, 띄어쓰기는 빼주세요
+          <Text style={styles.title4}>추천인을 입력하시면 두 분 모두에게 1,000p를 드려요!</Text>
+          <View style={styles.nickNameView}>
+            <TextInput
+              placeholder="추천인 닉네임"
+              placeholderTextColor={GREY}
+              style={[styles.nickNameTextInput, { borderColor: nickNameColor2 }]}
+              value={nickName2}
+              onChangeText={setNickName2}
+              onChange={(e) => {
+                setNickNameColor2(GREY);
+                setGuideColor4(GREY);
+                setButtonColor2(e.nativeEvent.text.length == 0 ? GREY_BUTTON : BLUE);
+              }}
+            />
+            <TouchableOpacity
+              style={[styles.nickNameButton, { backgroundColor: buttonColor2 }]}
+              disabled={buttonColor2 == BLUE ? false : true}
+              onPress={() => {
+                onPress2();
+                checkUser();
+              }}
+            >
+              <Text style={styles.nickNameButtonText}>찾아 보기</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.guideView}>
+            <Text style={[styles.guideText, { color: guideColor4 }]}>
+              · 작심친구에 있는 닉네임이어야 해요
+            </Text>
+            <Feather name="check" size={16} color={guideColor4 == BLACK ? RED : guideColor4} />
+          </View>
+        </ScrollView>
+        <TouchableOpacity
+          style={[
+            styles.submitButton,
+            { backgroundColor: buttonColor1 == BLACK ? BLUE : "#F5F5FB" },
+          ]}
+          onPress={() => {
+            postNickName();
+            navigation.navigate("BirthDay");
+          }}
+          disabled={buttonColor1 != BLACK}
+        >
+          <Text style={[styles.submitButtonText, { color: buttonColor1 == BLACK ? "#fff" : GREY }]}>
+            다음으로
           </Text>
-          <Feather name="check" size={16} color={guideColor2 == BLACK ? RED : guideColor2} />
-        </View>
-        <View style={styles.guideView}>
-          <Text style={[styles.guideText, { color: guideColor3 }]}>
-            · 중복 닉네임은 쓸 수 없어요
-          </Text>
-          <Feather name="check" size={16} color={guideColor3 == BLACK ? RED : guideColor3} />
-        </View>
-        <Text style={styles.title3}>
-          추천인의 닉네임을 입력해주세요 <Text style={{ color: BLUE }}>{"(선택 사항)"}</Text>
-        </Text>
-        <Text style={styles.title4}>추천인을 입력하시면 두 분 모두에게 1,000p를 드려요!</Text>
-        <View style={styles.nickNameView}>
-          <TextInput
-            placeholder="추천인 닉네임"
-            placeholderTextColor={GREY}
-            style={[styles.nickNameTextInput, { borderColor: nickNameColor2 }]}
-            value={nickName2}
-            onChangeText={setNickName2}
-            onChange={(e) => {
-              setNickNameColor2(GREY);
-              setGuideColor4(GREY);
-              setButtonColor2(e.nativeEvent.text.length == 0 ? GREY_BUTTON : BLUE);
-            }}
-          />
-          <TouchableOpacity
-            style={[styles.nickNameButton, { backgroundColor: buttonColor2 }]}
-            disabled={buttonColor2 == BLUE ? false : true}
-            onPress={onPress2}
-          >
-            <Text style={styles.nickNameButtonText}>찾아 보기</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.guideView}>
-          <Text style={[styles.guideText, { color: guideColor4 }]}>
-            · 작심친구에 있는 닉네임이어야 해요
-          </Text>
-          <Feather name="check" size={16} color={guideColor4 == BLACK ? RED : guideColor4} />
-        </View>
-      </ScrollView>
-      <TouchableOpacity
-        style={[styles.submitButton, { backgroundColor: buttonColor1 == BLACK ? BLUE : "#F5F5FB" }]}
-        onPress={() => {
-          postNickName();
-          navigation.navigate("BirthDay");
-        }}
-        disabled={buttonColor1 != BLACK}
-      >
-        <Text style={[styles.submitButtonText, { color: buttonColor1 == BLACK ? "#fff" : GREY }]}>
-          다음으로
-        </Text>
-      </TouchableOpacity>
-      <NickNameModal1 visible={modalVisible1} setVisible={setModalVisible1} nickName={nickName} />
-      <NickNameModal2 visible={modalVisible2} setVisible={setModalVisible2} />
-      <NickNameModal3 visible={modalVisible3} setVisible={setModalVisible3} nickName={nickName2} />
-      <NickNameModal4 visible={modalVisible4} setVisible={setModalVisible4} />
-    </Wrapper>
+        </TouchableOpacity>
+        <NickNameModal1 visible={modalVisible1} setVisible={setModalVisible1} nickName={nickName} />
+        <NickNameModal2 visible={modalVisible2} setVisible={setModalVisible2} />
+        <NickNameModal3
+          visible={modalVisible3}
+          setVisible={setModalVisible3}
+          nickName={nickName2}
+        />
+        <NickNameModal4 visible={modalVisible4} setVisible={setModalVisible4} />
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 

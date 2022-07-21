@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  cancelModalAtom,
   createdModalAtom,
+  dateAtom,
+  infoAtom,
   isLoggedInAtom,
   isUserAtom,
   nextButtonAtom,
+  numberAtom,
+  progressTitleAtom,
+  selectedCategoryIndexAtom,
+  startDateAtom,
   submitButtonAtom,
+  tagsAtom,
+  timeAtom,
+  titleAtom,
 } from "../../atom";
 import {
   Category,
@@ -38,38 +46,133 @@ import ArrowLeft from "react-native-vector-icons/AntDesign";
 import { unlink } from "@react-native-seoul/kakao-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileEdit from "../screens/main/ProfileEdit";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import axios from "axios";
+import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/HomeChallengeInfo";
+import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/ProgressPageInfo";
+import messaging from "@react-native-firebase/messaging";
 
 const Stack = createStackNavigator();
 
 const MainNav = () => {
-  const isUser = useRecoilValue(isUserAtom);
+  const [isUser, setIsUser] = useRecoilState(isUserAtom);
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const nextButtonDisable = useRecoilValue(nextButtonAtom);
   const submitButtonDisable = useRecoilValue(submitButtonAtom);
   const setModalVisible = useSetRecoilState(createdModalAtom);
-  const setCancelModal = useSetRecoilState(cancelModalAtom);
+  const progressTitle = useRecoilValue(progressTitleAtom);
   const navigation = useNavigation();
   const goToChallengeOpenOne = () => navigation.navigate("ChallengeOpenOne");
   const goToChallengeOpenTwo = () => navigation.navigate("ChallengeOpenTwo");
-  const goToRecruitPageInfo = () => navigation.navigate("RecruitPageInfo");
-  const goToBeforeStartPageInfo = () => navigation.navigate("BeforeStartPageInfo");
   const goToProgressNotification = () => navigation.navigate("ProgressNotification");
   const goToMyChallenge = () => navigation.navigate("내챌린지");
   const goBack = () => navigation.goBack();
+
+  // signOut
+  const [userIndex, setUserIndex] = useState(0);
+  AsyncStorage.getItem("userIdx", (err, result: any) => {
+    setUserIndex(parseInt(result));
+  });
+  const signOutPatch = () => {
+    axios
+      .patch(`https://jaksimfriend.site/users/${userIndex}/delete`)
+      .then(function (response) {
+        console.warn(response.data.result);
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
+  };
   const kakaoSignOut = async (): Promise<void> => {
     const message = await unlink();
-    console.warn(message);
+    console.log(message);
     AsyncStorage.removeItem("jwt");
     AsyncStorage.removeItem("userIdx");
+    signOutPatch();
     setIsLoggedIn(false);
+    setIsUser(false);
   };
+
+  // 챌린지 개설
+  const title = useRecoilValue(titleAtom); // 제목
+  const content = useRecoilValue(infoAtom); // 내용
+  const startDate = useRecoilValue(startDateAtom); // 시작 날짜
+  const date = useRecoilValue(dateAtom); // 인증 날짜
+  const number = useRecoilValue(numberAtom); // 인증 횟수
+  const time = useRecoilValue(timeAtom); // 인증 시간
+  const categoryIdx = useRecoilValue(selectedCategoryIndexAtom); // 카테고리 인덱스
+  const tags = useRecoilValue(tagsAtom); // 태그
+  const createChallenge = () => {
+    axios
+      .post("https://jaksimfriend.site/challenges", {
+        title: title,
+        content: content,
+        startDate: startDate,
+        cycle: date,
+        count: number,
+        deadline: time,
+        categoryIdx: categoryIdx,
+        userIdx: userIndex,
+        tags: tags,
+      })
+      .then(function (response) {
+        console.warn(response.data);
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
+  };
+
+  //   const date1 = new Date();
+  // const times  = (Date.parse(`01 may 2022 ${time} GMT`))
+  //   const timestamp = date1.getTime();
+  //   console.warn((times))
+
+  // useEffect(() => {
+  //   const date1 = new Date();
+
+  //   const tmpHours = `${date1.getHours() < 10 ? "0" : ""}${date1.getHours()}`;
+  //   // let meridiem;
+  //   const meridiem = parseInt(tmpHours) - 12 < 0 ? "AM" : "PM";
+  //   const tmpMinuets = `${date1.getMinutes() < 10 ? "0" : ""}${date1.getMinutes()}`;
+  //   const fullTime = `${tmpHours}:${tmpMinuets} ${meridiem}`;
+  //   console.warn(fullTime);
+  // }, []);
+
+  const [loading, setLoading] = useState(true);
+  const [initialRoute, setInitialRoute] = useState('Home');
+
+  useEffect(() => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      navigation.navigate("Home");
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          setInitialRoute("Home");
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return null;
+  }
   return (
     <>
       {isLoggedIn ? (
         <Stack.Navigator
-          initialRouteName="Home"
+        initialRouteName={initialRoute}
           screenOptions={{
             headerTitle: () => false,
             headerTransparent: true,
@@ -134,6 +237,18 @@ const MainNav = () => {
               />
             </>
           )}
+          <Stack.Screen
+            name="HomeChallengeInfo"
+            component={HomeChallengeInfo}
+            options={{
+              presentation: "transparentModal",
+              headerLeft: () => (
+                <TouchableOpacity onPress={goBack}>
+                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                </TouchableOpacity>
+              ),
+            }}
+          />
 
           {/* 우측 상단 페이지들 */}
           <Stack.Screen
@@ -221,9 +336,8 @@ const MainNav = () => {
             component={ProgressDetailTopTab}
             options={{
               presentation: "transparentModal",
-              headerTitle: "제목", //서버데이터
+              headerTitle: progressTitle,
               headerTitleAlign: "center",
-              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
               headerLeft: () => (
                 <TouchableOpacity onPress={goToMyChallenge}>
                   <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
@@ -261,20 +375,23 @@ const MainNav = () => {
             }}
           />
           <Stack.Screen
-            name="BeforeStartPage"
-            component={BeforeStartPage}
+            name="ProgressPageInfo"
+            component={ProgressPageInfo}
             options={{
               presentation: "transparentModal",
-              headerRight: () => (
-                <TouchableOpacity onPress={goToBeforeStartPageInfo}>
-                  <Text style={{ color: "#054de4", fontSize: 16, marginRight: 15 }}>정보</Text>
-                </TouchableOpacity>
-              ),
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
                   <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
+            }}
+          />
+          <Stack.Screen
+            name="BeforeStartPage"
+            component={BeforeStartPage}
+            options={{
+              presentation: "transparentModal",
+              headerLeft: () => <></>,
             }}
           />
           <Stack.Screen
@@ -294,16 +411,7 @@ const MainNav = () => {
             component={RecruitPage}
             options={{
               presentation: "transparentModal",
-              headerRight: () => (
-                <TouchableOpacity onPress={goToRecruitPageInfo}>
-                  <Text style={{ color: "#054de4", fontSize: 16, marginRight: 15 }}>정보</Text>
-                </TouchableOpacity>
-              ),
-              headerLeft: () => (
-                <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
-                </TouchableOpacity>
-              ),
+              headerLeft: () => <></>,
             }}
           />
           <Stack.Screen
@@ -324,22 +432,7 @@ const MainNav = () => {
             options={{
               presentation: "transparentModal",
               headerShadowVisible: false,
-              headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => {
-                    setCancelModal(true);
-                  }}
-                  style={{ marginRight: 20 }}
-                >
-                  <Text style={{ color: "#054de4" }}>신청 취소</Text>
-                </TouchableOpacity>
-              ),
-              headerLeft: () => (
-                <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
-                </TouchableOpacity>
-              ),
+              headerLeft: () => <></>,
             }}
           />
 
@@ -405,6 +498,7 @@ const MainNav = () => {
               headerRight: () => (
                 <TouchableOpacity
                   onPress={() => {
+                    createChallenge();
                     setModalVisible(true);
                   }}
                   disabled={submitButtonDisable}

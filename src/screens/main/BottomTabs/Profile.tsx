@@ -1,68 +1,49 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProfileModal from "../../../components/organisms/ProfileModal";
-import { ProfileNavParamList } from "../../../navigators";
+import { ProfileNavParamList } from "../../../navigators/Tabs/ProfileNav";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type ProfileDataType = {
   image: string;
-  nickName: string;
-  introduce: string;
-  point: number;
-  pointList: {
-    type: number;
-    date: string;
-    value: number;
-    total: number;
-  }[];
 };
 
 export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) => {
-  const [profileData, setProfileData] = useState<ProfileDataType>({
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/1600px-A_black_image.jpg?20201103073518",
-    nickName: "수화",
-    introduce: "친구야, 나랑 작심하자!",
-    point: 12000,
-    pointList: [
-      {
-        type: 0,
-        date: "2022/06/26",
-        value: 15000,
-        total: 25000,
-      },
-      {
-        type: 1,
-        date: "2022/05/15",
-        value: 10000,
-        total: 15000,
-      },
-      {
-        type: 2,
-        date: "2022/05/14",
-        value: 3000,
-        total: 5000,
-      },
-      {
-        type: 3,
-        date: "2022/05/13",
-        value: -10000,
-        total: 2000,
-      },
-      {
-        type: 4,
-        date: "2022/05/12",
-        value: 10000,
-        total: 12000,
-      },
-    ],
-  });
+  const [profileDatas, setProfileDatas]: any = useState([]);
+  const [profilePoint, setProfilePoint] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/profiles/${userIdx}`)
+        .then(function (response) {
+          setProfileDatas(response.data.result[0]);
+          setProfilePoint(response.data.result[0].point.toLocaleString("ko-KR"));
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
+  
+  // const [profileData, setProfileData] = useState<ProfileDataType>({
+  //   image:
+  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/1600px-A_black_image.jpg?20201103073518",
+  // });
 
-  const pointType = ["광고 보상", "친구 초대 보상", "챌린지 결제", "인출", "챌린지 보상"];
-  const pointIconName = ["gift-outline", "person-add-outline", "receipt-outline", "wallet-outline", "flag-outline"]; //Ionicons
+  const pointIconName = [
+    "gift-outline",
+    "person-add-outline",
+    "receipt-outline",
+    "wallet-outline",
+    "flag-outline",
+  ]; //Ionicons
 
   const [modalVisible, setModalVisible] = useState(false);
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
@@ -70,31 +51,44 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView style={{ flex: 1 }} bounces={false} onLayout={(e) => { setScrollViewHeight(e.nativeEvent.layout.height); }}>
-        <View onLayout={(e) => { scrollViewContentHeight == 0 && setScrollViewContentHeight(e.nativeEvent.layout.height) }}>
-          <TouchableOpacity onPress={() => navigation.navigate('SettingNav')}>
+      <ScrollView
+        style={{ flex: 1 }}
+        bounces={false}
+        onLayout={(e) => {
+          setScrollViewHeight(e.nativeEvent.layout.height);
+        }}
+      >
+        <View
+          onLayout={(e) => {
+            scrollViewContentHeight == 0 && setScrollViewContentHeight(e.nativeEvent.layout.height);
+          }}
+        >
+          <TouchableOpacity onPress={() => navigation.navigate("SettingNav")}>
             <Text style={styles.setting}>설정</Text>
           </TouchableOpacity>
           <View style={styles.profileView}>
             <Image
               source={{
-                uri: profileData.image,
+                uri: profileDatas.profile,
               }}
               style={styles.image}
             />
             <View style={styles.profileRightView}>
               <View style={styles.nameView}>
-                <Text style={styles.nickName}>{profileData.nickName}</Text>
-                <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('ProfileEdit')}>
+                <Text style={styles.nickName}>{profileDatas.nickName}</Text>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => navigation.navigate("ProfileEdit")}
+                >
                   <AntDesign name="edit" size={20} color="#101647" />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.introduce}>{profileData.introduce}</Text>
+              <Text style={styles.introduce}>{profileDatas.promise}</Text>
             </View>
           </View>
           <LinearGradient style={styles.linearGradient} colors={["#947BEA", "#1151E5"]}>
             <Text style={styles.pointTitleText}>내 캐시</Text>
-            <Text style={styles.pointText}>{profileData.point.toLocaleString("ko-KR")}C</Text>
+            <Text style={styles.pointText}>{profilePoint}C</Text>
             <View style={styles.pointButtonView}>
               <TouchableOpacity style={styles.pointButton} onPress={() => setModalVisible(true)}>
                 <Text style={styles.pointButtonText}>초대하기</Text>
@@ -107,33 +101,49 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
               </TouchableOpacity>
             </View>
           </LinearGradient>
-          <View style={[styles.bottomView, { paddingBottom: scrollViewContentHeight > scrollViewHeight ? 30 : scrollViewHeight - scrollViewContentHeight }]}>
+          <View style={[styles.bottomView]}>
             <Text style={styles.bottomTitle}>내역 보기</Text>
-            {profileData.pointList.length == 0 ? (
+            {profileDatas.points?.length == 0 ? (
               <Text style={styles.emptyAlertText}>결제 내역이 없어요</Text>
             ) : (
-              profileData.pointList.map((v, i) => (
-                <View key={i} style={styles.pointListRow}>
+              profileDatas.points?.map((item: any, index: number) => (
+                <View key={index} style={styles.pointListRow}>
                   <View style={styles.pointIconView}>
-                    {v.type == -1 ? (
+                    {item.categoryName === "챌린지 결제" ? (
                       <Image
                         source={require("../../../assets/coinIcon.png")}
                         style={styles.coinIcon}
                       />
                     ) : (
-                      <Ionicons name={pointIconName[v.type]} color="#101647" size={24} />
+                      <Ionicons
+                        name={
+                          pointIconName[
+                            item.categoryName === "광고 보상"
+                              ? 0
+                              : item.categoryName === "친구 초대 보상"
+                              ? 1
+                              : item.categoryName === "챌린지 결제"
+                              ? 2
+                              : item.categoryName === "인출"
+                              ? 3
+                              : 4
+                          ]
+                        }
+                        color="#101647"
+                        size={24}
+                      />
                     )}
                   </View>
                   <View style={[styles.pointColumnView, { flex: 1 }]}>
-                    <Text style={styles.pointTypeText}>{pointType[v.type]}</Text>
-                    <Text style={styles.pointDateText}>{v.date}</Text>
+                    <Text style={styles.pointTypeText}>{item.categoryName}</Text>
+                    <Text style={styles.pointDateText}>{item.createAt}</Text>
                   </View>
                   <View style={styles.pointColumnView}>
                     <Text style={[styles.pointTypeText, { color: "#044DE4", textAlign: "right" }]}>
-                      {(v.value > 0 ? "+" : "") + v.value.toLocaleString("ko-KR")}C
+                      {(item.point > 0 ? "+" : "") + item.point.toLocaleString("ko-KR")}C
                     </Text>
                     <Text style={[styles.pointDateText, { textAlign: "right" }]}>
-                      {v.total.toLocaleString("ko-KR")}C
+                      {item.balance.toLocaleString("ko-KR")}C
                     </Text>
                   </View>
                 </View>
@@ -161,7 +171,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   profileView: {
-    marginVertical: 50,
+    marginVertical: 35,
     marginHorizontal: 20,
     flexDirection: "row",
   },
@@ -193,10 +203,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   linearGradient: {
+    width: "95%",
     paddingVertical: 16,
-    paddingHorizontal: 15,
-    marginHorizontal: 20,
+    paddingHorizontal: "3%",
     borderRadius: 13,
+    alignSelf: "center",
   },
   pointTitleText: {
     color: "#fff",
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 30,
     elevation: 5,
-    shadowColor: '#0F2D6B33',
+    shadowColor: "#0F2D6B33",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,
     shadowRadius: 16,
@@ -244,7 +255,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     marginBottom: 30,
-    fontWeight: '600'
+    fontWeight: "600",
   },
   pointListRow: {
     borderBottomWidth: 1,

@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -8,12 +9,19 @@ export interface NickNameModal4Props {
 }
 
 export default function ProfileEditModal({ visible, setVisible }: NickNameModal4Props) {
+  const navigation = useNavigation();
   return (
     <Modal visible={visible} transparent={true}>
       <View style={styles.background}>
         <View style={styles.container}>
           <Text style={styles.text1}>수정 완료</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={() => setVisible(() => false)}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => {
+              setVisible(() => false);
+              navigation.goBack();
+            }}
+          >
             <Ionicons name="close-outline" color="#101647" size={24} />
           </TouchableOpacity>
           <Text style={styles.text2}>프로필을{"\n"}변경했어요</Text>

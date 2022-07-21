@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StatusBar, Text } from "react-native";
 import styled from "styled-components/native";
-import moment from "moment";
-import { GradientButtons } from "../../../../../components/GradientButtons";
 import {
   CalendarIcon,
   ClockIconTwo,
@@ -21,7 +19,7 @@ type RouteParams = {
   };
 };
 
-export const BeforeStartPageInfo = ({ route }: RouteParams) => {
+export const ProgressPageInfo = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
 
   const [data, setData]: any = useState([]);
@@ -39,7 +37,7 @@ export const BeforeStartPageInfo = ({ route }: RouteParams) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <Wrapper>
-      <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
+        <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
         <Title>{data.title}</Title>
         <Content>{data.content}</Content>
         <Infos>
@@ -88,14 +86,6 @@ export const BeforeStartPageInfo = ({ route }: RouteParams) => {
             </TextWrapper>
           </InfoWrapper>
         </Infos>
-        <OpenChallenge>
-          <GradientButtons
-            onPress={() => {
-              console.warn("공유할래용");
-            }}
-            Title="공유할래요"
-          />
-        </OpenChallenge>
       </Wrapper>
     </SafeAreaView>
   );
@@ -134,11 +124,4 @@ const TopText = styled.Text`
   font-size: 12px;
   color: #6f81a9;
   margin-bottom: 3px;
-`;
-const OpenChallenge = styled.View`
-  align-self: center;
-  width: 90%;
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 30px;
 `;

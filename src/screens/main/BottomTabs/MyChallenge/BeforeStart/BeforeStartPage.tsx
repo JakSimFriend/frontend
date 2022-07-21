@@ -1,5 +1,13 @@
-import React, { useEffect } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styled from "styled-components/native";
 import {
   HomeCalendarBlue,
@@ -10,102 +18,118 @@ import {
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
-import { useSetRecoilState } from "recoil";
-import {
-  BeforeStartContentInfoAtom,
-  BeforeStartMembersInfoAtom,
-  BeforeStartScheduleInfoAtom,
-  BeforeStartStartDateInfoAtom,
-  BeforeStartTitleInfoAtom,
-  BeforeStartWaitingInfoAtom,
-} from "../../../../../../atom";
-import { a } from "../../../../../assets/images";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 type RouteParams = {
   route: {
     params: {
-      title: string;
-      content: string;
-      startDate: string;
-      schedule: string;
-      members: number;
-      waiting: number;
+      challengeIdx: number;
     };
   };
 };
 
 // startDate이 오늘 이후인 data만 fetch
 export const BeforeStartPage = ({ route }: RouteParams) => {
-  const { title, startDate, schedule, members, content, waiting } = route.params;
-  const setBeforeStartTitleData = useSetRecoilState(BeforeStartTitleInfoAtom);
-  const setBeforeStartContentData = useSetRecoilState(BeforeStartContentInfoAtom);
-  const setBeforeStartStartDateData = useSetRecoilState(BeforeStartStartDateInfoAtom);
-  const setBeforeStartScheduleData = useSetRecoilState(BeforeStartScheduleInfoAtom);
-  const setBeforeStartMembersData = useSetRecoilState(BeforeStartMembersInfoAtom);
-  const setBeforeStartWaitingData = useSetRecoilState(BeforeStartWaitingInfoAtom);
+  const { challengeIdx } = route.params;
+
+  const [data, setData]: any = useState([]);
   useEffect(() => {
-    setBeforeStartTitleData(title);
-    setBeforeStartContentData(content);
-    setBeforeStartStartDateData(startDate);
-    setBeforeStartScheduleData(schedule);
-    setBeforeStartMembersData(members);
-    setBeforeStartWaitingData(waiting);
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/before-info`)
+        .then(function (response) {
+          setData(response.data.result[0]);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
   }, []);
+
+  const navigation: any = useNavigation();
   return (
-    <Wrapper>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.headerTitle}>{title}</Text>
-        <Text style={styles.title}>정보</Text>
-        <Calendar
-          firstDay={1}
-          initialDate={startDate}
-          minDate={startDate}
-          hideDayNames
-          maxDate={moment(startDate).add(14, "days").format(`YYYY-MM-DD`)}
-        />
-        <View style={styles.spendingDateBox}>
-          <Text style={styles.spendingDateText}>
-            {moment(startDate, "YYYYMMDD").fromNow()}에 시작해요
-          </Text>
-        </View>
-        <View style={styles.infoBox}>
-          <View style={styles.infoWrapper}>
-            <Text style={{ color: "#6F81A9" }}>
-              <HomeCalendarBlue /> {moment(startDate).format(`M월 D일`)} ~{" "}
-              {moment(startDate).add(14, "days").format(`M월 D일`)}
-            </Text>
-            <Text style={{ marginTop: 10, color: "#6F81A9" }}>
-              <HomeClockBlue /> {schedule}
-            </Text>
-          </View>
-          <View style={styles.infoWrapper}>
-            <Text style={{ color: "#6F81A9" }}>
-              <HomeUserBlue /> {members} 명
-            </Text>
-            <Text style={{ color: "#6F81A9", marginTop: 10 }}>
-              <HomeCamera /> 11시 30분 마감
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <View style={styles.topView}>
+        <Text style={styles.topText}>{data.title}</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#101647" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("BeforeStartPageInfo", {
+              challengeIdx: challengeIdx,
+            });
+          }}
+        >
+          <Text style={{ color: "#054de4", fontSize: 16 }}>정보</Text>
+        </TouchableOpacity>
+      </View>
+      <Wrapper>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Calendar
+            firstDay={1}
+            initialDate={data.startDate}
+            minDate={data.startDate}
+            hideDayNames
+            maxDate={moment(data.startDate).add(14, "days").format(`YYYY-MM-DD`)}
+          />
+          <View style={styles.spendingDateBox}>
+            <Text style={styles.spendingDateText}>
+              {moment(data.startDate, "YYYYMMDD").fromNow()}에 시작해요
             </Text>
           </View>
-        </View>
-        <Text style={styles.membersTitle}>작심친구 {members}</Text>
-        <Friends>
-          <Friend>
-            <Logo resizeMode="contain" source={a} />
-            <UserInfo>
-              <Name>이름</Name>
-              <Promise>작심</Promise>
-            </UserInfo>
-          </Friend>
-        </Friends>
-      </ScrollView>
-    </Wrapper>
+          <View style={styles.infoBox}>
+            <View style={styles.infoWrapper}>
+              <Text style={{ color: "#6F81A9" }}>
+                <HomeCalendarBlue /> {moment(data.startDate).format(`M월 D일`)} ~{" "}
+                {moment(data.startDate).add(14, "days").format(`M월 D일`)}
+              </Text>
+              <Text style={{ marginTop: 10, color: "#6F81A9" }}>
+                <HomeClockBlue /> {data.certification}
+              </Text>
+            </View>
+            <View style={styles.infoWrapper}>
+              <Text style={{ color: "#6F81A9" }}>
+                <HomeUserBlue /> {data.limited} 명
+              </Text>
+              <Text style={{ color: "#6F81A9", marginTop: 10 }}>
+                <HomeCamera /> {data.deadline}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.membersTitle}>작심친구 {data.members?.length}</Text>
+          {data.members?.map((item: any, index: number) => {
+            return (
+              <Friends key={index}>
+                <Friend>
+                  <Logo
+                    resizeMode="contain"
+                    source={{
+                      uri: item.profile,
+                    }}
+                  />
+                  <UserInfo>
+                    <Name>{item.nickName}</Name>
+                    <Promise>{item.promise}</Promise>
+                  </UserInfo>
+                </Friend>
+              </Friends>
+            );
+          })}
+        </ScrollView>
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 50px 4% 0 4%;
+  padding: 0 4%;
 `;
 const Friends = styled.View`
   flex-direction: column;
@@ -123,6 +147,7 @@ const Logo = styled.Image`
   width: 35px;
   height: 35px;
   margin-right: 20px;
+  border-radius: 15px;
 `;
 const UserInfo = styled.View`
   flex-direction: column;
@@ -133,18 +158,24 @@ const Name = styled.Text`
 const Promise = styled.Text`
   margin-top: 10px;
 `;
-
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
-  headerTitle: {
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "500",
+  topView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
-  title: {
-    marginTop: 25,
-    marginBottom: 20,
-    fontSize: 20,
-    fontWeight: "600",
+  topText: {
+    color: "#101647",
+    fontSize: 17,
+    position: "absolute",
+    width: width,
+    height: "100%",
+    textAlign: "center",
+    textAlignVertical: "center",
+    marginTop: 10,
+    fontWeight: "500",
   },
   spendingDateBox: {
     paddingVertical: 20,

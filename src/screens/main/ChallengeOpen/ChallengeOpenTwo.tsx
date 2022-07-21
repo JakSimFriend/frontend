@@ -15,21 +15,39 @@ import moment from "moment";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Progress from "react-native-progress";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { createdModalAtom, submitButtonAtom } from "../../../../atom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  createdModalAtom,
+  dateAtom,
+  numberAtom,
+  startDateAtom,
+  submitButtonAtom,
+  timeAtom,
+} from "../../../../atom";
 import CreatedModal1 from "../../../components/organisms/CreatedModal";
+import axios from "axios";
 
 export const ChallengeOpenTwo = () => {
   const submitButtonDisable = useSetRecoilState(submitButtonAtom);
   const GREY = "#6F81A9";
-  const [startDate, setStartDate] = useState(""); // 시작 날짜
   const [endDate, setEndDate] = useState(""); // 종료 날짜
   const [endProgress, setEndProgress] = useState(0.666); // progressbar
 
-  const [date, setDate] = useState(""); // 날짜
-  const [number, setNumber] = useState("0"); // 횟수
+  const [startDate, setStartDate] = useState(""); // 시작 날짜
+  const [date, setDate] = useState(""); // 인증 날짜
+  const [number, setNumber] = useState(""); // 인증 횟수
+  const [time, setTime] = useState(""); // 인증 시간
   const [summedNumber, setSummedNumber] = useState("0"); // 총 횟수
-  const [time, setTime] = useState(""); // 시간
+  const setStartDates = useSetRecoilState(startDateAtom);
+  const setDates = useSetRecoilState(dateAtom);
+  const setNumbers = useSetRecoilState(numberAtom);
+  const setTimes = useSetRecoilState(timeAtom);
+  useEffect(() => {
+    setStartDates(startDate);
+    setDates(date);
+    setNumbers(number);
+    setTimes(time);
+  }, [startDate, date, number, time]);
 
   // DropDown
   const [open1, setOpen1] = useState(false); // 첫번째 dropdown
@@ -70,12 +88,12 @@ export const ChallengeOpenTwo = () => {
     setTimePickerVisibility(false);
   };
   const handleDateConfirm = (date: Date) => {
-    setStartDate(moment(date).format(`YYYY/MM/DD`));
-    setEndDate(moment(date).add(14, "days").format(`YYYY/MM/DD`));
+    setStartDate(moment(date).format(`YYYY-MM-DD`));
+    setEndDate(moment(date).add(14, "days").format(`YYYY-MM-DD`));
     hideDatePicker();
   };
   const handleTimeConfirm = (time: Date) => {
-    setTime(moment(time).format("h:mm"));
+    setTime(moment(time).format("hh:mm:ss"));
     hideTimePicker();
   };
 
@@ -90,7 +108,6 @@ export const ChallengeOpenTwo = () => {
     submitButtonDisable(true);
   }, []);
   const Width = Dimensions.get("window").width;
-  // CreatedModalVisible
   const modalVisible = useRecoilValue(createdModalAtom);
   return (
     <TouchableWithoutFeedback onPress={hideDropDown}>
@@ -345,7 +362,7 @@ const styles = StyleSheet.create({
     width: 110,
     marginTop: 40,
     borderWidth: 1,
-    borderColor:"#c4c7cc",
+    borderColor: "#c4c7cc",
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     overflow: "visible",

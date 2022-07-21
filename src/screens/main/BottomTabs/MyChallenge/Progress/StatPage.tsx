@@ -1,107 +1,130 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { GradientButtons } from "../../../../../components/GradientButtons";
-import { useSetRecoilState } from "recoil";
-import { recieveModalAtom } from "../../../../../../atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { progressIndexAtom, recieveModalAtom } from "../../../../../../atom";
 import RecieveModal from "../../../../../components/organisms/RecieveModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 export const StatPage = () => {
-  const todayDate = moment(new Date()).format("YYYY/MM/DD일 h:00 기준");
-  const Percentage = 50; //data
-  const [challengeEnded, setChallengeEnded] = useState(true); //data
+  const progressIndex = useRecoilValue(progressIndexAtom);
+  const todayDate = moment(new Date()).format("YYYY/MM/DD일 hh:mm 기준");
   const [received, setReceived] = useState(false); //data
   const [graphColor, setGraphColor] = useState("#947BEA");
   const [graphColorTwo, setGraphColorTwo] = useState("#1151E5");
   const setModalVisible = useSetRecoilState(recieveModalAtom);
   const 보상받기 = () => {
+    // 여기에 보상받기 post38번 추가
     setModalVisible(true);
     setReceived(true);
     setGraphColor("#BFC7D7");
     setGraphColorTwo("#BFC7D7");
   };
-  return (
-    <Wrapper>
-      <TodayText>{todayDate}</TodayText>
-      <GraphWrapper>
-        <AnimatedCircularProgress
-          size={250}
-          width={25}
-          fill={Percentage}
-          tintColor={graphColor}
-          tintColorSecondary={graphColorTwo}
-          backgroundColor="#F6F5FB"
-          rotation={270}
-          arcSweepAngle={180}
-          style={{ height: 125 }}
-        >
-          {() => (
-            <View style={styles.GraphInnerWrapper}>
-              <Text style={[styles.GraphInnerText, { color: graphColorTwo }]}>달성률</Text>
-              <Text style={[styles.GraphInnerPercentage, { color: graphColorTwo }]}>
-                {Percentage}%
-              </Text>
-            </View>
-          )}
-        </AnimatedCircularProgress>
-      </GraphWrapper>
-      <View style={styles.InfoWrapper}>
-        <View>
-          <Text style={styles.InfoTitle}>환급 캐시</Text>
-          <Text style={styles.InfoValue}>
-            <Text style={styles.InfoNumber}>1,000</Text>C
-          </Text>
-          <View>
-            <Text style={styles.BoxTitle}>총 도전 캐시</Text>
-            <View style={styles.InfoBox}>
-              <Text style={styles.BoxText}>1,000C</Text>
-            </View>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.InfoTitle}>경험치</Text>
-          <Text style={styles.InfoValue}>
-            <Text style={styles.InfoNumber}>2,000</Text>EXP
-          </Text>
-          <View>
-            <Text style={styles.BoxTitle}>개인 달성률</Text>
-            <View style={styles.InfoBox}>
-              <Text style={styles.BoxText}>1,000C</Text>
-            </View>
-          </View>
-          <View>
-            <Text style={styles.BoxTitle}>작심친구 달성률</Text>
-            <View style={styles.InfoBox}>
-              <Text style={styles.BoxText}>1,000C</Text>
-            </View>
-          </View>
-          <View>
-            <Text style={styles.BoxTitle}>작심친구 구성 보너스</Text>
-            <View style={styles.InfoBox}>
-              <Text style={styles.BoxText}>1,000C</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-      {challengeEnded ? (
-        received ? (
-          <RecievedButtonWrapper>
-            <RecievedButtonText>보상을 이미 받으셨어요</RecievedButtonText>
-          </RecievedButtonWrapper>
-        ) : (
-          <RecievedButton>
-            <GradientButtons Title="보상 받기" onPress={보상받기} />
-          </RecievedButton>
+
+  const [data, setData]: any = useState([]);
+  const [fill, setFill] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(
+          `https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-calculation`,
         )
-      ) : (
-        <ButtonWrapper>
-          <ButtonText>끝나고 보상 받기</ButtonText>
-        </ButtonWrapper>
-      )}
-      <RecieveModal />
-    </Wrapper>
+        .then(function (response) {
+          setData(response.data.result);
+          setFill(response.data.result.achievement);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <Wrapper>
+        <TodayText>{todayDate}</TodayText>
+        <GraphWrapper>
+          <AnimatedCircularProgress
+            size={250}
+            width={25}
+            fill={fill}
+            tintColor={graphColor}
+            tintColorSecondary={graphColorTwo}
+            backgroundColor="#F6F5FB"
+            rotation={270}
+            arcSweepAngle={180}
+            style={{ height: 125 }}
+          >
+            {() => (
+              <View style={styles.GraphInnerWrapper}>
+                <Text style={[styles.GraphInnerText, { color: graphColorTwo }]}>달성률</Text>
+                <Text style={[styles.GraphInnerPercentage, { color: graphColorTwo }]}>
+                  {data.achievement}%
+                </Text>
+              </View>
+            )}
+          </AnimatedCircularProgress>
+        </GraphWrapper>
+        <View style={styles.InfoWrapper}>
+          <View>
+            <Text style={styles.InfoTitle}>환급 캐시</Text>
+            <Text style={styles.InfoValue}>
+              <Text style={styles.InfoNumber}>{data.refundCash}</Text>C
+            </Text>
+            <View>
+              <Text style={styles.BoxTitle}>총 도전 캐시</Text>
+              <View style={styles.InfoBox}>
+                <Text style={styles.BoxText}>{data.totalCash}C</Text>
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.InfoTitle}>경험치</Text>
+            <Text style={styles.InfoValue}>
+              <Text style={styles.InfoNumber}>{data.experience}</Text>EXP
+            </Text>
+            <View>
+              <Text style={styles.BoxTitle}>개인 달성률</Text>
+              <View style={styles.InfoBox}>
+                <Text style={styles.BoxText}>{data.individual}EXP</Text>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.BoxTitle}>작심친구 달성률</Text>
+              <View style={styles.InfoBox}>
+                <Text style={styles.BoxText}>{data.friend}EXP</Text>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.BoxTitle}>작심친구 구성 보너스</Text>
+              <View style={styles.InfoBox}>
+                <Text style={styles.BoxText}>{data.bonus}EXP</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        {data.exitStatus === 1 ? (
+          received ? (
+            <RecievedButtonWrapper>
+              <RecievedButtonText>보상을 이미 받으셨어요</RecievedButtonText>
+            </RecievedButtonWrapper>
+          ) : (
+            <RecievedButton>
+              <GradientButtons Title="보상 받기" onPress={보상받기} />
+            </RecievedButton>
+          )
+        ) : (
+          <ButtonWrapper>
+            <ButtonText>끝나고 보상 받기</ButtonText>
+          </ButtonWrapper>
+        )}
+        <RecieveModal />
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -138,7 +161,7 @@ const styles = StyleSheet.create({
   },
   InfoBox: {
     paddingVertical: 12,
-    paddingRight: 100,
+    paddingRight: "30%",
     paddingLeft: 10,
     backgroundColor: "#f6f5fb",
     borderRadius: 15,

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import {
   HomeCalendarBlue,
@@ -10,138 +10,161 @@ import {
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
-import { a } from "../../../../../assets/images";
 import { GradientButtons } from "../../../../../components/GradientButtons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { progressIndexAtom } from "../../../../../../atom";
 
-const DetailInfo = { title: "제목", startDate: "2022-07-05", schedule: "1주일에 2회", members: 5 };
-const markedDate = [
-  "2022-07-05",
-  "2022-07-06",
-  "2022-07-07",
-  "2022-07-08",
-  "2022-07-09",
-  "2022-07-10",
-  "2022-07-11",
-];
-
-// startDate이 오늘 이후인 data만 fetch
 export const ProgressPage = () => {
-  const [certified, setCertified] = useState(false); //data
-  const navigation = useNavigation();
-  const goToCertifiedPage = () => navigation.navigate("ProgressCertified");
-  return (
-    <Wrapper>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 캘린더 */}
-        <Calendar
-          firstDay={1}
-          initialDate={DetailInfo.startDate}
-          minDate={DetailInfo.startDate}
-          maxDate={moment(DetailInfo.startDate).add(14, "days").format(`YYYY-MM-DD`)}
-          markingType={"period"}
-          hideDayNames
-          markedDates={{
-            [`${markedDate[0]}`]: {
-              startingDay: true,
-              endingDay: true,
-              color: "#054DE4",
-              textColor: "#ffffff",
-            },
-            [`${markedDate[1]}`]: {
-              startingDay: true,
-              endingDay: true,
-              color: "#054DE4",
-              textColor: "#ffffff",
-            },
-            [`${markedDate[2]}`]: {
-              startingDay: true,
-              endingDay: true,
-              color: "#054DE4",
-              textColor: "#ffffff",
-            },
-            [`${markedDate[3]}`]: {
-              startingDay: true,
-              endingDay: true,
-              color: "#054DE4",
-              textColor: "#ffffff",
-            },
-            [`${markedDate[4]}`]: {
-              startingDay: true,
-              endingDay: true,
-              color: "#054DE4",
-              textColor: "#ffffff",
-            },
-          }}
-        />
-        {/* 개설 시 정해준 총 인증횟수가 앞으로 남은 시간동안 몇 회 남았는가 */}
-        <View style={styles.spendingDateBox}>
-          <Text style={styles.spendingDateText}>3일 안에 2회 더 인증하셔야 해요</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <View style={styles.infoWrapper}>
-            <Text style={styles.textColor}>
-              <HomeCalendarBlue /> {moment(DetailInfo.startDate).format(`M월 D일`)} ~{" "}
-              {moment(DetailInfo.startDate).add(14, "days").format(`M월 D일`)}
-            </Text>
-            <Text style={styles.textBottomColor}>
-              <HomeClockBlue /> {DetailInfo.schedule}
-            </Text>
-          </View>
-          <View style={styles.infoWrapper}>
-            <Text style={styles.textColor}>
-              <HomeUserBlue /> {DetailInfo.members} 명
-            </Text>
-            <Text style={styles.textBottomColor}>
-              <HomeCamera /> 11시 30분 마감
-            </Text>
-          </View>
-        </View>
-        <Text style={styles.membersTitle}>작심친구 {DetailInfo.members}</Text>
-        <Friends>
-          <Friend>
-            <View style={styles.friendLeft}>
-              <Logo resizeMode="contain" source={a} />
-              <UserInfo>
-                <Name>이름</Name>
-                <Promise>작심</Promise>
-              </UserInfo>
-            </View>
-            <PercentageInfo>
-              <Percentage>100%</Percentage>
-              {/* percentage가 0이면 "인증 내역 없음" */}
-              <LastCertified>14일 전 인증</LastCertified>
-            </PercentageInfo>
-          </Friend>
-          <Friend>
-            <View style={styles.friendLeft}>
-              <Logo resizeMode="contain" source={a} />
-              <UserInfo>
-                <Name>이름</Name>
-                <Promise>작심</Promise>
-              </UserInfo>
-            </View>
-            <PercentageInfo>
-              <Percentage>100%</Percentage>
-              <LastCertified>14일 전 인증</LastCertified>
-            </PercentageInfo>
-          </Friend>
-        </Friends>
-      </ScrollView>
+  const progressIndex = useRecoilValue(progressIndexAtom);
+  const navigation: any = useNavigation();
 
-      {/* 인증한 날 중에 오늘 날이 있으면 certified=true */}
-      {certified ? (
-        <OpenChallenge>
-          <TouchableOpacity style={styles.completedButton}>
-            <Text style={styles.completedButtonText}>오늘 인증 완료했어요!</Text>
-          </TouchableOpacity>
-        </OpenChallenge>
-      ) : (
-        <OpenChallenge>
-          <GradientButtons onPress={goToCertifiedPage} Title="사진으로 인증하기" />
-        </OpenChallenge>
-      )}
-    </Wrapper>
+  const [data, setData]: any = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-info`)
+        .then(function (response) {
+          setData(response.data.result[0]);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
+  const markedDate = [
+    "2022-07-05",
+    "2022-07-06",
+    "2022-07-07",
+    "2022-07-08",
+    "2022-07-09",
+    "2022-07-10",
+    "2022-07-11",
+  ];
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <Wrapper>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* <Text>
+            {data.dateLists?.map((item: any, index: number) => {
+              {
+                item.certificationDate;
+              }
+            })}
+          </Text> */}
+          <Calendar
+            firstDay={1}
+            initialDate={data.startDate}
+            minDate={data.startDate}
+            maxDate={moment(data.startDate).add(14, "days").format(`YYYY-MM-DD`)}
+            markingType={"period"}
+            hideDayNames
+            markedDates={{
+              [`${markedDate[0]}`]: {
+                startingDay: true,
+                endingDay: true,
+                color: "#054DE4",
+                textColor: "#ffffff",
+              },
+              [`${markedDate[1]}`]: {
+                startingDay: true,
+                endingDay: true,
+                color: "#054DE4",
+                textColor: "#ffffff",
+              },
+              [`${markedDate[2]}`]: {
+                startingDay: true,
+                endingDay: true,
+                color: "#054DE4",
+                textColor: "#ffffff",
+              },
+              [`${markedDate[3]}`]: {
+                startingDay: true,
+                endingDay: true,
+                color: "#054DE4",
+                textColor: "#ffffff",
+              },
+              [`${markedDate[4]}`]: {
+                startingDay: true,
+                endingDay: true,
+                color: "#054DE4",
+                textColor: "#ffffff",
+              },
+            }}
+          />
+          <View style={styles.spendingDateBox}>
+            <Text style={styles.spendingDateText}>
+              {data.remainingDay}일 안에 {data.remainingCount}회 더 인증하셔야 해요
+            </Text>
+          </View>
+          <View style={styles.infoBox}>
+            <View style={styles.infoWrapper}>
+              <Text style={styles.textColor}>
+                <HomeCalendarBlue /> {data.date}
+              </Text>
+              <Text style={styles.textBottomColor}>
+                <HomeClockBlue /> {data.certificationInfo}
+              </Text>
+            </View>
+            <View style={styles.infoWrapper}>
+              <Text style={styles.textColor}>
+                <HomeUserBlue /> {data.limited} 명
+              </Text>
+              <Text style={styles.textBottomColor}>
+                <HomeCamera /> {data.deadline}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.membersTitle}>작심친구 {data.memberCount}</Text>
+          {data.members?.map((item: any, index: number) => {
+            return (
+              <Friends key={index}>
+                <Friend>
+                  <View style={styles.friendLeft}>
+                    <Logo
+                      resizeMode="contain"
+                      source={{ uri: item.profile }}
+                      style={{ borderRadius: 15 }}
+                    />
+                    <UserInfo>
+                      <Name>{item.nickName}</Name>
+                      <Promise>{item.promise}</Promise>
+                    </UserInfo>
+                  </View>
+                  <PercentageInfo>
+                    <Percentage>{item.percent}%</Percentage>
+                    <LastCertified>{item.certification}</LastCertified>
+                  </PercentageInfo>
+                </Friend>
+              </Friends>
+            );
+          })}
+        </ScrollView>
+
+        {data.certificationStatus === 1 ? (
+          <OpenChallenge>
+            <TouchableOpacity style={styles.completedButton} disabled>
+              <Text style={styles.completedButtonText}>오늘 인증 완료했어요!</Text>
+            </TouchableOpacity>
+          </OpenChallenge>
+        ) : (
+          <OpenChallenge>
+            <GradientButtons
+              onPress={() => {
+                navigation.navigate("ProgressCertified", {
+                  challengeIdx: progressIndex,
+                });
+              }}
+              Title="사진으로 인증하기"
+            />
+          </OpenChallenge>
+        )}
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 

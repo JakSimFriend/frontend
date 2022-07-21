@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import Bells from "react-native-vector-icons/MaterialCommunityIcons";
 import Flag from "react-native-vector-icons/FontAwesome";
 import Clock from "react-native-vector-icons/AntDesign";
-import messaging from '@react-native-firebase/messaging';
+import messaging from "@react-native-firebase/messaging";
+import { NotificationListner } from "../NotificationEvent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const data = [
   {
@@ -30,14 +32,40 @@ const data = [
   },
 ];
 
+const requestUserPermission = async () => {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log("Authorization status:", authStatus);
+  }
+};
+const getFCMToken = async () => {
+  try {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.warn(fcmToken, "new token");
+      await AsyncStorage.setItem("fcmtoken", fcmToken);
+    }
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
 export const Notifications = () => {
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.warn('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    getFCMToken();
+    requestUserPermission();
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.warn(
+        "Notification caused app to open from background state:",
+        remoteMessage.notification,
+      );
     });
-
-    return unsubscribe;
-  }, []);
+    // NotificationListner();
+  });
   return (
     <Wrapper>
       {data.length === 0 ? (

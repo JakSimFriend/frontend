@@ -17,12 +17,15 @@ export const ProgressTopbarNav = () => {
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          width: "40%",
+          width: "45%",
         },
         tabBarPressColor: "#ffffff",
       }}
     >
-      <Tab.Screen name="정보" component={ProgressInfoNav} options={{}} />
+      <Tab.Screen
+        name="정보"
+        component={ProgressInfoNav}
+      />
       <Tab.Screen name="정산" component={StatInfoNav} />
     </Tab.Navigator>
   );

@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, StatusBar, Text } from "react-native";
 import styled from "styled-components/native";
-import moment from "moment";
 import { GradientButtons } from "../../../../../components/GradientButtons";
 import {
   CalendarIcon,
@@ -10,29 +9,38 @@ import {
   FlagIcon,
   UserIconTwo,
 } from "../../../../../components/TabIcon";
-import { useRecoilValue } from "recoil";
-import {
-  recruitContentInfoAtom,
-  recruitMembersInfoAtom,
-  recruitScheduleInfoAtom,
-  recruitStartDateInfoAtom,
-  recruitTitleInfoAtom,
-  recruitWaitingInfoAtom,
-} from "../../../../../../atom";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const RecruitPageInfo = () => {
-  const recruitTitleInfo = useRecoilValue(recruitTitleInfoAtom);
-  const recruitContentInfo = useRecoilValue(recruitContentInfoAtom);
-  const recruitStartDateInfo = useRecoilValue(recruitStartDateInfoAtom);
-  const recruitScheduleInfo = useRecoilValue(recruitScheduleInfoAtom);
-  const recruitMembersInfo = useRecoilValue(recruitMembersInfoAtom);
-  const recruitWaitingInfo = useRecoilValue(recruitWaitingInfoAtom);
+type RouteParams = {
+  route: {
+    params: {
+      challengeIdx: string;
+    };
+  };
+};
+
+export const RecruitPageInfo = ({ route }: RouteParams) => {
+  const { challengeIdx } = route.params;
+
+  const [data, setData]: any = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/detail`)
+        .then(function (response) {
+          setData(response.data.result);
+        })
+        .catch((error) => console.log(error.message));
+    });
+  }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <Wrapper>
         <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
-        <Title>{recruitTitleInfo}</Title>
-        <Content>{recruitContentInfo}</Content>
+        <Title>{data.title}</Title>
+        <Content>{data.content}</Content>
         <Infos>
           <InfoWrapper>
             <IconWrapper>
@@ -48,10 +56,7 @@ export const RecruitPageInfo = () => {
               <CalendarIcon />
             </IconWrapper>
             <TextWrapper>
-              <Text style={{ marginTop: 9 }}>
-                {moment(recruitStartDateInfo).format(`M월 D일`)}~
-                {moment(recruitStartDateInfo).add(14, "days").format(`M월 D일`)}
-              </Text>
+              <Text style={{ marginTop: 12 }}>{data.date}</Text>
             </TextWrapper>
           </InfoWrapper>
           <InfoWrapper>
@@ -59,7 +64,7 @@ export const RecruitPageInfo = () => {
               <ClockIconTwo />
             </IconWrapper>
             <TextWrapper>
-              <Text style={{ marginTop: 9 }}>{recruitScheduleInfo}씩 인증</Text>
+              <Text style={{ marginTop: 9 }}>{data.certification}씩 인증</Text>
             </TextWrapper>
           </InfoWrapper>
           <InfoWrapper>
@@ -68,7 +73,7 @@ export const RecruitPageInfo = () => {
             </IconWrapper>
             <TextWrapper>
               <Text style={{ marginTop: 9 }}>
-                신청 인원 {recruitMembersInfo}명, 대기자 수 {recruitWaitingInfo}명
+                신청 인원 {data.accept}명, 대기자 수 {data.waiting}명
               </Text>
             </TextWrapper>
           </InfoWrapper>
@@ -78,7 +83,7 @@ export const RecruitPageInfo = () => {
             </IconWrapper>
             <TextWrapper>
               <TopText>팀원 평균</TopText>
-              <Text>상위 50%</Text>
+              <Text>{data.tier}</Text>
             </TextWrapper>
           </InfoWrapper>
         </Infos>

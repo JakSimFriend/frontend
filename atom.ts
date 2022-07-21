@@ -9,10 +9,6 @@ export const isUserAtom = atom<boolean>({
   key: `isUser${uuid()}`,
   default: false,
 });
-export const userIndexAtom = atom<number>({
-  key: `isUser${uuid()}`,
-  default: 0,
-});
 export const jwtAtom = atom<string>({
   key: `jwt${uuid()}`,
   default: "",
@@ -58,56 +54,54 @@ export const reportModalTwo = atom<boolean>({
   key: `ReportModalTwoVisible${uuid()}`,
   default: false,
 });
+
+// 개설 페이지 1
 export const categoryIndexAtom = atom<number>({
   key: `categoryIndex${uuid()}`,
   default: 0,
 });
+export const selectedCategoryIndexAtom = atom<number>({
+  key: `selectedCategoryIndex${uuid()}`,
+  default: 0,
+});
 
-export const recruitTitleInfoAtom = atom<string>({
-  key: `recruitTitleInfo${uuid()}`,
+// 개설 페이지 2
+export const titleAtom = atom<string>({
+  key: `title${uuid()}`,
   default: "",
 });
-export const recruitStartDateInfoAtom = atom<string>({
-  key: `recruitStartDateInfo${uuid()}`,
+export const infoAtom = atom<string>({
+  key: `info${uuid()}`,
   default: "",
 });
-export const recruitScheduleInfoAtom = atom<string>({
-  key: `recruitScheduleInfo${uuid()}`,
+export const tagsAtom = atom({
+  key: `tags${uuid()}`,
+  default: [""],
+});
+
+// 개설 페이지 3
+export const startDateAtom = atom<string>({
+  key: `startDate${uuid()}`,
   default: "",
 });
-export const recruitMembersInfoAtom = atom<number>({
-  key: `recruitMembersInfo${uuid()}`,
+export const dateAtom = atom<string>({
+  key: `date${uuid()}`,
+  default: "",
+});
+export const numberAtom = atom<string>({
+  key: `number${uuid()}`,
+  default: "",
+});
+export const timeAtom = atom<string>({
+  key: `time${uuid()}`,
+  default: "",
+});
+
+export const progressIndexAtom = atom<number>({
+  key: `progressIndex${uuid()}`,
   default: 0,
 });
-export const recruitWaitingInfoAtom = atom<number>({
-  key: `recruitContentInfo${uuid()}`,
-  default: 0,
-});
-export const recruitContentInfoAtom = atom<string>({
-  key: `recruitContentInfo${uuid()}`,
-  default: "",
-});
-export const BeforeStartTitleInfoAtom = atom<string>({
-  key: `BeforeStartTitleInfo${uuid()}`,
-  default: "",
-});
-export const BeforeStartStartDateInfoAtom = atom<string>({
-  key: `BeforeStartStartDateInfo${uuid()}`,
-  default: "",
-});
-export const BeforeStartScheduleInfoAtom = atom<string>({
-  key: `BeforeStartScheduleInfo${uuid()}`,
-  default: "",
-});
-export const BeforeStartMembersInfoAtom = atom<number>({
-  key: `BeforeStartMembersInfo${uuid()}`,
-  default: 0,
-});
-export const BeforeStartWaitingInfoAtom = atom<number>({
-  key: `BeforeStartContentInfo${uuid()}`,
-  default: 0,
-});
-export const BeforeStartContentInfoAtom = atom<string>({
-  key: `BeforeStartContentInfo${uuid()}`,
+export const progressTitleAtom = atom<string>({
+  key: `progressTitle${uuid()}`,
   default: "",
 });

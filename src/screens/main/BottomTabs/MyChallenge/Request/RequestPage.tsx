@@ -1,5 +1,13 @@
-import React from "react";
-import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Dimensions,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styled from "styled-components/native";
 import {
   CalendarIcon,
@@ -8,28 +16,76 @@ import {
   FlagIcon,
   UserIconTwo,
 } from "../../../../../components/TabIcon";
-import moment from "moment";
 import ChallengeCancelModal from "../../../../../components/organisms/ChallengeCancelModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
+import { useSetRecoilState } from "recoil";
+import { cancelModalAtom } from "../../../../../../atom";
 
 type RouteParams = {
   route: {
     params: {
-      title: string;
-      content: string;
-      startDate: string;
-      schedule: string;
-      members: number;
+      challengeIdx: number;
+      waitingIdx: number;
     };
   };
 };
 
 export const RequestPage = ({ route }: RouteParams) => {
-  const { title, content, startDate, schedule, members } = route.params;
+  const { challengeIdx, waitingIdx } = route.params;
+
+  const [data, setData]: any = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
+        .then(function (response) {
+          setData(response.data.result);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
+  const cancelChallenge = () => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .patch(`https://jaksimfriend.site/challenges/${waitingIdx}/${userIdx}/cancel`)
+        .then(function (response) {
+          console.warn(response.data);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  };
+
+  const navigation = useNavigation();
+  const setCancelModal = useSetRecoilState(cancelModalAtom);
   return (
-    <Wrapper>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Title>{title}</Title>
-        <Content>{content}</Content>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F5FB" }}>
+      <StatusBar barStyle={"dark-content"} backgroundColor="#F6F5FB"></StatusBar>
+      <View style={styles.topView}>
+        <Text style={styles.topText}>{data.title}</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#101647" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            cancelChallenge();
+            setCancelModal(true);
+          }}
+        >
+          <Text style={{ color: "#054de4", fontSize: 16 }}>신청 취소</Text>
+        </TouchableOpacity>
+      </View>
+      <Wrapper>
+        <Title>{data.title}</Title>
+        <Content>{data.content}</Content>
         <Infos>
           <InfoWrapper>
             <IconWrapper>
@@ -45,10 +101,7 @@ export const RequestPage = ({ route }: RouteParams) => {
               <CalendarIcon />
             </IconWrapper>
             <TextWrapper>
-              <Text style={{ marginTop: 9 }}>
-                {moment(startDate).format(`M월 D일`)} ~{" "}
-                {moment(startDate).add(14, "days").format(`M월 D일`)}
-              </Text>
+              <Text style={{ marginTop: 11 }}>{data.date}</Text>
             </TextWrapper>
           </InfoWrapper>
           <InfoWrapper>
@@ -56,7 +109,7 @@ export const RequestPage = ({ route }: RouteParams) => {
               <ClockIconTwo />
             </IconWrapper>
             <TextWrapper>
-              <Text style={{ marginTop: 9 }}>{schedule}씩 인증</Text>
+              <Text style={{ marginTop: 9 }}>{data.certification}씩 인증</Text>
             </TextWrapper>
           </InfoWrapper>
           <InfoWrapper>
@@ -64,7 +117,9 @@ export const RequestPage = ({ route }: RouteParams) => {
               <UserIconTwo />
             </IconWrapper>
             <TextWrapper>
-              <Text style={{ marginTop: 9 }}>신청 인원 {members}명</Text>
+              <Text style={{ marginTop: 9 }}>
+                신청 인원 {data.accept}명, 대기자 수 {data.waiting}명
+              </Text>
             </TextWrapper>
           </InfoWrapper>
           <InfoWrapper>
@@ -73,17 +128,17 @@ export const RequestPage = ({ route }: RouteParams) => {
             </IconWrapper>
             <TextWrapper>
               <TopText>팀원 평균</TopText>
-              <Text>상위 50%</Text>
+              <Text>{data.tier}</Text>
             </TextWrapper>
           </InfoWrapper>
         </Infos>
         <ChallengeCash>
           <ChallengeCashText>도전 캐시</ChallengeCashText>
-          <ChallengeCashText>1,000C</ChallengeCashText>
+          <ChallengeCashText>{data.pee}C</ChallengeCashText>
         </ChallengeCash>
         <MyCash>
           <Text>내 캐시</Text>
-          <Text>10,000C</Text>
+          <Text>{data.myPoint}C</Text>
         </MyCash>
         <Buttons>
           <TouchableOpacity
@@ -98,16 +153,16 @@ export const RequestPage = ({ route }: RouteParams) => {
             <Text style={{ color: "#ffffff" }}>이미 신청했어요</Text>
           </TouchableOpacity>
         </Buttons>
-      </ScrollView>
-      <ChallengeCancelModal />
-    </Wrapper>
+        <ChallengeCancelModal />
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 
 const Wrapper = styled.View`
   flex: 1;
   background-color: #f6f5fb;
-  padding: 50px 5% 0 5%;
+  padding: 0px 5%;
 `;
 const Title = styled.Text`
   font-size: 22px;
@@ -163,7 +218,25 @@ const TopText = styled.Text`
   color: #6f81a9;
   margin-bottom: 3px;
 `;
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
+  topView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  topText: {
+    color: "#101647",
+    fontSize: 17,
+    position: "absolute",
+    width: width,
+    height: "100%",
+    textAlign: "center",
+    textAlignVertical: "center",
+    marginTop: 10,
+    fontWeight: "500",
+  },
   shareButton: {
     backgroundColor: "#ffffff",
     paddingVertical: 15,

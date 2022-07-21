@@ -1,4 +1,4 @@
-import { View, Button, Alert, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, Button, TouchableOpacity, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   KakaoOAuthToken,
@@ -29,32 +29,11 @@ export const KakaoLogin = () => {
       });
   };
 
-  const createChallenge = () => {
-    axios
-      .post("https://jaksimfriend.site/challenges", {
-        title: "테스트1",
-        content: "content",
-        startDate: "2022-08-01",
-        cycle: 7,
-        count: 4,
-        deadline: "24:00:00",
-        categoryIdx: 3,
-        userIdx: userIndex,
-        tags: ["태그1"],
-      })
-      .then(function (response) {
-        console.warn(response.data);
-      })
-      .catch(function (error) {
-        console.warn(error);
-      });
-  };
-
   const showChallenges = () => {
     axios
-      .get(`https://jaksimfriend.site/my-challenges/${userIndex}/application`, {})
+      .get(`https://jaksimfriend.site/my-challenges/${userIndex}/progress`, {})
       .then((response) => {
-        console.warn(response.data);
+        console.warn(response.data.result);
       })
       .catch((error) => console.log(error.message));
   };
@@ -71,7 +50,6 @@ export const KakaoLogin = () => {
       <Button title="프로필홈 정보 불러오기" onPress={getProfile} />
       {/* <Button title="카카오프로필정보 불러오기" onPress={getKakaoProfile} /> */}
       <Button title="챌린지 정보 보여주기" onPress={showChallenges} />
-      <Button title="챌린지 개설하기post" onPress={createChallenge} />
     </View>
   );
 };
@@ -120,8 +98,6 @@ export const KakaoSignIn = () => {
   return <GradientButtons onPress={signInWithKakao} Title="카카오 계정으로 시작하기" />;
 };
 
-// 닉네임 설정 후 바로 안뜨고
-// 로그아웃한다음 다른 계정으로 로그인하면 닉네임페이지가 아예안뜸(isuser가 true인듯)
 export const LogOutWithKakao = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
 

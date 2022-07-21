@@ -1,30 +1,50 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import styled from "styled-components/native";
 import Camera from "react-native-vector-icons/AntDesign";
 import { GradientButtons } from "../../../../../components/GradientButtons";
+import { useNavigation } from "@react-navigation/native";
 
-export const ProgressCertified = () => {
+type RouteParams = {
+  route: {
+    params: {
+      challengeIdx: number;
+    };
+  };
+};
+
+export const ProgressCertified = ({ route }: RouteParams) => {
+  const { challengeIdx } = route.params;
+  const navigation: any = useNavigation();
+
   return (
-    <Wrapper>
-      <Title>사진 등록하기</Title>
-      <SubTitle>오늘도 작심한 것을 인증해주세요!</SubTitle>
-      <PhotoBox>
-        <Camera name="camerao" size={25} color={"#054de4"} />
-        <CameraText>도전작심 규칙을 참고하셔서{`\n`}인증할 수 있는 사진을 올려주세요!</CameraText>
-      </PhotoBox>
-      <InfoButton>
-        <InfoButtonText>도전작심 정보</InfoButtonText>
-      </InfoButton>
-      <GradientButtonWrapper>
-        <GradientButtons
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <Wrapper>
+        <Title>사진 등록하기</Title>
+        <SubTitle>오늘도 작심한 것을 인증해주세요!</SubTitle>
+        <PhotoBox>
+          <Camera name="camerao" size={25} color={"#054de4"} />
+          <CameraText>도전작심 규칙을 참고하셔서{`\n`}인증할 수 있는 사진을 올려주세요!</CameraText>
+        </PhotoBox>
+        <InfoButton
           onPress={() => {
-            "인증하기~";
+            navigation.navigate("ProgressPageInfo", {
+              challengeIdx: challengeIdx,
+            });
           }}
-          Title="사진 촬영해서 인증하기"
-        />
-      </GradientButtonWrapper>
-    </Wrapper>
+        >
+          <InfoButtonText>도전작심 정보</InfoButtonText>
+        </InfoButton>
+        <GradientButtonWrapper>
+          <GradientButtons
+            onPress={() => {
+              "인증하기~";
+            }}
+            Title="사진 촬영해서 인증하기"
+          />
+        </GradientButtonWrapper>
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 const Wrapper = styled.View`
@@ -68,4 +88,5 @@ const GradientButtonWrapper = styled.View`
   bottom: 0;
   align-self: center;
   width: 90%;
+  margin-bottom: 10%;
 `;

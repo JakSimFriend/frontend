@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Animated,
   Modal,
@@ -13,42 +13,26 @@ import {
 } from "react-native";
 import styled from "styled-components/native";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
-import { BeforeStartData, progressData } from "./ChallengeData";
 import Collapsible from "react-native-collapsible";
 import * as ProgressBar from "react-native-progress";
 import Arrow from "react-native-vector-icons/FontAwesome";
 import { GradientButtons } from "../../../../components/GradientButtons";
 import ReactionModal from "../../../../components/organisms/ReactionModal";
 import { useSetRecoilState } from "recoil";
-import { reactionModalAtom } from "../../../../../atom";
-import { Emo, a, b, c, d, e, f } from "../../../../assets/images";
+import { progressIndexAtom, progressTitleAtom, reactionModalAtom } from "../../../../../atom";
+import { Emo } from "../../../../assets/images";
 import { useNavigation } from "@react-navigation/native";
-import moment from "moment";
-
-// type StackParamList = {
-//   BeforeStart: {
-//     title: string;
-//     content: string;
-//     startDate: string;
-//     schedule: string;
-//     members: number;
-//     waiting: number;
-//   };
-//   ProgressPage: {
-//     title: string;
-//     content: string;
-//     startDate: string;
-//     schedule: string;
-//     members: number;
-//   };
-// };
-// type NavigationProps = StackNavigationProp<StackParamList>;
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 export const Progress = React.memo(() => {
+  const setProgressIndex = useSetRecoilState(progressIndexAtom);
+  const setProgressTitle = useSetRecoilState(progressTitleAtom);
+  const [nickName, setNickname] = useState("");
+
   const MYCOLOR = "#5266E8",
     OTHERSCOLOR = "#BFC7D7";
 
-  const [onProgress, setOnProgress] = useState(3); //data(진행중)
   const [reactionType, setReactionType] = useState("");
   const navigation: any = useNavigation();
 
@@ -70,9 +54,10 @@ export const Progress = React.memo(() => {
       useNativeDriver: false,
     }).start();
   };
-  const ShowBottomSheet = () => {
+  const ShowBottomSheet = (item: any) => {
     sheetUp();
     setBottomSheetVisible(true);
+    setNickname(item);
   };
   const HideBottomSheet = () => {
     sheetDown();
@@ -95,26 +80,47 @@ export const Progress = React.memo(() => {
   const emoticons = ["😊", "😄", "🙁", "😂", "😲", "😘"];
   const emoticonDetail = ["기쁨", "웃음", "불만", "미안", "놀람", "멋져"];
   const [emoticonIndex, setEmoticonIndex] = useState(10);
+
+  const [progressDatas, setProgressDatas]: any = useState([]);
+  const [userIndex, setUserIndex]: any = useState();
+  AsyncStorage.getItem("userIdx").then((value) => {
+    setUserIndex(value);
+  });
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/my-challenges/${userIdx}/progress`)
+        .then(function (response) {
+          setProgressDatas(response.data.result[0]);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
+
+  // acordion
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const Accordion = () => {
+    setIsCollapsed(!isCollapsed);
+  };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <ProgressWrapper>
         <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
           {/* 진행 중 */}
           <View style={styles.textWrapper}>
             <Text style={styles.title}>진행 중</Text>
-            <Text style={styles.number}>{onProgress}</Text>
+            <Text style={styles.number}>{progressDatas.proceedingCount}</Text>
           </View>
-          {onProgress === 0 ? (
+          {progressDatas.proceedingCount === 0 ? (
             <View style={styles.emptyBox}>
               <Text style={styles.emptyText}>진행하고 있는 도전작심이 없어요</Text>
             </View>
           ) : (
             <>
-              {progressData.map((item, index) => {
-                const [isCollapsed, setIsCollapsed] = useState(true); //accordion클릭이벤트
-                const Accordion = () => {
-                  setIsCollapsed(!isCollapsed);
-                };
+              {progressDatas.proceedings?.map((item: any, index: number) => {
                 return (
                   <TouchableWithoutFeedback onPress={Accordion} key={index}>
                     <View style={styles.accordionWrapper}>
@@ -130,54 +136,69 @@ export const Progress = React.memo(() => {
                       </View>
 
                       {/* accordion 외부내용 */}
-                      <Collapsible collapsed={!isCollapsed}>
-                        <Text style={styles.accordionMyState}>내 달성률 {item.Mypercentage}%</Text>
-                        <ProgressBar.Bar
-                          progress={item.Mypercentage / 100}
-                          width={330}
-                          height={12}
-                          borderRadius={30}
-                          color={MYCOLOR}
-                        />
-                      </Collapsible>
-
-                      {/* accordion 내부내용 */}
-                      {item.members.map((items, index) => {
-                        const icon = [a, b, c, d, e, f];
+                      {progressDatas.proceedings[0]?.members?.map((item: any, index: number) => {
                         return (
-                          <Collapsible
-                            key={index}
-                            collapsed={isCollapsed}
-                            style={styles.innerDataWrapper}
-                          >
-                            <View style={styles.innerData}>
-                              <View style={styles.pictureWrapper}>
-                                <Logo
-                                  style={styles.picture}
-                                  resizeMode="contain"
-                                  source={icon[index]}
-                                />
-                                <TouchableOpacity onPress={ShowBottomSheet}>
-                                  <View style={styles.reactionButton}>
-                                    <Logo resizeMode="contain" source={Emo} />
-                                  </View>
-                                </TouchableOpacity>
-                              </View>
-                              <View>
-                                <Text style={styles.innerTitle}>
-                                  {items.name}
-                                  <Text style={styles.innerPercentage}> {items.percentage}%</Text>
+                          <Collapsible collapsed={!isCollapsed} key={index}>
+                            {item.userIdx === parseInt(userIndex) ? (
+                              <>
+                                <Text style={styles.accordionMyState}>
+                                  내 달성률 {item.percent}%
                                 </Text>
                                 <ProgressBar.Bar
-                                  progress={items.percentage / 100}
-                                  width={250}
+                                  progress={item.percent / 100}
+                                  width={330}
                                   height={12}
                                   borderRadius={30}
-                                  color={OTHERSCOLOR}
+                                  color={MYCOLOR}
                                 />
-                              </View>
-                            </View>
+                              </>
+                            ) : (
+                              <></>
+                            )}
                           </Collapsible>
+                        );
+                      })}
+
+                      {/* accordion 내부내용 */}
+                      {progressDatas.proceedings[0]?.members?.map((items: any, index: number) => {
+                        return (
+                          <View key={index}>
+                            <Collapsible collapsed={isCollapsed} style={styles.innerDataWrapper}>
+                              <View style={styles.innerData}>
+                                <View style={styles.pictureWrapper}>
+                                  <Logo
+                                    style={styles.picture}
+                                    resizeMode="contain"
+                                    source={{
+                                      uri: items.profile,
+                                    }}
+                                  />
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      ShowBottomSheet(items.nickName);
+                                    }}
+                                  >
+                                    <View style={styles.reactionButton}>
+                                      <Logo resizeMode="contain" source={Emo} />
+                                    </View>
+                                  </TouchableOpacity>
+                                </View>
+                                <View>
+                                  <Text style={styles.innerTitle}>
+                                    {items.nickName}
+                                    <Text style={styles.innerPercentage}> {items.percent}%</Text>
+                                  </Text>
+                                  <ProgressBar.Bar
+                                    progress={items.percent / 100}
+                                    width={250}
+                                    height={12}
+                                    borderRadius={30}
+                                    color={OTHERSCOLOR}
+                                  />
+                                </View>
+                              </View>
+                            </Collapsible>
+                          </View>
                         );
                       })}
 
@@ -185,26 +206,30 @@ export const Progress = React.memo(() => {
                       <View style={styles.accordionButtons}>
                         <TouchableOpacity
                           onPress={() => {
-                            // 1.프롭스(진행중 정보페이지에서 axios로 받아오면됨)
-                            navigation.navigate("ProgressDetailTopTab", {
-                              title: "item.title",
-                              startDate: "2022-07-05",
-                              schedule: "item.schedule",
-                              members: 5,
-                            });
+                            navigation.navigate("ProgressDetailTopTab");
+                            setProgressIndex(item.challengeIdx);
+                            setProgressTitle(item.title);
                           }}
                           style={styles.detailButton}
                         >
                           <Text style={styles.detailButtonText}>상세 보기</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                          style={styles.completedButton}
-                          onPress={() => {
-                            console.warn("인증하기");
-                          }}
-                        >
-                          <Text style={styles.completedButtonText}>인증하기</Text>
-                        </TouchableOpacity>
+                        {item.certification === 0 ? (
+                          <TouchableOpacity
+                            style={styles.certifyButton}
+                            onPress={() => {
+                              navigation.navigate("ProgressCertified", {
+                                challengeIdx: item.challengeIdx,
+                              });
+                            }}
+                          >
+                            <Text style={styles.completedButtonText}>인증하기</Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity style={styles.completedButton} disabled>
+                            <Text style={styles.completedButtonText}>인증완료</Text>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     </View>
                   </TouchableWithoutFeedback>
@@ -216,85 +241,68 @@ export const Progress = React.memo(() => {
           {/* 시작 전 */}
           <View style={styles.textWrapper}>
             <Text style={styles.title}>시작 전</Text>
-            <Text style={styles.number}>{BeforeStartData.length}</Text>
+            <Text style={styles.number}>{progressDatas.beforeCount}</Text>
           </View>
-          {BeforeStartData.length === 0 ? (
+          {progressDatas.beforeCount === 0 ? (
             <View style={styles.emptyBox}>
               <Text style={styles.emptyText}>시작을 기다리는 도전작심이 없어요</Text>
             </View>
           ) : (
             <>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {BeforeStartData.map((item, index) => {
+                {progressDatas.befores?.map((item: any, index: number) => {
                   const Members = [1, 2, 3, 4, 5, 6];
-                  const selected = Members.slice(0, item.members);
+                  const selected = Members.slice(0, item.accept);
                   const common = Members.concat(selected);
                   const Others = common.filter(function (v) {
                     return common.indexOf(v) == common.lastIndexOf(v);
                   });
-                  const todayDate = moment(new Date()).format("YYYY-MM-DD");
                   return (
-                    <View key={index}>
-                      {/* 아직 시작전인 챌린지들만 띄우기 */}
-                      {item.startDate > todayDate ? (
-                        <ChallengeBox>
-                          <TouchableOpacity
-                            onPress={() => {
-                              navigation.navigate("BeforeStartPage", {
-                                title: item.title,
-                                content: item.content,
-                                startDate: item.startDate,
-                                schedule: item.schedule,
-                                members: item.members,
-                                waiting: item.waiting,
-                              });
-                            }}
-                          >
-                            <ChallengeCategory>
-                              <ChallengeCategoryText>{item.category}</ChallengeCategoryText>
-                            </ChallengeCategory>
-                            <ChallengeTitle>{item.title}</ChallengeTitle>
-                            <ChallengeTags>{item.tags}</ChallengeTags>
-                            <DateWrapper>
-                              <HomeCalendar />
-                              <InfoText>
-                                D-
-                                {Math.ceil(
-                                  moment
-                                    .duration({ from: new Date(), to: item.startDate })
-                                    .asDays(),
-                                )}
-                              </InfoText>
-                            </DateWrapper>
-                            <ScheduleWrapper>
-                              <HomeClock />
-                              <InfoText>{item.schedule}</InfoText>
-                            </ScheduleWrapper>
-                            <MembersWrapper>
-                              <HomeUser />
-                              {/* 선택된맴버수 예시:4명 */}
-                              {Members.slice(0, item.members).map((item, index) => {
-                                return (
-                                  <SelectedWrapper key={index}>
-                                    <ButtonText>{item}</ButtonText>
-                                  </SelectedWrapper>
-                                );
-                              })}
-                              {/* 전체 맴버수 예시:6명 */}
-                              {Others.map((item, index) => {
-                                return (
-                                  <NonSelectedWrapper key={index}>
-                                    <ButtonText>{item}</ButtonText>
-                                  </NonSelectedWrapper>
-                                );
-                              })}
-                            </MembersWrapper>
-                          </TouchableOpacity>
-                        </ChallengeBox>
-                      ) : (
-                        <></>
-                      )}
-                    </View>
+                    <ChallengeBox key={index}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("BeforeStartPage", {
+                            title: item.title,
+                            challengeIdx: item.challengeIdx,
+                          });
+                        }}
+                      >
+                        <ChallengeCategory>
+                          <ChallengeCategoryText>{item.categoryName}</ChallengeCategoryText>
+                        </ChallengeCategory>
+                        <ChallengeTitle>{item.title}</ChallengeTitle>
+                        <ChallengeTags>
+                          {item.tags[2] ? `#${item.tags[2]}` : ""}{" "}
+                          {item.tags[1] ? `#${item.tags[1]}` : ""}{" "}
+                          {item.tags[0] ? `#${item.tags[0]}` : ""}
+                        </ChallengeTags>
+                        <DateWrapper>
+                          <HomeCalendar />
+                          <InfoText>{item.remainingDay}</InfoText>
+                        </DateWrapper>
+                        <ScheduleWrapper>
+                          <HomeClock />
+                          <InfoText>{item.certification}</InfoText>
+                        </ScheduleWrapper>
+                        <MembersWrapper>
+                          <HomeUser />
+                          {Members.slice(0, item.accept).map((item, index) => {
+                            return (
+                              <SelectedWrapper key={index}>
+                                <ButtonText>{item}</ButtonText>
+                              </SelectedWrapper>
+                            );
+                          })}
+                          {Others.map((item, index) => {
+                            return (
+                              <NonSelectedWrapper key={index}>
+                                <ButtonText>{item}</ButtonText>
+                              </NonSelectedWrapper>
+                            );
+                          })}
+                        </MembersWrapper>
+                      </TouchableOpacity>
+                    </ChallengeBox>
                   );
                 })}
               </ScrollView>
@@ -317,7 +325,7 @@ export const Progress = React.memo(() => {
                       <View style={styles.picture}></View>
                       <View>
                         <TextOne>
-                          <Text style={styles.text1Name}>{progressData[0].member}</Text>
+                          <Text style={styles.text1Name}>{nickName}</Text>
                           님에게{"\n"}
                           <View style={styles.text2}>
                             {reactionType.length > 2 ? (
@@ -359,7 +367,6 @@ export const Progress = React.memo(() => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        {/* 리액션 전송 모달 팝업 */}
         <ReactionModal />
       </ProgressWrapper>
     </SafeAreaView>
@@ -530,8 +537,15 @@ const styles = StyleSheet.create({
   detailButtonText: {
     color: "#054de4",
   },
-  completedButton: {
+  certifyButton: {
     backgroundColor: "#054de4",
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    alignItems: "center",
+  },
+  completedButton: {
+    backgroundColor: "#BFC7D7",
     borderRadius: 10,
     paddingVertical: 15,
     paddingHorizontal: 25,

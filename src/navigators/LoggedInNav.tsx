@@ -7,6 +7,7 @@ import { Platform } from "react-native";
 const Tabs = createBottomTabNavigator();
 
 const LoggedInNav = () => {
+  const platformHeader = Platform.OS === "android" ? false : true;
   return (
     <>
       <Tabs.Navigator
@@ -17,6 +18,7 @@ const LoggedInNav = () => {
           tabBarInactiveTintColor: "#647498",
           tabBarStyle: { backgroundColor: "#ffffff" },
           headerShadowVisible: false,
+          headerShown: platformHeader,
         }}
       >
         <Tabs.Screen

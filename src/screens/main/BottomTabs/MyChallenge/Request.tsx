@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -13,30 +13,56 @@ import {
 import styled from "styled-components/native";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RecruitData, RequestData } from "./ChallengeData";
-import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { fetchLive } from "../../../../data/api";
+import { useQuery } from "react-query";
 
 type StackParamList = {
   RecruitPage: {
     title: string;
-    content: string;
-    startDate: string;
-    schedule: string;
     members: number;
     waiting: number;
+    challengeIdx: number;
   };
   RequestPage: {
-    title: string;
-    content: string;
-    startDate: string;
-    schedule: string;
-    members: number;
+    challengeIdx: number;
+    waitingIdx: number;
   };
 };
 type NavigationProps = StackNavigationProp<StackParamList>;
 
 export const Request = () => {
   const navigation = useNavigation<NavigationProps>();
+
+  // const { data } = useQuery("api", fetchLive);
+  // console.warn(data);
+  const [userIndex, setUserIndex] = useState(0);
+  AsyncStorage.getItem("userIdx", (err, result: any) => {
+    setUserIndex(parseInt(result));
+  });
+
+  // const { isLoading, error, data } = useQuery(["repoData"], async () => {
+  //   const { data } = await axios.get("https://api.github.com/repos/tannerlinsley/react-query");
+  //   return data;
+  // });
+
+  // if (isLoading) console.warn("isLoading...");
+
+  // if (error) console.warn("An error has occurred: " + error.message);
+  
+  const [recruitData, setRecruitData]: any = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/my-challenges/${userIdx}/application`)
+        .then((response) => {
+          setRecruitData(response.data.result[0]);
+        })
+        .catch((error) => console.log(error.message));
+    });
+  }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <RequestWrapper>
@@ -44,15 +70,15 @@ export const Request = () => {
           {/* 모집 중 */}
           <View style={styles.textWrapper}>
             <Text style={styles.title}>모집 중</Text>
-            <Text style={styles.number}>{RecruitData.length}</Text>
+            <Text style={styles.number}>{recruitData.recruitmentCount}</Text>
           </View>
-          {RecruitData.length === 0 ? (
+          {recruitData.recruitmentCount === 0 ? (
             <View style={styles.emptyBox}>
               <Text style={styles.emptyText}>모집하고 있는 도전작심이 없어요</Text>
             </View>
           ) : (
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              {RecruitData.map((item, index) => {
+              {recruitData.recruitments?.map((item: any, index: number) => {
                 return (
                   <TouchableOpacity
                     style={styles.recruitBox}
@@ -60,10 +86,8 @@ export const Request = () => {
                     onPress={() => {
                       navigation.navigate("RecruitPage", {
                         title: item.title,
-                        content: item.content,
-                        startDate: item.startDate,
-                        schedule: item.schedule,
-                        members: item.members,
+                        challengeIdx: item.challengeIdx,
+                        members: item.memberCount,
                         waiting: item.waiting,
                       });
                     }}
@@ -72,14 +96,9 @@ export const Request = () => {
                       <Text style={styles.recruitTitle}>{item.title}</Text>
                       <View style={styles.recruitInfo}>
                         <HomeCalendar />
-                        <RecruitText>
-                          D
-                          {Math.ceil(
-                            moment.duration({ from: new Date(), to: item.startDate }).asDays(),
-                          )}
-                        </RecruitText>
+                        <RecruitText>{item.remainingDay}</RecruitText>
                         <HomeUser />
-                        <RecruitText>{item.members}명</RecruitText>
+                        <RecruitText>{item.memberCount}명</RecruitText>
                       </View>
                       <View style={styles.newInfo}>
                         <Text style={styles.newInfoText}>신규 신청이 {item.waiting}건 있어요!</Text>
@@ -90,39 +109,38 @@ export const Request = () => {
               })}
             </ScrollView>
           )}
-
           {/* 신청 중 */}
           <View style={styles.textWrapper}>
             <Text style={styles.title}>신청 중</Text>
-            <Text style={styles.number}>{RequestData.length}</Text>
+            <Text style={styles.number}>{recruitData.applyingCount}</Text>
           </View>
-          {RequestData.length === 0 ? (
+          {recruitData.applyingCount === 0 ? (
             <View style={styles.emptyBox}>
               <Text style={styles.emptyText}>신청한 도전작심이 없어요</Text>
             </View>
           ) : (
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              {RequestData.map((item, index) => {
+              {recruitData.applyings?.map((item: any, index: number) => {
                 return (
                   <ChallengeBox key={index}>
-                    <Image
-                      source={require("../../../../assets/Art.png")}
-                      blurRadius={30}
-                      style={{ backgroundColor: "#000000", width: 100, height: 300 }}
-                    />
+                    {/* <ImageBackground
+                      source={require("../../../../assets/Book.png")}
+                      blurRadius={20}
+                      style={{ position: "absolute", zIndex: 100, width: "100%", height: "100%" }}
+                      borderRadius={15}
+                    >
+                      <Text>dd</Text>
+                    </ImageBackground> */}
                     <TouchableOpacity
-                      activeOpacity={0}
                       onPress={() => {
                         navigation.navigate("RequestPage", {
-                          title: item.title,
-                          content: item.content,
-                          startDate: item.startDate,
-                          schedule: item.schedule,
-                          members: item.members,
+                          challengeIdx: item.challengeIdx,
+                          waitingIdx: item.waitingIdx,
                         });
                       }}
+                      style={{ padding: 20 }}
                     >
-                      {item.approve ? (
+                      {item.acceptStatus === 1 ? (
                         <ChallengeCategory>
                           <ChallengeCategoryText>승인</ChallengeCategoryText>
                         </ChallengeCategory>
@@ -132,27 +150,26 @@ export const Request = () => {
                         </ChallengeCategoryTwo>
                       )}
                       <ChallengeTitle>{item.title}</ChallengeTitle>
-                      <ChallengeTags>{item.tags}</ChallengeTags>
+                      <ChallengeTags>
+                        {item.tags[2] ? `#${item.tags[2]}` : ""}{" "}
+                        {item.tags[1] ? `#${item.tags[1]}` : ""}{" "}
+                        {item.tags[0] ? `#${item.tags[0]}` : ""}
+                      </ChallengeTags>
                       <DateWrapper>
                         <HomeCalendar />
-                        <InfoText>
-                          D-
-                          {Math.ceil(
-                            moment.duration({ from: new Date(), to: item.startDate }).asDays(),
-                          )}
-                        </InfoText>
+                        <InfoText>{item.remainingDay}</InfoText>
                       </DateWrapper>
                       <ScheduleWrapper>
                         <HomeClock />
-                        <InfoText>{item.schedule}</InfoText>
+                        <InfoText>{item.certification}</InfoText>
                       </ScheduleWrapper>
                       <MembersWrapper>
                         <HomeUser />
-                        <InfoText>{item.members}명</InfoText>
+                        <InfoText>{item.memberCount}명</InfoText>
                       </MembersWrapper>
-                      {item.members < 4 ? (
+                      {item.memberCount < 4 ? (
                         <View style={styles.moreMembersButton}>
-                          <Text>{4 - item.members}명 더 필요해요</Text>
+                          <Text>{item.needCount}명 더 필요해요</Text>
                         </View>
                       ) : (
                         <></>
@@ -183,11 +200,9 @@ const RecruitText = styled.Text`
   margin: 0 10px 10px 5px;
 `;
 const ChallengeBox = styled.View`
-  padding: 20px 10px;
   background-color: #f6f5fb;
   border-radius: 12px;
   margin: 15px 10px 30px 5px;
-  z-index: 1000000;
 `;
 const ChallengeTitle = styled.Text`
   font-size: 18px;
@@ -285,7 +300,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   moreMembersButton: {
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     backgroundColor: "#ffffff",
     borderRadius: 15,
     marginTop: 10,

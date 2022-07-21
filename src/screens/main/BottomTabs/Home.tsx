@@ -13,9 +13,9 @@ import {
   AppleButton,
 } from "@invertase/react-native-apple-authentication";
 import { v4 as uuid } from "uuid";
-import { KakaoLogin } from "../../auth/KakaoLogin";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { KakaoLogin } from "../../auth/KakaoLogin";
 
 export const Home = React.memo(() => {
   const navigation = useNavigation();
@@ -34,13 +34,13 @@ export const Home = React.memo(() => {
   const MoveSearchBarUp = () => {
     Animated.timing(upValue, {
       toValue: 78,
-      duration: 200,
+      duration: 150,
       useNativeDriver: false,
     }).start();
     setTimeout(() => {
       Animated.timing(upValue, {
         toValue: 0,
-        duration: 200,
+        duration: 300,
         useNativeDriver: false,
       }).start();
     }, 400);
@@ -62,11 +62,6 @@ export const Home = React.memo(() => {
       }).start();
     }, 250);
   };
-  // xcode()=>ios 13버전으로 애플로그인 확인(시뮬레이터 문제이므로 바꾸면 될것) + 안드로이드 apple login 세팅 마치기
-  // 카카오 로그인
-  // 알림, 공유
-  // 광고
-  // 나머지 서버
   async function onAppleButtonPress() {
     // Start the sign-in request
     const appleAuthRequestResponse = await appleAuth.performRequest({
@@ -119,8 +114,8 @@ export const Home = React.memo(() => {
     // Send the authorization code to your backend for verification
   }
   useEffect(() => {
-    AsyncStorage.getItem("userIdx", (err, result: any) => {
-      const userIdx = parseInt(result);
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
       axios
         .get(`https://jaksimfriend.site/profiles/${userIdx}`)
         .then(function (response) {
@@ -131,7 +126,6 @@ export const Home = React.memo(() => {
         });
     });
   }, []);
-
   return (
     <HomeWrapper>
       <StatusBar barStyle={"dark-content"}></StatusBar>
@@ -141,7 +135,7 @@ export const Home = React.memo(() => {
         nestedScrollEnabled={true}
       >
         <Title>
-          환영합니다. {userName}님!{"\n"}새로운 챌린지를 찾아보세요!
+          환영합니다. {userName}님!{"\n"}천리길의 한걸음도 작심친구와 함께!
         </Title>
         <Animated.View
           style={{
@@ -169,8 +163,8 @@ export const Home = React.memo(() => {
         >
           <CategoryHeader />
         </Animated.View>
-        <KakaoLogin />
-        {appleAuthAndroid.isSupported && (
+
+        {/* {appleAuthAndroid.isSupported && (
           <AppleButton
             buttonStyle={AppleButton.Style.WHITE}
             buttonType={AppleButton.Type.SIGN_IN}
@@ -187,7 +181,7 @@ export const Home = React.memo(() => {
             borderColor: "#000000",
           }}
           onPress={() => onAppleButtonPress().then(() => console.log("Apple sign-in complete!"))}
-        />
+        /> */}
         <Challenges />
       </ScrollView>
       <OpenChallenge>

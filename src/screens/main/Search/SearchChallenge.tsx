@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Animated,
   Modal,
@@ -22,21 +22,22 @@ import { GradientButtons } from "../../../components/GradientButtons";
 import ChallengeApplyModal from "../../../components/organisms/ChallengeApplyModal";
 import { useSetRecoilState } from "recoil";
 import { applyModalAtom } from "../../../../atom";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 type RouteParams = {
   route: {
     params: {
       title: string;
-      content: string;
-      startDate: string;
       schedule: string;
       members: number;
+      challengeIdx: number;
     };
   };
 };
 
 export const SearchChallenge = ({ route }: RouteParams) => {
-  const { title, content, startDate, schedule, members } = route.params;
+  const { title, schedule, members, challengeIdx } = route.params;
   const setModalVisible = useSetRecoilState(applyModalAtom);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const upValue = useState(new Animated.Value(0))[0];
@@ -69,11 +70,42 @@ export const SearchChallenge = ({ route }: RouteParams) => {
     setBottomSheetVisible(() => false);
     setModalVisible(true);
   };
+
+  const [searchData, setSearchData]: any = useState("");
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
+        .then(function (response) {
+          setSearchData(response.data.result);
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    });
+  }, []);
+  const joinChallenge = () => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .post(`https://jaksimfriend.site/challenges/join`, {
+          userIdx: userIdx,
+          challengeIdx: challengeIdx,
+        })
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
+  };
   return (
     <Wrapper>
       <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
       <Title>{title}</Title>
-      <Content>{content}</Content>
+      <Content>{searchData.content}</Content>
       <Infos>
         <InfoWrapper>
           <IconWrapper>
@@ -89,10 +121,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
             <CalendarIcon />
           </IconWrapper>
           <TextWrapper>
-            <Text style={{ marginTop: 9 }}>
-              {moment(startDate).format(`M월 D일`)}~
-              {moment(startDate).add(14, "days").format(`M월 D일`)}
-            </Text>
+            <Text style={{ marginTop: 9 }}>{searchData.date}</Text>
           </TextWrapper>
         </InfoWrapper>
         <InfoWrapper>
@@ -108,7 +137,9 @@ export const SearchChallenge = ({ route }: RouteParams) => {
             <UserIconTwo />
           </IconWrapper>
           <TextWrapper>
-            <Text style={{ marginTop: 9 }}>신청 인원 {members}명</Text>
+            <Text style={{ marginTop: 9 }}>
+              신청 인원 {members}명, 대기자 수 {searchData.waiting}명
+            </Text>
           </TextWrapper>
         </InfoWrapper>
         <InfoWrapper>
@@ -117,17 +148,17 @@ export const SearchChallenge = ({ route }: RouteParams) => {
           </IconWrapper>
           <TextWrapper>
             <TopText>팀원 평균</TopText>
-            <Text>상위 50%</Text>
+            <Text>{searchData.tier}</Text>
           </TextWrapper>
         </InfoWrapper>
       </Infos>
       <ChallengeCash>
         <ChallengeCashText>도전 캐시</ChallengeCashText>
-        <ChallengeCashText>1,000C</ChallengeCashText>
+        <ChallengeCashText>{searchData.pee}C</ChallengeCashText>
       </ChallengeCash>
       <MyCash>
         <Text>내 캐시</Text>
-        <Text>10,000C</Text>
+        <Text>{searchData.myPoint}C</Text>
       </MyCash>
       <Buttons>
         <TouchableOpacity
@@ -138,9 +169,15 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         >
           <Text>공유할래요</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.CompletedButton} onPress={ShowBottomSheet}>
-          <Text style={{ color: "#ffffff" }}>신청할게요</Text>
-        </TouchableOpacity>
+        {searchData.existStatus === 1 ? (
+          <TouchableOpacity style={styles.CompletedButton} disabled>
+            <Text style={{ color: "#ffffff" }}>이미 신청했어요</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.applyButton} onPress={ShowBottomSheet}>
+            <Text style={{ color: "#ffffff" }}>신청할게요</Text>
+          </TouchableOpacity>
+        )}
       </Buttons>
 
       {/* 바텀 시트(신청할게요) */}
@@ -157,8 +194,14 @@ export const SearchChallenge = ({ route }: RouteParams) => {
                 <Text style={styles.infoTwo}>
                   캐시는 개설자가 가입 승인할 때 빠져 나가요!{"\n"}한번 신청하면 취소할 수 없어요!
                 </Text>
-                <GradientButtons onPress={ModalVisible} Title="결제할래요" />
-                <TouchableOpacity style={styles.nextButton}>
+                <GradientButtons
+                  onPress={() => {
+                    joinChallenge();
+                    ModalVisible();
+                  }}
+                  Title="결제할래요"
+                />
+                <TouchableOpacity style={styles.nextButton} onPress={HideBottomSheet}>
                   <Text style={styles.nextButtonText}>다음에 할게요</Text>
                 </TouchableOpacity>
               </View>
@@ -179,6 +222,12 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   CompletedButton: {
+    backgroundColor: "#bfc7d7",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 15,
+  },
+  applyButton: {
     backgroundColor: "#5A69E8",
     paddingVertical: 15,
     paddingHorizontal: 40,

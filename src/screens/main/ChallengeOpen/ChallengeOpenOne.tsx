@@ -12,16 +12,30 @@ import styled from "styled-components/native";
 import Feather from "react-native-vector-icons/AntDesign";
 import * as Progress from "react-native-progress";
 import { useSetRecoilState } from "recoil";
-import { nextButtonAtom } from "../../../../atom";
+import {
+  infoAtom,
+  nextButtonAtom,
+  tagsAtom,
+  titleAtom,
+} from "../../../../atom";
 
 export const ChallengeOpenOne = () => {
   const nextButtonDisable = useSetRecoilState(nextButtonAtom);
-  // data
+  const setTitles = useSetRecoilState(titleAtom);
+  const setInfos = useSetRecoilState(infoAtom);
+  const setTags = useSetRecoilState(tagsAtom);
+
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
   const [tag1, setTag1] = useState("");
   const [tag2, setTag2] = useState("");
   const [tag3, setTag3] = useState("");
+  const tags = [tag1, tag2, tag3];
+  useEffect(() => {
+    setTitles(title);
+    setInfos(info);
+    setTags(tags);
+  }, [title, info, tag1, tag2, tag3]);
 
   const GREY = "#6F81A9",
     BLACK = "#101647",
@@ -55,7 +69,7 @@ export const ChallengeOpenOne = () => {
       nextButtonDisable(true);
     } else {
       setGuideColor1(BLUE);
-      setBorderColor(GREY);
+      setBorderColor(BLUE);
       if (guideColor2 && guideColor3 && guideColor4 === BLUE) nextButtonDisable(false);
     }
   };
@@ -63,11 +77,13 @@ export const ChallengeOpenOne = () => {
   const onChangeInfo = (info: string) => {
     if (info.length === 0) {
       setGuideColor2(GREY);
+      setBorderColor2(GREY);
       nextButtonDisable(true);
       return;
     }
     if (info.length > 0) {
       setGuideColor2(BLUE);
+      setBorderColor2(BLUE);
       if (guideColor1 && guideColor3 && guideColor4 === BLUE) nextButtonDisable(false);
       return;
     }
@@ -289,7 +305,7 @@ export const ChallengeOpenOne = () => {
             <Feather name="check" size={16} color={guideColor3 === BLACK ? RED : guideColor3} />
           </View>
           <View style={styles.guideView}>
-            <Text style={[styles.guideText, { color: guideColor4, marginBottom:80 }]}>
+            <Text style={[styles.guideText, { color: guideColor4, marginBottom: 80 }]}>
               · 영문, 특수문자, 띄어쓰기는 빼주세요
             </Text>
             <Feather name="check" size={16} color={guideColor4 === BLACK ? RED : guideColor4} />
