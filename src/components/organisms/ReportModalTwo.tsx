@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -7,6 +8,7 @@ import { reportModalTwo } from "../../../atom";
 export default function ReportModalTwo() {
   const modalVisible = useRecoilValue(reportModalTwo);
   const setModalVisible = useSetRecoilState(reportModalTwo);
+  const navigation = useNavigation();
   return (
     <Modal visible={modalVisible} transparent={true}>
       <View style={styles.background}>
@@ -16,6 +18,7 @@ export default function ReportModalTwo() {
             style={styles.closeButton}
             onPress={() => {
               setModalVisible(false);
+              navigation.goBack();
             }}
           >
             <Ionicons name="close-outline" color="#101647" size={24} />

@@ -1,6 +1,7 @@
 import React from "react";
 import { Progress, Request } from "../../../screens/main";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { Dimensions } from "react-native";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -12,11 +13,16 @@ export const MyChallengeCategoryNav = () => {
         swipeEnabled: false,
         tabBarActiveTintColor: "#000000",
         tabBarInactiveTintColor: "#BFC7D7",
+        tabBarItemStyle: {
+          alignItems: "baseline",
+          marginRight: -50,
+          marginLeft:5,
+          width: Dimensions.get("window").width * 0.3,
+        },
         tabBarIndicatorStyle: { backgroundColor: "#fff" },
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },
         tabBarStyle: {
           shadowColor: "#fff",
-          width: "50%",
         },
         tabBarPressColor: "#ffffff",
       }}

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -12,8 +13,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ProfileNavParamList } from "../../navigators";
-import Entypo from "react-native-vector-icons/Entypo";
-import Feather from "react-native-vector-icons/Feather";
+import Feather from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { launchImageLibrary } from "react-native-image-picker";
 import ProfileEditModal from "../../components/organisms/ProfileEditModal";
@@ -21,29 +21,15 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-type DataType = {
-  image: string;
-  introduce: string;
-};
-
 type ImageType = {
-  fileName?: string | undefined;
+  name?: string | undefined;
   type?: string | undefined;
   uri?: string | undefined;
 };
 
 export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavParamList>) {
   const [promise, setPromise] = useState("");
-  const [data, setData] = useState<DataType>({
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/1600px-A_black_image.jpg?20201103073518",
-    introduce: "친구야, 나랑 작심하자!",
-  });
-  const [images, setImage] = useState<ImageType>({
-    uri: data.image,
-    type: "multipart/form-data",
-    fileName: data.image,
-  });
+  const [disable, setDisable] = useState(true);
   const [textInputBorderColor, setTextInputBorderColor] = useState("#6F81A9");
   const [modalVisible, setModalVisible] = useState(false);
   const textInputRef = useRef<TextInput>(null);
@@ -51,31 +37,11 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
   const onChangeText = (text: string) => {
     text.slice();
     if (text.length > 10) setTextInputBorderColor("#D75858");
-    else setTextInputBorderColor("#044DE4");
+    else {
+      setTextInputBorderColor("#044DE4");
+      setDisable(false);
+    }
   };
-
-  const onPressComplete = () => {
-    // postPromise();
-    postPicture();
-    textInputRef.current?.blur();
-    setModalVisible(true);
-    setTextInputBorderColor("#6F81A9");
-  };
-
-  const formdata = new FormData();
-  const onPressCamera = () =>
-    launchImageLibrary({ selectionLimit: 1, mediaType: "photo" }, (response) => {
-      textInputRef.current?.blur();
-      if (response.assets) {
-        setImage(response.assets[0]);
-        formdata.append("images", {
-          images: response.assets[0].uri,
-          type: response.assets[0].type,
-          name: response.assets[0].fileName,
-        });
-      }
-    });
-
   const singleTap = Gesture.Tap().onStart(() => {
     textInputRef.current?.blur();
   });
@@ -90,54 +56,85 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
           setDatas(response.data.result);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);
 
-  const [userIndex, setUserIndex] = useState(0);
-  AsyncStorage.getItem("userIdx", (err, result: any) => {
-    setUserIndex(parseInt(result));
-  });
   const postPromise = () => {
-    axios
-      .post(`https://jaksimfriend.site/profiles/promise`, {
-        userIdx: userIndex,
-        promise: promise,
-      })
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.warn(error);
-      });
-  };
-  const postPicture = async () => {
-    // axios
-    //   .post(
-    //     `https://jaksimfriend.site/profiles/${userIndex}/image`,
-    //     { body: formdata },
-    //     {
-    //       headers: { "content-type": "multipart/form-data" },
-    //     },
-    //   )
-    //   .then(function (response) {
-    //     console.warn(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.warn(error);
-    //   });
-    let res = await fetch(`https://jaksimfriend.site/profiles/${userIndex}/image`, {
-      method: "post",
-      body: formdata,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .post(`https://jaksimfriend.site/profiles/promise`, {
+          userIdx: userIdx,
+          promise: promise,
+        })
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
-    let responseJson = await res.json();
-    console.warn(responseJson);
   };
 
+  const [image, setImage] = useState<ImageType>({
+    uri: "",
+    type: "image/jpeg",
+    name: "test",
+  });
+  const UploadImage = async () => {
+    launchImageLibrary({ selectionLimit: 1, mediaType: "photo" }, (res: any) => {
+      if (res.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (res.errorCode) {
+        console.log("ImagePicker Error: ", res.errorCode);
+      } else if (res.assets) {
+        setImage({
+          uri:
+            Platform.OS === "android"
+              ? res.assets[0].uri
+              : res.assets[0].uri.replace("file://", ""),
+          name: res.assets[0].fileName,
+          type: res.assets[0].type,
+        });
+      }
+      setDisable(false);
+    });
+  };
+  const postPhoto = () => {
+    const formdata = new FormData();
+    formdata.append("images", image);
+    const headers = {
+      "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
+    };
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .post(`https://jaksimfriend.site/profiles/${userIdx}/image`, formdata, { headers: headers })
+        .then((response) => {
+          if (response) {
+            console.log(response.data);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
+        });
+    });
+  };
+  const onPressComplete = () => {
+    postPhoto();
+    postPromise();
+    textInputRef.current?.blur();
+    setModalVisible(true);
+    setTextInputBorderColor("#6F81A9");
+  };
   return (
     <GestureDetector gesture={singleTap}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -146,16 +143,14 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="#101647" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPressComplete}>
+          <TouchableOpacity onPress={onPressComplete} disabled={disable}>
             <Text style={styles.finishText}>완료</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.bottomView}>
           <View style={styles.imageView}>
-            
-            {/* uri: datas.profile로 변경 */}
-            <Image source={{ uri: images.uri }} style={styles.image} />
-            <TouchableOpacity style={styles.cameraIconView} onPress={onPressCamera}>
+            <Image source={{ uri: image.uri ? image.uri : datas.profile }} style={styles.image} />
+            <TouchableOpacity style={styles.cameraIconView} onPress={UploadImage}>
               <Icon name="camera-outline" color="#044DE4" size={24} />
             </TouchableOpacity>
           </View>
@@ -175,7 +170,7 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
                 { color: textInputBorderColor == "#D75858" ? "#101647" : textInputBorderColor },
               ]}
             >
-              <Entypo name="dot-single" /> 최대 10자 이하만 적을 수 있어요
+              · 최대 10자 이하만 사용할 수 있어요
             </Text>
             <Feather name="check" size={16} color={textInputBorderColor} />
           </View>

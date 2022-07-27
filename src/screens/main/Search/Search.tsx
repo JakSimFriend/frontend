@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -54,7 +55,6 @@ export const Search = () => {
         });
     });
   }, [categoryIndex]);
-
   return (
     <Wrapper>
       <Animated.View
@@ -62,40 +62,57 @@ export const Search = () => {
           top: DownValue,
         }}
       >
-        <InputWrapper>
-          <InputBox
+        <View
+          style={{
+            backgroundColor: "#f6f5fb",
+            borderRadius: 15,
+            padding: 10,
+            width: "90%",
+            marginTop: 10,
+            flexDirection: "row",
+            marginLeft: "5%",
+          }}
+        >
+          <SearchIcon />
+          <TextInput
+            style={{ marginLeft: 10 }}
             placeholder="다양한 챌린지를 검색해보세요!"
-            placeholderTextColor={"#6b7ba2"}
+            placeholderTextColor="#6b7ba2"
             onChangeText={(text) => setSearchInput(text)}
           />
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-        </InputWrapper>
+        </View>
       </Animated.View>
       <CategoryBox>
-        {categories.map((item, index) => {
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                setCategoryName(item);
-                setCategoryIndex(index);
-              }}
-              style={categoryName === item ? styles.categoryBorderSelected : styles.categoryBorder}
-            >
-              <Category style={categoryName === item ? styles.categorySelected : styles.category}>
-                {item}
-              </Category>
-            </TouchableOpacity>
-          );
-        })}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {categories.map((item, index) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  setCategoryName(item);
+                  setCategoryIndex(index);
+                }}
+                style={[
+                  categoryName === item ? styles.categoryBorderSelected : styles.categoryBorder,
+                  { marginLeft: 17,marginRight:5, alignSelf: "center" },
+                ]}
+              >
+                <Category style={categoryName === item ? styles.categorySelected : styles.category}>
+                  {item}
+                </Category>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </CategoryBox>
 
       <ScrollView>
         {/* 모집중 검색 필터링 */}
+        {/* categoryEmpth?합치기 */}
         {categoryEmpty ? (
-          <></>
+          <EmptyBox>
+            <EmptyBoxText>아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!</EmptyBoxText>
+          </EmptyBox>
         ) : (
           <>
             {searchDatas.recruitments
@@ -173,7 +190,7 @@ export const Search = () => {
                         <View style={styles.searchBox}>
                           <ImageBackground
                             source={require("../../../assets/Book.png")}
-                            blurRadius={20}
+                            blurRadius={25}
                             style={{
                               position: "absolute",
                               zIndex: 1,
@@ -229,14 +246,6 @@ export const Search = () => {
               })}
           </>
         )}
-
-        {categoryEmpty ? (
-          <EmptyBox>
-            <EmptyBoxText>아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!</EmptyBoxText>
-          </EmptyBox>
-        ) : (
-          <></>
-        )}
       </ScrollView>
       {categoryEmpty ? (
         <OpenChallenge>
@@ -269,7 +278,8 @@ const styles = StyleSheet.create({
   searchBox: {
     backgroundColor: "#f6f5fb",
     borderRadius: 15,
-    margin: 20,
+    marginHorizontal: 20,
+    marginVertical: 5,
   },
   searchHeader: {
     flexDirection: "row",
@@ -303,27 +313,12 @@ const styles = StyleSheet.create({
     marginRight: 20,
     fontSize: 15,
   },
+  inputText: {},
 });
 
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-`;
-const InputWrapper = styled.TouchableOpacity`
-  align-items: flex-start;
-  flex-direction: row;
-  margin-top: 5px;
-  padding-left: 10px;
-`;
-const InputBox = styled.TextInput`
-  background-color: #f6f5fb;
-  border-radius: 10px;
-  padding: 15px;
-  width: 83%;
-  margin-left: 12px;
-`;
-const SearchIconWrapper = styled.View`
-  margin: 12px 0 0 5px;
 `;
 const CategoryBox = styled.View`
   flex-direction: row;
@@ -332,6 +327,7 @@ const CategoryBox = styled.View`
   align-items: center;
   border-bottom-width: 2px;
   border-bottom-color: #f6f5fb;
+  margin-bottom: 20px;
 `;
 const Category = styled.Text`
   color: #000000;

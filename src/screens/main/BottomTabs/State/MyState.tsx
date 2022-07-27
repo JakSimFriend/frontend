@@ -1,12 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styled from "styled-components/native";
 import { Wrapper } from "../../../../styles/styles";
-import { StatData } from "./StatData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { a, b, c, d, e, f, g, h } from "../../../../assets/images";
+import { useRoute } from "@react-navigation/native";
 
 export const MyState = () => {
-  const [categoryEmpty, setCategoryEmpty] = useState(false); // data
+  const icons = [a, b, c, d, e, f, g, h];
+  const [statData, setStatData]: any = useState([]);
+  const [categoryEmpty, setCategoryEmpty] = useState(false);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/status/${userIdx}`)
+        .then(function (response) {
+          if (response.data.code === 3049) {
+            setCategoryEmpty(true);
+          } else if (response.data.code === 1000) {
+            setCategoryEmpty(false);
+            setStatData(response.data.result[0]);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          setCategoryEmpty(true);
+        });
+    });
+  }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <Wrapper>
@@ -15,21 +39,24 @@ export const MyState = () => {
             <UpBox>
               <SeasonTitle>시즌 1</SeasonTitle>
               <ChallengeText>2022/06/01 ~ 2022/08/30</ChallengeText>
-              <ChallengeText>기간동안 만료한 챌린지만 합산됩니다</ChallengeText>
+              <ChallengeText>기간동안 완료한 챌린지만 합산됩니다</ChallengeText>
             </UpBox>
             <InfoWrapper>
               <View>
                 <Text style={styles.text}>평균 달성률</Text>
                 <Text style={styles.text}>
-                  <Text style={styles.number}>20</Text>%
+                  <Text style={styles.number}>
+                    {statData.achievement ? statData.achievement : 0}
+                  </Text>
+                  %
                 </Text>
               </View>
             </InfoWrapper>
           </LinearGradient>
           <Text style={styles.expTitle}>누적 경험치</Text>
-          <Text style={styles.expNumber}>4,0000 EXP</Text>
+          <Text style={styles.expNumber}>{statData.experience ? statData.experience : 0} EXP</Text>
           <StatTitle>카테고리 통계</StatTitle>
-          {categoryEmpty ? (
+          {statData.categories?.length === 0 || categoryEmpty ? (
             <>
               <View style={styles.EmptyView}>
                 <Text style={styles.EmptyText}>완료한 도전작심이 없어요</Text>
@@ -37,17 +64,17 @@ export const MyState = () => {
             </>
           ) : (
             <>
-              {StatData.map((item, index) => {
+              {statData.categories?.map((item: any, index: number) => {
                 return (
                   <Categories key={index}>
                     <Left>
                       <ImageWrapper style={styles.categoryBackground}>
-                        <Logo resizeMode="contain" source={item.category} />
+                        <Logo resizeMode="contain" source={icons[item.categoryIdx - 1]} />
                       </ImageWrapper>
-                      <Text style={styles.categoryText}>{item.categoryTitle}</Text>
+                      <Text style={styles.categoryText}>{item.categoryName}</Text>
                     </Left>
                     <TextWrapper>
-                      <Text style={styles.EXP}>{item.exp}EXP</Text>
+                      <Text style={styles.EXP}>{item.categoryEx}EXP</Text>
                     </TextWrapper>
                   </Categories>
                 );
@@ -101,8 +128,8 @@ const ImageWrapper = styled.View`
   border-radius: 10px;
 `;
 const Logo = styled.Image`
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
 `;
 const TextWrapper = styled.View`
   margin-top: 10px;
@@ -121,6 +148,7 @@ const styles = StyleSheet.create({
   number: {
     fontSize: 45,
     fontWeight: "bold",
+    textAlign: "center",
   },
   expTitle: {
     marginTop: 30,
@@ -141,7 +169,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   EXP: {
-    fontSize: 17,
+    fontSize: 18,
+    fontWeight: "500",
   },
   EmptyView: {
     backgroundColor: "#F6F5FB",
@@ -151,5 +180,6 @@ const styles = StyleSheet.create({
   EmptyText: {
     color: "#6F81A9",
     alignSelf: "center",
+    fontSize: 18,
   },
 });

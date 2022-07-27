@@ -7,3 +7,4 @@ export const f = require('./Habit.png');
 export const g = require('./Sport.png'); 
 export const h = require('./Others.png'); 
 export const Emo = require('./Emo.png'); 
+export const Logo = require('./KakaoLogo.png'); 

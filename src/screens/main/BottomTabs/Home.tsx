@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, ScrollView, StatusBar, Text, View } from "react-native";
+import { Animated, ScrollView, StatusBar } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 import { SearchIcon } from "../../../components/TabIcon";
@@ -15,7 +15,6 @@ import {
 import { v4 as uuid } from "uuid";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { KakaoLogin } from "../../auth/KakaoLogin";
 
 export const Home = React.memo(() => {
   const navigation = useNavigation();
@@ -33,7 +32,7 @@ export const Home = React.memo(() => {
   const upValue = useState(new Animated.Value(0))[0];
   const MoveSearchBarUp = () => {
     Animated.timing(upValue, {
-      toValue: 78,
+      toValue: 88,
       duration: 150,
       useNativeDriver: false,
     }).start();
@@ -50,7 +49,7 @@ export const Home = React.memo(() => {
   const iconValue = useState(new Animated.Value(0))[0];
   const MoveIconUp = () => {
     Animated.timing(iconValue, {
-      toValue: 40,
+      toValue: 60,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -113,6 +112,7 @@ export const Home = React.memo(() => {
 
     // Send the authorization code to your backend for verification
   }
+
   useEffect(() => {
     AsyncStorage.getItem("userIdx").then((value) => {
       const userIdx = value;
@@ -122,7 +122,7 @@ export const Home = React.memo(() => {
           setUserName(response.data.result[0].nickName);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);
@@ -135,26 +135,22 @@ export const Home = React.memo(() => {
         nestedScrollEnabled={true}
       >
         <Title>
-          환영합니다. {userName}님!{"\n"}천리길의 한걸음도 작심친구와 함께!
+          어서 오세요, {userName}님!{"\n"}천 리 길의 한 걸음도 작심친구와 함께!
         </Title>
         <Animated.View
           style={{
             bottom: upValue,
           }}
         >
-          <InputWrapper
+          <InputBox
             onPress={() => {
               MoveSearchBarUp();
               goToSearch();
             }}
           >
-            <InputBox>
-              <InputText>다양한 챌린지를 검색해보세요!</InputText>
-            </InputBox>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-          </InputWrapper>
+            <SearchIcon />
+            <InputText>다양한 도전작심을 검색해 보세요!</InputText>
+          </InputBox>
         </Animated.View>
         <Animated.View
           style={{
@@ -163,8 +159,7 @@ export const Home = React.memo(() => {
         >
           <CategoryHeader />
         </Animated.View>
-
-        {/* {appleAuthAndroid.isSupported && (
+        {appleAuthAndroid.isSupported && (
           <AppleButton
             buttonStyle={AppleButton.Style.WHITE}
             buttonType={AppleButton.Type.SIGN_IN}
@@ -181,7 +176,7 @@ export const Home = React.memo(() => {
             borderColor: "#000000",
           }}
           onPress={() => onAppleButtonPress().then(() => console.log("Apple sign-in complete!"))}
-        /> */}
+        />
         <Challenges />
       </ScrollView>
       <OpenChallenge>
@@ -206,26 +201,21 @@ const Title = styled.Text`
   color: #000000;
   font-size: 20px;
   font-weight: 400;
-  margin: 10px 0px 0 25px;
+  margin: 20px 0 0 6%;
 `;
-const InputWrapper = styled.TouchableOpacity`
-  align-items: flex-start;
-  flex-direction: row;
-  margin-top: 30px;
-  margin-left: 10px;
-`;
-const InputBox = styled.View`
+const InputBox = styled.TouchableOpacity`
   background-color: #f6f5fb;
-  border-radius: 10px;
-  padding: 15px;
-  width: 83%;
-  margin-left: 12px;
+  border-radius: 15px;
+  flex-direction: row;
+  padding: 10px;
+  width: 88%;
+  margin-top: 30px;
+  margin-left: 6%;
 `;
 const InputText = styled.Text`
   color: #6b7ba2;
-`;
-const SearchIconWrapper = styled.View`
-  margin: 12px 0 0 5px;
+  align-self: center;
+  margin-left: 15px;
 `;
 const OpenChallenge = styled.View`
   align-self: center;

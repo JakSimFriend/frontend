@@ -1,55 +1,102 @@
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from "react-native";
 import styled from "styled-components/native";
-import { StatData } from "./StatData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { a, b, c, d, e, f, g, h } from "../../../../assets/images";
+import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export const Detail = () => {
-  const [categoryEmpty, setCategoryEmpty] = useState(false); // data
+  const icons = [a, b, c, d, e, f, g, h];
+  const [detailEmpty, setDetailEmpty] = useState(true);
+  const [detailData, setDetailData]: any = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/status/${userIdx}/detail`)
+        .then(function (response) {
+          if (response.data.code === 3049) {
+            setDetailEmpty(true);
+          } else if (response.data.code === 1000) {
+            setDetailEmpty(false);
+            setDetailData(response.data);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          setDetailEmpty(true);
+        });
+    });
+  }, []);
+  const navigation = useNavigation();
   return (
-    <Wrapper>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {categoryEmpty ? (
-          <>
-            <View style={styles.EmptyView}>
-              <Text style={styles.EmptyText}>완료한 챌린지가 없어요</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <Wrapper>
+        <View style={styles.topView}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={25} color="#101647" />
+          </TouchableOpacity>
+          <Text style={styles.topText}>상세</Text>
+          <Ionicons name="arrow-back" size={24} color="#0000" />
+        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {detailEmpty ? (
+            <>
+              <View style={styles.EmptyView}>
+                <Text style={styles.EmptyText}>완료한 챌린지가 없어요</Text>
+              </View>
+            </>
+          ) : (
+            <View style={{ marginTop: "10%" }}>
+              {detailData.result?.map((item: any, index: number) => {
+                return (
+                  <Categories key={index}>
+                    <Left>
+                      <ImageWrapper style={styles.categoryBackground}>
+                        <Logo resizeMode="contain" source={icons[item.categoryIdx - 1]} />
+                      </ImageWrapper>
+                      <View style={{ flexDirection: "column" }}>
+                        <Text style={styles.categoryText}>{item.title}</Text>
+                        <Text style={[styles.categoryText, { color: "#BFC7D7", fontSize: 15 }]}>
+                          {item.endDate}
+                        </Text>
+                      </View>
+                    </Left>
+                    <TextWrapper>
+                      <Text style={styles.EXP}>+{item.experience}EXP</Text>
+                      <Text style={[styles.EXP, { color: "#BFC7D7", fontSize: 15 }]}>
+                        {item.total}EXP
+                      </Text>
+                    </TextWrapper>
+                  </Categories>
+                );
+              })}
             </View>
-          </>
-        ) : (
-          <>
-            {StatData.map((item, index) => {
-              return (
-                <Categories key={index}>
-                  <Left>
-                    <ImageWrapper style={styles.categoryBackground}>
-                      <Logo resizeMode="contain" source={item.category} />
-                    </ImageWrapper>
-                    <Text style={styles.categoryText}>{item.categoryTitle}</Text>
-                  </Left>
-                  <TextWrapper>
-                    <Text style={styles.EXP}>{item.exp}EXP</Text>
-                  </TextWrapper>
-                </Categories>
-              );
-            })}
-          </>
-        )}
-      </ScrollView>
-    </Wrapper>
+          )}
+        </ScrollView>
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 
 const Wrapper = styled.View`
   flex: 1;
-  padding: 100px 20px 0 20px;
+  padding: 0 5% 0 5%;
   background-color: #ffffff;
 `;
 const Categories = styled.View`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 15px;
+  border-bottom-width: 1px;
+  border-bottom-color: #f6f5fb;
+  padding-bottom: 10px;
 `;
 const Left = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 const ImageWrapper = styled.View`
   padding: 10px;
@@ -60,16 +107,27 @@ const Logo = styled.Image`
   height: 20px;
 `;
 const TextWrapper = styled.View`
-  margin-top: 10px;
+  align-items: center;
 `;
 const styles = StyleSheet.create({
+  topView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 5,
+  },
+  topText: {
+    color: "#101647",
+    fontSize: 18,
+    fontWeight: "900",
+    alignSelf: "center",
+  },
   categoryBackground: {
     backgroundColor: "#f6f5fb",
   },
   categoryText: {
-    marginTop: 12,
     marginLeft: 15,
-    fontSize: 16,
+    fontSize: 18,
   },
   EXP: {
     fontSize: 17,

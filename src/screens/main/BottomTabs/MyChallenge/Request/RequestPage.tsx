@@ -22,7 +22,8 @@ import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useSetRecoilState } from "recoil";
-import { cancelModalAtom } from "../../../../../../atom";
+import { cancelModalAtom, onDevelopModalAtom } from "../../../../../../atom";
+import OnDevelopModal from "../../../../../components/organisms/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -46,7 +47,7 @@ export const RequestPage = ({ route }: RouteParams) => {
           setData(response.data.result);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);
@@ -56,16 +57,17 @@ export const RequestPage = ({ route }: RouteParams) => {
       axios
         .patch(`https://jaksimfriend.site/challenges/${waitingIdx}/${userIdx}/cancel`)
         .then(function (response) {
-          console.warn(response.data);
+          console.log(response.data);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   };
 
   const navigation = useNavigation();
   const setCancelModal = useSetRecoilState(cancelModalAtom);
+  const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F5FB" }}>
       <StatusBar barStyle={"dark-content"} backgroundColor="#F6F5FB"></StatusBar>
@@ -132,19 +134,22 @@ export const RequestPage = ({ route }: RouteParams) => {
             </TextWrapper>
           </InfoWrapper>
         </Infos>
-        <ChallengeCash>
-          <ChallengeCashText>도전 캐시</ChallengeCashText>
-          <ChallengeCashText>{data.pee}C</ChallengeCashText>
-        </ChallengeCash>
-        <MyCash>
-          <Text>내 캐시</Text>
-          <Text>{data.myPoint}C</Text>
-        </MyCash>
+        <View style={styles.cashWrapper}>
+          {/* 그림자 */}
+          <ChallengeCash>
+            <ChallengeCashText>도전 캐시</ChallengeCashText>
+            <ChallengeCashText>{data.pee}C</ChallengeCashText>
+          </ChallengeCash>
+          <MyCash>
+            <Text>내 캐시</Text>
+            <Text>{data.myPoint}C</Text>
+          </MyCash>
+        </View>
         <Buttons>
           <TouchableOpacity
             style={styles.shareButton}
             onPress={() => {
-              console.warn("공유할래용");
+              setModalTwoVisible(true);
             }}
           >
             <Text>공유할래요</Text>
@@ -155,6 +160,7 @@ export const RequestPage = ({ route }: RouteParams) => {
         </Buttons>
         <ChallengeCancelModal />
       </Wrapper>
+      <OnDevelopModal />
     </SafeAreaView>
   );
 };
@@ -163,6 +169,7 @@ const Wrapper = styled.View`
   flex: 1;
   background-color: #f6f5fb;
   padding: 0px 5%;
+  margin-top: 20px;
 `;
 const Title = styled.Text`
   font-size: 22px;
@@ -189,7 +196,6 @@ const TextWrapper = styled.View`
   margin-left: 20px;
 `;
 const ChallengeCash = styled.View`
-  margin-top: 20px;
   background-color: #101647;
   padding: 22px;
   border-radius: 15px;
@@ -207,11 +213,10 @@ const MyCash = styled.View`
   border-radius: 15px;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 30px;
 `;
 const Buttons = styled.View`
   flex-direction: row;
-  justify-content: space-around;
+  align-self: center;
 `;
 const TopText = styled.Text`
   font-size: 12px;
@@ -224,29 +229,40 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   topText: {
     color: "#101647",
-    fontSize: 17,
+    fontSize: 18,
     position: "absolute",
     width: width,
     height: "100%",
     textAlign: "center",
     textAlignVertical: "center",
     marginTop: 10,
-    fontWeight: "500",
+    fontWeight: "600",
   },
   shareButton: {
     backgroundColor: "#ffffff",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
+    paddingVertical: 20,
+    marginRight: 5,
+    paddingHorizontal: "15%",
     borderRadius: 15,
   },
   CompletedButton: {
     backgroundColor: "#BFC7D7",
-    paddingVertical: 15,
-    paddingHorizontal: 25,
+    paddingVertical: 20,
+    marginLeft: 5,
+    paddingHorizontal: "12%",
     borderRadius: 15,
+  },
+  cashWrapper: {
+    backgroundColor: "#ffffff",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+    marginTop: 20,
+    marginBottom: 30,
   },
 });

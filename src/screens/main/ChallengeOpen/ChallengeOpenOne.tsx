@@ -12,12 +12,7 @@ import styled from "styled-components/native";
 import Feather from "react-native-vector-icons/AntDesign";
 import * as Progress from "react-native-progress";
 import { useSetRecoilState } from "recoil";
-import {
-  infoAtom,
-  nextButtonAtom,
-  tagsAtom,
-  titleAtom,
-} from "../../../../atom";
+import { infoAtom, nextButtonAtom, tagsAtom, titleAtom } from "../../../../atom";
 
 export const ChallengeOpenOne = () => {
   const nextButtonDisable = useSetRecoilState(nextButtonAtom);
@@ -31,6 +26,7 @@ export const ChallengeOpenOne = () => {
   const [tag2, setTag2] = useState("");
   const [tag3, setTag3] = useState("");
   const tags = [tag1, tag2, tag3];
+  
   useEffect(() => {
     setTitles(title);
     setInfos(info);
@@ -70,7 +66,7 @@ export const ChallengeOpenOne = () => {
     } else {
       setGuideColor1(BLUE);
       setBorderColor(BLUE);
-      if (guideColor2 && guideColor3 && guideColor4 === BLUE) nextButtonDisable(false);
+      if (guideColor2 === BLUE) nextButtonDisable(false);
     }
   };
   //설명이벤트
@@ -84,7 +80,7 @@ export const ChallengeOpenOne = () => {
     if (info.length > 0) {
       setGuideColor2(BLUE);
       setBorderColor2(BLUE);
-      if (guideColor1 && guideColor3 && guideColor4 === BLUE) nextButtonDisable(false);
+      if (guideColor1 === BLUE) nextButtonDisable(false);
       return;
     }
   };
@@ -94,7 +90,7 @@ export const ChallengeOpenOne = () => {
       setGuideColor3(GREY);
       setGuideColor4(GREY);
       setBorderColor3(GREY);
-      nextButtonDisable(true);
+      nextButtonDisable(false);
       return;
     }
     if (tags.length > 4) {
@@ -123,7 +119,7 @@ export const ChallengeOpenOne = () => {
       setGuideColor3(GREY);
       setGuideColor4(GREY);
       setBorderColor4(GREY);
-      nextButtonDisable(true);
+      nextButtonDisable(false);
       return;
     }
     if (tags.length > 4) {
@@ -152,7 +148,7 @@ export const ChallengeOpenOne = () => {
       setGuideColor3(GREY);
       setGuideColor4(GREY);
       setBorderColor5(GREY);
-      nextButtonDisable(true);
+      nextButtonDisable(false);
       return;
     }
     if (tags.length > 4) {

@@ -31,7 +31,6 @@ type RouteParams = {
   };
 };
 
-// startDate이 오늘 이후인 data만 fetch
 export const BeforeStartPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
 
@@ -45,7 +44,7 @@ export const BeforeStartPage = ({ route }: RouteParams) => {
           setData(response.data.result[0]);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);

@@ -60,7 +60,7 @@ const CategoryBox = styled.View`
   margin: 30px 0;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 0 10px;
+
 `;
 const CategoryButtons = styled.TouchableOpacity`
   margin-bottom: 10px;

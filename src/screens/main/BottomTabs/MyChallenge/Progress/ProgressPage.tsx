@@ -9,7 +9,7 @@ import {
 } from "../../../../../components/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
-import { Calendar } from "react-native-calendars";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 import { GradientButtons } from "../../../../../components/GradientButtons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,7 +20,6 @@ import { progressIndexAtom } from "../../../../../../atom";
 export const ProgressPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
   const navigation: any = useNavigation();
-
   const [data, setData]: any = useState([]);
   useEffect(() => {
     AsyncStorage.getItem("userIdx").then((value) => {
@@ -31,74 +30,58 @@ export const ProgressPage = () => {
           setData(response.data.result[0]);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);
-  const markedDate = [
-    "2022-07-05",
-    "2022-07-06",
-    "2022-07-07",
-    "2022-07-08",
-    "2022-07-09",
-    "2022-07-10",
-    "2022-07-11",
-  ];
 
+  LocaleConfig.locales["fr"] = {
+    monthNames: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+    monthNamesShort: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+    dayNames: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
+    dayNamesShort: ["일", "월", "화", "수", "목", "금", "토"],
+    today: "today",
+  };
+  LocaleConfig.defaultLocale = "fr";
+  const markedDates = data.dateLists?.map((item: any) => {
+    return item.certificationDate;
+  });
+  let dates: any = {};
+  markedDates?.forEach((val: string) => {
+    dates[val] = {
+      customStyles: {
+        container: {
+          backgroundColor: "#054DE4",
+          borderRadius: 10,
+        },
+        text: {
+          color: "#ffffff",
+        },
+      },
+    };
+  });
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <Wrapper>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* <Text>
-            {data.dateLists?.map((item: any, index: number) => {
-              {
-                item.certificationDate;
-              }
-            })}
-          </Text> */}
           <Calendar
             firstDay={1}
             initialDate={data.startDate}
             minDate={data.startDate}
             maxDate={moment(data.startDate).add(14, "days").format(`YYYY-MM-DD`)}
-            markingType={"period"}
+            markingType={"custom"}
             hideDayNames
-            markedDates={{
-              [`${markedDate[0]}`]: {
-                startingDay: true,
-                endingDay: true,
-                color: "#054DE4",
-                textColor: "#ffffff",
-              },
-              [`${markedDate[1]}`]: {
-                startingDay: true,
-                endingDay: true,
-                color: "#054DE4",
-                textColor: "#ffffff",
-              },
-              [`${markedDate[2]}`]: {
-                startingDay: true,
-                endingDay: true,
-                color: "#054DE4",
-                textColor: "#ffffff",
-              },
-              [`${markedDate[3]}`]: {
-                startingDay: true,
-                endingDay: true,
-                color: "#054DE4",
-                textColor: "#ffffff",
-              },
-              [`${markedDate[4]}`]: {
-                startingDay: true,
-                endingDay: true,
-                color: "#054DE4",
-                textColor: "#ffffff",
-              },
+            markedDates={dates}
+            monthFormat={"yyyy/MM"}
+            theme={{
+              todayTextColor: "#054DE4",
             }}
           />
           <View style={styles.spendingDateBox}>
             <Text style={styles.spendingDateText}>
-              {data.remainingDay}일 안에 {data.remainingCount}회 더 인증하셔야 해요
+              {data.remainingDay > 0
+                ? `${data.remainingDay}일 안에 ${data.remainingCount}회 더 인증하셔야 해요`
+                : `챌린지가 종료되었어요`}
             </Text>
           </View>
           <View style={styles.infoBox}>
@@ -119,49 +102,72 @@ export const ProgressPage = () => {
               </Text>
             </View>
           </View>
-          <Text style={styles.membersTitle}>작심친구 {data.memberCount}</Text>
-          {data.members?.map((item: any, index: number) => {
-            return (
-              <Friends key={index}>
-                <Friend>
-                  <View style={styles.friendLeft}>
-                    <Logo
-                      resizeMode="contain"
-                      source={{ uri: item.profile }}
-                      style={{ borderRadius: 15 }}
-                    />
-                    <UserInfo>
-                      <Name>{item.nickName}</Name>
-                      <Promise>{item.promise}</Promise>
-                    </UserInfo>
-                  </View>
-                  <PercentageInfo>
-                    <Percentage>{item.percent}%</Percentage>
-                    <LastCertified>{item.certification}</LastCertified>
-                  </PercentageInfo>
-                </Friend>
-              </Friends>
-            );
-          })}
+          <Text style={styles.membersTitle}>작심친구 6</Text>
+          <View style={{ marginBottom: "15%" }}>
+            {data.members?.map((item: any, index: number) => {
+              return (
+                <Friends key={index}>
+                  <Friend>
+                    <View style={styles.friendLeft}>
+                      <Logo
+                        style={{ borderRadius: 15 }}
+                        resizeMode="contain"
+                        source={{ uri: item.profile }}
+                      />
+                      {/* 내부 리액션 연결 */}
+                      <View>
+                        <View style={styles.reactionButton}>
+                          <Logo
+                            style={{ width: 25, height: 25 }}
+                            resizeMode="contain"
+                            source={require("../../../../../assets/Emo.png")}
+                          />
+                        </View>
+                      </View>
+                      <UserInfo>
+                        <Name>{item.nickName}</Name>
+                        <Promise>{item.promise}</Promise>
+                      </UserInfo>
+                    </View>
+                    <PercentageInfo>
+                      {item.percent === 100 ? (
+                        <Percentage style={{ color: "#676de8" }}>{item.percent}</Percentage>
+                      ) : (
+                        <Percentage style={{ color: "#000" }}>{item.percent}</Percentage>
+                      )}
+                      <LastCertified>{item.certification}</LastCertified>
+                    </PercentageInfo>
+                  </Friend>
+                </Friends>
+              );
+            })}
+          </View>
         </ScrollView>
-
-        {data.certificationStatus === 1 ? (
-          <OpenChallenge>
-            <TouchableOpacity style={styles.completedButton} disabled>
-              <Text style={styles.completedButtonText}>오늘 인증 완료했어요!</Text>
-            </TouchableOpacity>
-          </OpenChallenge>
+        {/* 종료 = 빈코드 */}
+        {data.remainingDay < 1 ? (
+          <></>
         ) : (
-          <OpenChallenge>
-            <GradientButtons
-              onPress={() => {
-                navigation.navigate("ProgressCertified", {
-                  challengeIdx: progressIndex,
-                });
-              }}
-              Title="사진으로 인증하기"
-            />
-          </OpenChallenge>
+          <>
+            {data.certificationStatus === 1 ? (
+              <OpenChallenge>
+                <TouchableOpacity style={styles.completedButton} disabled>
+                  <Text style={styles.completedButtonText}>오늘 인증 완료했어요!</Text>
+                </TouchableOpacity>
+              </OpenChallenge>
+            ) : (
+              <OpenChallenge>
+                <GradientButtons
+                  onPress={() => {
+                    navigation.navigate("ProgressCertified", {
+                      challengeIdx: progressIndex,
+                      certification: data.certificationStatus,
+                    });
+                  }}
+                  Title="사진으로 인증하기"
+                />
+              </OpenChallenge>
+            )}
+          </>
         )}
       </Wrapper>
     </SafeAreaView>
@@ -187,19 +193,19 @@ const Friend = styled.View`
   justify-content: space-between;
 `;
 const Logo = styled.Image`
-  width: 35px;
-  height: 35px;
+  width: 45px;
+  height: 45px;
   margin-right: 20px;
 `;
 const UserInfo = styled.View`
   flex-direction: column;
+  margin-left: -20px;
 `;
 const PercentageInfo = styled.View`
   align-items: flex-end;
   margin-right: 10px;
 `;
 const Percentage = styled.Text`
-  color: #676de8;
   font-size: 25px;
   font-weight: 600;
 `;
@@ -209,13 +215,16 @@ const LastCertified = styled.Text`
 `;
 const Name = styled.Text`
   font-weight: 600;
+  font-size: 18px;
 `;
 const Promise = styled.Text`
   margin-top: 10px;
+  color: #6f81a9;
+  font-weight: 600;
 `;
 const OpenChallenge = styled.View`
   align-self: center;
-  width: 70%;
+  width: 80%;
   position: absolute;
   bottom: 0;
   margin-bottom: 30px;
@@ -257,17 +266,31 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   completedButton: {
-    paddingHorizontal: 55,
+    paddingHorizontal: 80,
     paddingVertical: 15,
     backgroundColor: "#BFC7D7",
     borderRadius: 15,
     alignSelf: "center",
-    marginBottom: 20,
   },
   completedButtonText: {
     color: "#ffffff",
   },
   friendLeft: {
     flexDirection: "row",
+  },
+  picture: {
+    padding: 20,
+    backgroundColor: "#F6F5FB",
+    borderRadius: 50,
+  },
+  reactionButton: {
+    width: 25,
+    height: 25,
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    top: 24,
+    justifyContent: "center",
+    alignSelf: "center",
+    right: 35,
   },
 });

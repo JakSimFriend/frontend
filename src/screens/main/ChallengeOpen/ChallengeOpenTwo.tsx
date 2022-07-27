@@ -129,9 +129,6 @@ export const ChallengeOpenTwo = () => {
                 placeholder="시작 날짜"
                 placeholderTextColor={"#6F81A9"}
                 editable={false}
-                onSubmitEditing={() => {
-                  console.warn("끝");
-                }}
               />
             </TouchableOpacity>
           ) : (

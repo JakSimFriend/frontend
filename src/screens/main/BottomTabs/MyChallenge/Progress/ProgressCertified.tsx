@@ -1,21 +1,100 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { ImageBackground, Platform, SafeAreaView } from "react-native";
 import styled from "styled-components/native";
-import Camera from "react-native-vector-icons/AntDesign";
+import Cameras from "react-native-vector-icons/AntDesign";
 import { GradientButtons } from "../../../../../components/GradientButtons";
 import { useNavigation } from "@react-navigation/native";
+import { launchImageLibrary } from "react-native-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useRecoilState } from "recoil";
+import { CertifiedAtom, CertifiedFailAtom } from "../../../../../../atom";
+import CertifiedModal from "../../../../../components/organisms/CertifiedModal";
+import CertifiedFailModal from "../../../../../components/organisms/CertifiedFailModal";
 
 type RouteParams = {
   route: {
     params: {
       challengeIdx: number;
+      certification: number;
     };
   };
 };
+type ImageType = {
+  name?: string | undefined;
+  type?: string | undefined;
+  uri?: string | undefined;
+};
 
 export const ProgressCertified = ({ route }: RouteParams) => {
-  const { challengeIdx } = route.params;
+  const { challengeIdx, certification } = route.params;
   const navigation: any = useNavigation();
+  const [certified, setCertified] = useState(false);
+  const [modalVisible, setModalVisible] = useRecoilState(CertifiedAtom);
+  const [modalTwoVisible, setModalTwoVisible] = useRecoilState(CertifiedFailAtom);
+  const [modalIndex, setModalIndex] = useState(10);
+  const [certifiedPercent, setCertifiedPercent]: any = useState([]);
+
+  const [image, setImage] = useState<ImageType>({
+    uri: "",
+    type: "image/jpeg",
+    name: "test",
+  });
+  const UploadImage = () => {
+    launchImageLibrary({ selectionLimit: 1, mediaType: "photo" }, (res: any) => {
+      if (res.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (res.errorCode) {
+        console.log("ImagePicker Error: ", res.errorCode);
+      } else if (res.assets) {
+        setImage({
+          uri:
+            Platform.OS === "android"
+              ? res.assets[0].uri
+              : res.assets[0].uri.replace("file://", ""),
+          name: res.assets[0].fileName,
+          type: res.assets[0].type,
+        });
+        setCertified(true);
+      }
+    });
+  };
+  const postPhoto = async () => {
+    const formdata = new FormData();
+    formdata.append("images", image);
+    const headers = {
+      "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
+    };
+    await AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .post(
+          `https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/certification`,
+          formdata,
+          { headers: headers },
+        )
+        .then((response) => {
+          if (response.data.code === 3035) {
+            setModalIndex(1);
+          } else if (response.data.code === 1000) {
+            setCertifiedPercent(response.data.result);
+            setModalIndex(0);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
+        });
+    });
+  };
+  const openModal = () => {
+    modalIndex === 0 ? setModalVisible(true) : setModalTwoVisible(true);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -23,7 +102,18 @@ export const ProgressCertified = ({ route }: RouteParams) => {
         <Title>사진 등록하기</Title>
         <SubTitle>오늘도 작심한 것을 인증해주세요!</SubTitle>
         <PhotoBox>
-          <Camera name="camerao" size={25} color={"#054de4"} />
+          <ImageBackground
+            source={{ uri: image.uri }}
+            style={{
+              position: "absolute",
+              zIndex: 1,
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+            }}
+            borderRadius={15}
+          />
+          <Cameras name="camerao" size={25} color={"#054de4"} />
           <CameraText>도전작심 규칙을 참고하셔서{`\n`}인증할 수 있는 사진을 올려주세요!</CameraText>
         </PhotoBox>
         <InfoButton
@@ -35,15 +125,24 @@ export const ProgressCertified = ({ route }: RouteParams) => {
         >
           <InfoButtonText>도전작심 정보</InfoButtonText>
         </InfoButton>
-        <GradientButtonWrapper>
-          <GradientButtons
-            onPress={() => {
-              "인증하기~";
-            }}
-            Title="사진 촬영해서 인증하기"
-          />
-        </GradientButtonWrapper>
+        {certified ? (
+          <GradientButtonWrapper>
+            <GradientButtons
+              onPress={() => {
+                postPhoto();
+                openModal();
+              }}
+              Title="인증 완료!"
+            />
+          </GradientButtonWrapper>
+        ) : (
+          <GradientButtonWrapper>
+            <GradientButtons onPress={UploadImage} Title="사진 촬영해서 인증하기" />
+          </GradientButtonWrapper>
+        )}
       </Wrapper>
+      <CertifiedModal visible={modalVisible} certifiedPercent={certifiedPercent} />
+      <CertifiedFailModal visible={modalTwoVisible} />
     </SafeAreaView>
   );
 };
@@ -62,10 +161,11 @@ const SubTitle = styled.Text`
 `;
 const PhotoBox = styled.View`
   margin-top: 30px;
-  padding: 40% 0;
+  height: 50%;
   border-radius: 15px;
   background-color: #f6f5fb;
   align-items: center;
+  justify-content: center;
 `;
 const CameraText = styled.Text`
   margin-top: 30px;

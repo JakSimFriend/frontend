@@ -16,6 +16,8 @@ import { isLoggedInAtom, isUserAtom } from "../../../atom";
 import { unlink } from "@react-native-seoul/kakao-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
 export interface WithdrawalModalProps {
   visible: boolean;
   setVisible: (value: (value: boolean) => boolean) => void;
@@ -66,22 +68,29 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
     if (e.nativeEvent.text == "탈퇴") {
       setButtonDisabled(false);
       setTextInputBordercolor("#101647");
-    } else {
-      if (buttonDisabled == false) setButtonDisabled(true);
-    }
-    if (e.nativeEvent.text.length == 0) {
+    } else if (e.nativeEvent.text.length == 0) {
       setTextInputBordercolor("#BFC7D7");
+      setButtonDisabled(true);
     } else if (e.nativeEvent.text != "탈퇴") {
       setTextInputBordercolor("#044DE4");
+      setButtonDisabled(true);
     }
   };
 
   const KakaoSignOut = async (): Promise<void> => {
-    const message = await unlink();
-    console.log(message);
+    signOutPatch();
+    try {
+      await unlink();
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.log(error);
+    }
     AsyncStorage.removeItem("jwt");
     AsyncStorage.removeItem("userIdx");
-    await signOutPatch();
     setIsLoggedIn(false);
     setIsUser(false);
   };

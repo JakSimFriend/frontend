@@ -8,6 +8,7 @@ pod 'KakaoSDK'
 
 target 'jaksimfriend' do
   config = use_native_modules!
+  pod 'GoogleSignIn', '~> 6.2.2'
 
   # Flags change depending on the env values.
   flags = get_default_flags()
@@ -20,6 +21,8 @@ target 'jaksimfriend' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
 
   target 'jaksimfriendTests' do
     inherit! :complete

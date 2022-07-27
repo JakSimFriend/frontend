@@ -18,16 +18,17 @@ export const HomeNav = () => {
       screenOptions={{
         headerTitle: "홈",
         headerTitleAlign: "center",
-        headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+        headerTitleStyle: { fontSize: 18, fontWeight: "600" },
         headerShadowVisible: false,
-        headerRightContainerStyle: { paddingRight: 20 },
       }}
     >
       <Stack.Screen
         name="Home"
         component={Home}
         options={{
-          headerRight: () => <Bell name="bells" size={23} onPress={goToNotifications} />,
+          headerRight: () => (
+            <Bell name="bells" size={23} onPress={goToNotifications} style={{ marginRight: 16 }} />
+          ),
         }}
       />
     </Stack.Navigator>

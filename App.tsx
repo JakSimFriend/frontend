@@ -7,14 +7,13 @@ import MainNav from "./src/navigators/MainNav";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "react-native-gesture-handler";
 import messaging from "@react-native-firebase/messaging";
-import { Alert } from "react-native";
 
 const queryClient = new QueryClient();
 const App = () => {
   useEffect(() => {
     setTimeout(() => {
       SplashScreen.hide();
-    }, 2000);
+    }, 500);
   });
   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
     console.log("Message handled in the background!", remoteMessage);

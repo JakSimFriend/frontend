@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -9,6 +9,10 @@ import ProfileModal from "../../../components/organisms/ProfileModal";
 import { ProfileNavParamList } from "../../../navigators/Tabs/ProfileNav";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import OnDevelopModal from "../../../components/organisms/OnDevelopModal";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { onDevelopModalAtom } from "../../../../atom";
+// import { TestIds, RewardedAd, RewardedAdEventType } from "@react-native-firebase/admob";
 
 type ProfileDataType = {
   image: string;
@@ -23,19 +27,23 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
       axios
         .get(`https://jaksimfriend.site/profiles/${userIdx}`)
         .then(function (response) {
-          setProfileDatas(response.data.result[0]);
-          setProfilePoint(response.data.result[0].point.toLocaleString("ko-KR"));
+          if (response.data.result === undefined) {
+            console.log("워닝");
+          } else {
+            setProfileDatas(response.data.result[0]);
+            setProfilePoint(response.data.result[0].point.toLocaleString("ko-KR"));
+          }
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);
-  
-  // const [profileData, setProfileData] = useState<ProfileDataType>({
-  //   image:
-  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/1600px-A_black_image.jpg?20201103073518",
-  // });
+
+  const [profileData, setProfileData] = useState<ProfileDataType>({
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/1600px-A_black_image.jpg?20201103073518",
+  });
 
   const pointIconName = [
     "gift-outline",
@@ -46,8 +54,49 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   ]; //Ionicons
 
   const [modalVisible, setModalVisible] = useState(false);
+  const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
   const [scrollViewContentHeight, setScrollViewContentHeight] = useState(0);
+
+  const receiveReward = () => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .patch(`https://jaksimfriend.site/profiles/${userIdx}/reward`)
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
+  };
+  // 플랫폼에 따라 다른 app Id firebase.json에서가져오기
+  // const appId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+  // const getAds = () => {
+  //   try {
+  //     //TestIds에 각 플랫폼 id넣어주면됨
+  //     const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
+  //       requestNonPersonalizedAdsOnly: true,
+  //     });
+  //     rewarded.onAdEvent((type, error, reward) => {
+  //       if (error) {
+  //         console.log("동영상을 불러오는 중 오류가 발생했어요", error);
+  //       }
+  //       if (type === RewardedAdEventType.LOADED) {
+  //         // 동영상 로드 완료
+  //         rewarded.show(); // 동영상 광고 띄우기
+  //       }
+  //       if (type === RewardedAdEventType.EARNED_REWARD) {
+  //         console.log("User earned reward of ", reward);
+  //         receiveReward();
+  //       }
+  //     });
+  //     rewarded.load();
+  //   } catch (error) {
+  //     console.log("catch error", error);
+  //   }
+  // };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -69,7 +118,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
           <View style={styles.profileView}>
             <Image
               source={{
-                uri: profileDatas.profile,
+                uri: profileDatas.profile ? profileDatas.profile : profileData.image,
               }}
               style={styles.image}
             />
@@ -93,17 +142,35 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
               <TouchableOpacity style={styles.pointButton} onPress={() => setModalVisible(true)}>
                 <Text style={styles.pointButtonText}>초대하기</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.pointButton, { marginHorizontal: 10 }]}>
+              <TouchableOpacity
+                style={[styles.pointButton, { marginHorizontal: 10 }]}
+                onPress={() => {
+                  setModalTwoVisible(true);
+                }}
+              >
                 <Text style={styles.pointButtonText}>충전하기</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.pointButton}>
+              <TouchableOpacity
+                style={styles.pointButton}
+                onPress={() => {
+                  setModalTwoVisible(true);
+                }}
+              >
                 <Text style={styles.pointButtonText}>인출하기</Text>
               </TouchableOpacity>
             </View>
           </LinearGradient>
-          <View style={[styles.bottomView]}>
+          <View
+            style={[
+              styles.bottomView,
+              {
+                paddingBottom:
+                  profileDatas.points?.length < 4 ? scrollViewHeight - scrollViewContentHeight : 30,
+              },
+            ]}
+          >
             <Text style={styles.bottomTitle}>내역 보기</Text>
-            {profileDatas.points?.length == 0 ? (
+            {profileDatas.points?.length === 0 ? (
               <Text style={styles.emptyAlertText}>결제 내역이 없어요</Text>
             ) : (
               profileDatas.points?.map((item: any, index: number) => (
@@ -154,6 +221,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
       </ScrollView>
       {/* <View style={{ position: 'absolute', backgroundColor: '#fff', bottom: 0, height: 200, width: '100%', zIndex: -1 }} /> */}
       <ProfileModal visible={modalVisible} setVisible={setModalVisible} />
+      <OnDevelopModal />
     </SafeAreaView>
   );
 };
@@ -203,7 +271,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   linearGradient: {
-    width: "95%",
+    width: "90%",
     paddingVertical: 16,
     paddingHorizontal: "3%",
     borderRadius: 13,
@@ -222,7 +290,7 @@ const styles = StyleSheet.create({
   },
   pointButtonView: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   pointButton: {
     backgroundColor: "#FFFFFF4D",

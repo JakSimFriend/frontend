@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
-import { useSetRecoilState } from "recoil";
+import { Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
-import { isUserAtom } from "../../../atom";
+import { isUserAtom, SignInAtom } from "../../../atom";
 import { GradientButtons } from "../../components/GradientButtons";
 import moment from "moment";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SignInModal from "../../components/organisms/SignInModal";
 
 export const BirthDay = () => {
-  const setIsUser = useSetRecoilState(isUserAtom);
+  const [visible, setModalVisible] = useRecoilState(SignInAtom);
 
   const GREY = "#6F81A9";
   const [dateSelected, setDateSelected] = useState(false);
@@ -32,7 +33,7 @@ export const BirthDay = () => {
   useEffect(() => {
     showTimePicker();
   }, []);
-
+  
   const [userIndex, setUserIndex] = useState(0);
   AsyncStorage.getItem("userIdx", (err, result: any) => {
     setUserIndex(parseInt(result));
@@ -52,10 +53,10 @@ export const BirthDay = () => {
   };
   const jakSimStart = () => {
     postBirthDay();
-    setIsUser(true);
+    setModalVisible(true);
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor:"#ffffff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <Wrapper>
         <Title>생년월일을 적어주세요!</Title>
         <SubTitle>작심친구에서 맞춤 서비스를 제공해드려요!</SubTitle>
@@ -109,6 +110,7 @@ export const BirthDay = () => {
           confirmTextIOS="확인"
         />
       </Wrapper>
+      <SignInModal visible={visible}/>
     </SafeAreaView>
   );
 };
@@ -125,7 +127,7 @@ const SubTitle = styled.Text`
   margin-top: 20px;
   font-size: 15px;
 `;
-const GradientWrapper = styled.View`
+const GradientWrapper = styled.TouchableOpacity`
   align-self: center;
   width: 80%;
   position: absolute;

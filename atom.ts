@@ -30,6 +30,22 @@ export const createdModalAtom = atom<boolean>({
   key: `createdModalVisible${uuid()}`,
   default: false,
 });
+export const SignInAtom = atom<boolean>({
+  key: `signinModalVisible${uuid()}`,
+  default: false,
+});
+export const CertifiedAtom = atom<boolean>({
+  key: `certifiedAtomVisible${uuid()}`,
+  default: false,
+});
+export const CertifiedFailAtom = atom<boolean>({
+  key: `certifiedFailAtomVisible${uuid()}`,
+  default: false,
+});
+export const onDevelopModalAtom = atom<boolean>({
+  key: `certifiedFailAtomVisible${uuid()}`,
+  default: false,
+});
 export const reactionModalAtom = atom<boolean>({
   key: `ReactionModalVisible${uuid()}`,
   default: false,

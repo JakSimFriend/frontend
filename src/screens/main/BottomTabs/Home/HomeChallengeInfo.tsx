@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Animated,
+  Dimensions,
+  Linking,
   Modal,
+  Platform,
   SafeAreaView,
+  Share,
   StatusBar,
   StyleSheet,
   Text,
@@ -23,7 +28,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import ChallengeApplyModal from "../../../../components/organisms/ChallengeApplyModal";
 import { useSetRecoilState } from "recoil";
-import { applyModalAtom } from "../../../../../atom";
+import { applyModalAtom, onDevelopModalAtom } from "../../../../../atom";
+import LinearGradient from "react-native-linear-gradient";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
+import OnDevelopModal from "../../../../components/organisms/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -40,6 +49,8 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
   const { title, schedule, members, challengeIdx } = route.params;
 
   const setModalVisible = useSetRecoilState(applyModalAtom);
+  const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
+
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const upValue = useState(new Animated.Value(0))[0];
   const sheetUp = () => {
@@ -82,10 +93,9 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
           setInfoData(response.data.result);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
-
   }, []);
   const joinChallenge = () => {
     AsyncStorage.getItem("userIdx").then((value) => {
@@ -103,9 +113,44 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
         });
     });
   };
- 
+  // const onClickOpenChat = useCallback(() => {
+  //   Linking.openURL(`https://reactnative.dev/docs/linking`);
+  // }, []);
+
+  const link =
+    Platform.OS === "ios"
+      ? "https://apps.apple.com/us/app/%EB%B3%B4%EB%8B%A5-%EB%82%B4-%EB%B3%B4%ED%97%98%EC%A0%90%EC%88%98-%EC%A7%84%EB%8B%A8-%EC%83%88%EB%8A%94-%EB%B3%B4%ED%97%98%EB%A3%8C-%ED%99%95%EC%9D%B8/id1447862053"
+      : "https://play.google.com/store/apps/details?id=com.kakao.talk&hl=ko";
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: title,
+        message: `${infoData.content}${`\n`} ${link}`,
+        url: "https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const moneyAvailable = infoData.pee < infoData.myPoint ? true : false;
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
+      <View style={styles.topView}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#101647" />
+        </TouchableOpacity>
+      </View>
       <Wrapper>
         <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
         <Title>{title}</Title>
@@ -156,17 +201,22 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
             </TextWrapper>
           </InfoWrapper>
         </Infos>
-        <ChallengeCash>
-          <ChallengeCashText>도전 캐시</ChallengeCashText>
-          <ChallengeCashText>1,000C</ChallengeCashText>
-        </ChallengeCash>
-        <MyCash>
-          <Text>내 캐시</Text>
-          <Text>{infoData.myPoint}C</Text>
-        </MyCash>
+        <View style={styles.cashWrapper}>
+          <ChallengeCash>
+            <ChallengeCashText>도전 캐시</ChallengeCashText>
+            <ChallengeCashText>{infoData.pee}C</ChallengeCashText>
+          </ChallengeCash>
+          <MyCash>
+            <Text>내 캐시</Text>
+            <Text>{infoData.myPoint}C</Text>
+          </MyCash>
+        </View>
         <Buttons>
           <TouchableOpacity
             style={styles.shareButton}
+            onPress={() => {
+              setModalTwoVisible(true);
+            }}
           >
             <Text>공유할래요</Text>
           </TouchableOpacity>
@@ -175,8 +225,12 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
               <Text style={{ color: "#ffffff" }}>이미 신청했어요</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.applyButton} onPress={ShowBottomSheet}>
-              <Text style={{ color: "#ffffff" }}>신청할게요</Text>
+            <TouchableOpacity onPress={ShowBottomSheet}>
+              <LinearGradient style={styles.applyButton} colors={["#947BEA", "#1151E5"]}>
+                <Text style={{ color: "#ffffff", paddingVertical: 20, paddingHorizontal: "15%" }}>
+                  신청할게요
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
           )}
         </Buttons>
@@ -210,7 +264,8 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        <ChallengeApplyModal />
+        <ChallengeApplyModal money={moneyAvailable} />
+        <OnDevelopModal />
       </Wrapper>
     </SafeAreaView>
   );
@@ -219,7 +274,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #f6f5fb;
-  padding: 50px 4% 0 4%;
+  padding: 20px 4% 0 4%;
 `;
 const Title = styled.Text`
   font-size: 22px;
@@ -251,12 +306,12 @@ const TopText = styled.Text`
   margin-bottom: 3px;
 `;
 const ChallengeCash = styled.View`
-  margin-top: 20px;
   background-color: #101647;
   padding: 22px;
   border-radius: 15px;
   flex-direction: row;
   justify-content: space-between;
+  box-shadow: 0px 2px 16px rgba(15, 45, 107, 0.2);
 `;
 const ChallengeCashText = styled.Text`
   color: #ffffff;
@@ -269,30 +324,49 @@ const MyCash = styled.View`
   border-radius: 15px;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 30px;
 `;
 const Buttons = styled.View`
   flex-direction: row;
-  justify-content: space-around;
+  align-self: center;
 `;
+
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
+  topView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  topText: {
+    color: "#101647",
+    fontSize: 17,
+    position: "absolute",
+    width: width,
+    height: "100%",
+    textAlign: "center",
+    textAlignVertical: "center",
+    marginTop: 10,
+    fontWeight: "500",
+  },
   shareButton: {
     backgroundColor: "#ffffff",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
+    paddingVertical: 20,
+    paddingHorizontal: "15%",
+    marginRight: 5,
     borderRadius: 15,
   },
   CompletedButton: {
     backgroundColor: "#bfc7d7",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingVertical: 20,
+    paddingHorizontal: "11%",
+    marginLeft: 5,
     borderRadius: 15,
   },
   applyButton: {
     backgroundColor: "#5A69E8",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
     borderRadius: 15,
+    alignSelf: "center",
   },
   background: {
     flex: 1,
@@ -326,5 +400,14 @@ const styles = StyleSheet.create({
   nextButtonText: {
     fontSize: 18,
     color: "#6F81A9",
+  },
+  cashWrapper: {
+    backgroundColor: "#ffffff",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+    marginTop: 20,
+    marginBottom: 30,
   },
 });

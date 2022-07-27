@@ -1,111 +1,131 @@
-import React from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
-import Camera from "react-native-vector-icons/MaterialCommunityIcons";
-import CameraOff from "react-native-vector-icons/MaterialCommunityIcons";
-import Happy from "react-native-vector-icons/Ionicons";
 import Alarm from "react-native-vector-icons/MaterialCommunityIcons";
-import { a } from "../../../../../assets/images";
 import ReportModalOne from "../../../../../components/organisms/ReportModalOne";
 import ReportModalTwo from "../../../../../components/organisms/ReportModalTwo";
-import { useSetRecoilState } from "recoil";
-import { reportModalOne, reportModalTwo } from "../../../../../../atom";
-
-const data = [
-  {
-    index: 1,
-    title: "제목1",
-    date: "5월 21일",
-    time: "11 : 00 ",
-    icon: "camera",
-  },
-  {
-    index: 2,
-    title: "제목2",
-    date: "5월 22일",
-    time: "10 : 20 ",
-    icon: "camera-off",
-  },
-  {
-    index: 3,
-    title: "제목3",
-    date: "5월 23일",
-    time: "10 : 05 ",
-    icon: "happy",
-  },
-];
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { onDevelopModalAtom, progressIndexAtom, reportModalOne } from "../../../../../../atom";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import OnDevelopModal from "../../../../../components/organisms/OnDevelopModal";
 
 export const ProgressNotification = () => {
+  const progressIndex = useRecoilValue(progressIndexAtom);
   const setModalOneVisible = useSetRecoilState(reportModalOne);
-  const setModalTwoVisible = useSetRecoilState(reportModalTwo);
-  const Delete = () => {
-    console.warn("삭제~");
-  };
+  const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
+
   const Report = () => {
     setModalOneVisible(true);
   };
+  const [notificationData, setNotificationData]: any = useState([]);
+  const [listEmpty, setListEmpty] = useState(false);
+  const [cancel, setCancelIndex] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .get(`https://jaksimfriend.site/alerts/${progressIndex}/${userIdx}`)
+        .then((response) => {
+          if (response.data.result === undefined) {
+            setListEmpty(true);
+          } else {
+            setListEmpty(false);
+            setNotificationData(response.data.result);
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+          setListEmpty(true);
+        });
+    });
+  }, [cancel]);
+  const cancelChallenge = () => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .patch(`https://jaksimfriend.site/alerts/${cancel}/delete/${userIdx}`)
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
-      <Wrapper>
-        {data.length === 0 ? (
-          <EmptyText>확인하실 알림이 없어요</EmptyText>
-        ) : (
-          <>
-            <Text>5월 5일</Text>
-            {data.map((item, index) => {
-              return (
-                <View key={index}>
-                  <NoticeBox>
-                    <NoticeIcon>
-                      {item.icon === "happy" ? (
-                        <Left>
-                          <Happy name={item.icon} size={25} color={"#054de4"} />
-                          <NoticeText>
-                            ㅇㅇㅇㅇ님이{"\n"}만두님께{"\n"}멋져요 리액션을 남기셨어요
-                          </NoticeText>
-                        </Left>
-                      ) : item.icon === "camera-off" ? (
-                        <Left>
-                          <CameraOff name={item.icon} size={25} color={"#054de4"} />
-                          <NoticeText>만두님의{"\n"}인증이 신고되었어요</NoticeText>
-                        </Left>
-                      ) : (
-                        <Left>
-                          <Camera name={item.icon} size={25} color={"#054de4"} />
-                          <NoticeText>만두님이{"\n"}도전작심을 인증하셨어요</NoticeText>
-                        </Left>
-                      )}
-                      <DeleteButton onPress={Delete}>
-                        <DeleteText>X</DeleteText>
-                      </DeleteButton>
-                    </NoticeIcon>
-                    {item.icon === "camera" ? (
-                      <DownBox>
-                        <TouchableOpacity>
-                          <Logo resizeMode="contain" source={a} />
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: "row" }}>
-                          <AlarmWrapper onPress={Report}>
-                            <Alarm name="alarm-light" size={25} color={"#054de4"} />
-                          </AlarmWrapper>
-                          <ReactionButton>
-                            <ReactionButtonText>리액션 하기</ReactionButtonText>
-                          </ReactionButton>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Wrapper>
+          {listEmpty || notificationData.length === 0 ? (
+            <EmptyText>확인하실 알림이 없어요</EmptyText>
+          ) : (
+            <>
+              {notificationData.map((item: any, index: number) => {
+                return (
+                  <View key={index}>
+                    <Text>{item.date}</Text>
+                    {item.alerts?.map((items: any, index: number) => {
+                      return (
+                        <View key={index}>
+                          <NoticeBox>
+                            <UpBox>
+                              <NoticeIcon>
+                                <Image
+                                  resizeMode="contain"
+                                  source={{ uri: items.image }}
+                                  style={{ width: 25, height: 25 }}
+                                />
+                                <NoticeText>{items.alert}</NoticeText>
+                              </NoticeIcon>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  setCancelIndex(items.alertIdx);
+                                  cancelChallenge();
+                                }}
+                              >
+                                <DeleteText>X</DeleteText>
+                              </TouchableOpacity>
+                            </UpBox>
+                            <DownBox>
+                              <View>
+                                <Logo
+                                  resizeMode="contain"
+                                  source={{ uri: items.certificationPhoto }}
+                                />
+                              </View>
+                              <View style={{ flexDirection: "row" }}>
+                                {items.reportStatus === 0 ? (
+                                  <AlarmWrapper onPress={Report}>
+                                    <Alarm name="alarm-light" size={25} color={"#054de4"} />
+                                  </AlarmWrapper>
+                                ) : (
+                                  <></>
+                                )}
+                                <ReactionButton
+                                  onPress={() => {
+                                    setModalTwoVisible(true);
+                                  }}
+                                >
+                                  <ReactionButtonText>리액션 하기</ReactionButtonText>
+                                </ReactionButton>
+                              </View>
+                            </DownBox>
+                          </NoticeBox>
+                          <Time>{items.time}</Time>
                         </View>
-                      </DownBox>
-                    ) : (
-                      <></>
-                    )}
-                  </NoticeBox>
-                  <Time>오후 {item.time}</Time>
-                </View>
-              );
-            })}
-          </>
-        )}
-      </Wrapper>
+                      );
+                    })}
+                  </View>
+                );
+              })}
+            </>
+          )}
+        </Wrapper>
+      </ScrollView>
       <ReportModalOne />
       <ReportModalTwo />
+      <OnDevelopModal />
     </SafeAreaView>
   );
 };
@@ -121,21 +141,17 @@ const EmptyText = styled.Text`
 `;
 const NoticeBox = styled.View`
   margin-top: 10px;
-  padding: 16px 10px 15px 10px;
+  padding: 10px 10px 15px 10px;
   border-radius: 10px;
   background-color: #f6f5fb;
 `;
 const NoticeIcon = styled.View`
   flex-direction: row;
-  justify-content: space-between;
-`;
-const Left = styled.View`
-  flex-direction: row;
 `;
 const NoticeText = styled.Text`
-  margin-left: 15px;
+  max-width: 70%;
+  margin-left: 5%;
 `;
-const DeleteButton = styled.TouchableOpacity``;
 const DeleteText = styled.Text`
   font-weight: 600;
   font-size: 20px;
@@ -146,10 +162,15 @@ const Time = styled.Text`
   align-self: flex-end;
 `;
 const Logo = styled.Image`
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   background-color: #000000;
   border-radius: 5px;
+  margin-left: 25%;
+`;
+const UpBox = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
 `;
 const DownBox = styled.View`
   flex-direction: row;
@@ -158,15 +179,17 @@ const DownBox = styled.View`
   padding: 0 10px;
 `;
 const AlarmWrapper = styled.TouchableOpacity`
-  padding: 5px 7px;
+  padding: 7px 7px;
   background-color: #ffffff;
   border-radius: 10px;
   margin-right: 10px;
+  align-self: center;
 `;
 const ReactionButton = styled.TouchableOpacity`
   background-color: #054de4;
   border-radius: 10px;
   padding: 10px 25px;
+  align-self: center;
 `;
 const ReactionButtonText = styled.Text`
   color: #ffffff;

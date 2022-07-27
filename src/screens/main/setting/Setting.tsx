@@ -30,12 +30,12 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
           axios
             .patch(`https://jaksimfriend.site/settings/${userIdx}/alert`)
             .then(function (response) {
-              console.warn(response.data);
+              console.log(response.data);
               AsyncStorage.setItem("alertButton", "true");
               setSwitchEnable(true);
             })
             .catch(function (error) {
-              console.warn(error);
+              console.log(error);
             });
         })
       : AsyncStorage.getItem("userIdx").then((value) => {
@@ -43,12 +43,12 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
           axios
             .patch(`https://jaksimfriend.site/settings/${userIdx}/alert-cancel`)
             .then(function (response) {
-              console.warn(response.data);
+              console.log(response.data);
               AsyncStorage.setItem("alertButton", "false");
               setSwitchEnable(false);
             })
             .catch(function (error) {
-              console.warn(error);
+              console.log(error);
             });
         });
   };

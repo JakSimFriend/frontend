@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MyChallenge } from "../../../screens/main";
 import { Text } from "react-native";
@@ -24,9 +24,10 @@ export const MyChallengeNav = () => {
         options={{
           headerTitle: "내 도전",
           headerTitleAlign: "center",
+          headerTitleStyle: { fontSize: 18, fontWeight: "900" },
           headerRight: () => (
             <TouchableOpacity onPress={goToRecord}>
-              <Text style={{ color: "#054de4", fontSize: 15, marginRight: 15 }}>기록</Text>
+              <Text style={{ color: "#054de4", fontSize: 15, marginRight: 18 }}>기록</Text>
             </TouchableOpacity>
           ),
         }}

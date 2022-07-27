@@ -12,6 +12,9 @@ import {
 } from "../../../../../components/TabIcon";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSetRecoilState } from "recoil";
+import { onDevelopModalAtom } from "../../../../../../atom";
+import OnDevelopModal from "../../../../../components/organisms/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -23,6 +26,7 @@ type RouteParams = {
 
 export const BeforeStartPageInfo = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
+  const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {
@@ -39,7 +43,7 @@ export const BeforeStartPageInfo = ({ route }: RouteParams) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <Wrapper>
-      <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
+        <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
         <Title>{data.title}</Title>
         <Content>{data.content}</Content>
         <Infos>
@@ -91,12 +95,13 @@ export const BeforeStartPageInfo = ({ route }: RouteParams) => {
         <OpenChallenge>
           <GradientButtons
             onPress={() => {
-              console.warn("공유할래용");
+              setModalTwoVisible(true);
             }}
             Title="공유할래요"
           />
         </OpenChallenge>
       </Wrapper>
+      <OnDevelopModal />
     </SafeAreaView>
   );
 };

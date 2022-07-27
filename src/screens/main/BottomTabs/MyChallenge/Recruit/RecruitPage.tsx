@@ -53,10 +53,10 @@ export const RecruitPage = ({ route }: RouteParams) => {
       axios
         .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/accept`)
         .then(function (response) {
-          console.warn(response.data);
+          console.log(response.data);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   };
@@ -66,10 +66,10 @@ export const RecruitPage = ({ route }: RouteParams) => {
       axios
         .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/refuse`)
         .then(function (response) {
-          console.warn(response.data);
+          console.log(response.data);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   };
@@ -100,6 +100,7 @@ export const RecruitPage = ({ route }: RouteParams) => {
             minDate={recruitPageData.startDate}
             hideDayNames
             maxDate={moment(recruitPageData.startDate).add(14, "days").format(`YYYY-MM-DD`)}
+            monthFormat={"yyyy/MM"}
           />
           <View style={styles.spendingDateBox}>
             <Text style={styles.spendingDateText}>
@@ -264,19 +265,22 @@ const Friend = styled.View`
   padding-bottom: 10px;
 `;
 const Logo = styled.Image`
-  width: 35px;
-  height: 35px;
+  width: 45px;
+  height: 45px;
   margin-right: 20px;
-  border-radius: 15px;
+  border-radius: 5px;
 `;
 const UserInfo = styled.View`
   flex-direction: column;
 `;
 const Name = styled.Text`
   font-weight: 600;
+  font-size: 18px;
 `;
 const Promise = styled.Text`
   margin-top: 10px;
+  color: #6f81a9;
+  font-weight: 600;
 `;
 
 const { width } = Dimensions.get("window");
@@ -289,14 +293,14 @@ const styles = StyleSheet.create({
   },
   topText: {
     color: "#101647",
-    fontSize: 17,
+    fontSize: 18,
     position: "absolute",
     width: width,
     height: "100%",
     textAlign: "center",
     textAlignVertical: "center",
     marginTop: 10,
-    fontWeight: "500",
+    fontWeight: "600",
   },
   spendingDateBox: {
     paddingVertical: 20,

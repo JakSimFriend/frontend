@@ -41,7 +41,7 @@ export const Challenges = () => {
           }
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, [categoryIndex]);
@@ -52,7 +52,7 @@ export const Challenges = () => {
         <EmptyChallengeList />
       ) : (
         <>
-          <ChallegeHeader>추천 챌린지</ChallegeHeader>
+          <ChallegeHeader>추천 도전작심</ChallegeHeader>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -125,7 +125,7 @@ export const Challenges = () => {
 };
 
 const ChallegeHeader = styled.Text`
-  margin: 20px 4% 0 4%;
+  margin: 15px 0 0 6%;
   font-size: 20px;
   font-weight: 600;
 `;
@@ -133,7 +133,7 @@ const ChallengeBox = styled.View`
   padding: 20px 10px;
   background-color: #f6f5fb;
   border-radius: 12px;
-  margin: 30px 10px 0px 5px;
+  margin: 15px 10px 0px 10px;
 `;
 const ChallengeTitle = styled.Text`
   font-size: 18px;

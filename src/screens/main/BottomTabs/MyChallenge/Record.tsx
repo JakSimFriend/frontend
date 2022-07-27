@@ -1,40 +1,22 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
-import { recieveModalAtom } from "../../../../../atom";
+import { progressIndexAtom, progressTitleAtom } from "../../../../../atom";
 import { GradientButtons } from "../../../../components/GradientButtons";
 import RecieveModal from "../../../../components/organisms/RecieveModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
-const data = [
-  {
-    title: "제목1",
-    category: "전공 기초",
-    date: "2022년 6월 15일",
-    percentage: "60%",
-  },
-  {
-    title: "제목2",
-    category: "예술",
-    date: "2022년 6월 10일",
-    percentage: "100%",
-  },
-  {
-    title: "제목3",
-    category: "운동",
-    date: "2022년 6월 25일",
-    percentage: "80%",
-  },
-];
+import Ionicons from "react-native-vector-icons/Ionicons";
+import LinearGradient from "react-native-linear-gradient";
 
 export const Record = () => {
-  const setModalVisible = useSetRecoilState(recieveModalAtom);
+  const setProgressIndex = useSetRecoilState(progressIndexAtom);
+  const setProgressTitle = useSetRecoilState(progressTitleAtom);
   const navigation = useNavigation();
-  const goToProgressInfo = () => navigation.navigate("ProgressDetailTopTab");
 
+  const [recordEmpth, setRecordEmpty] = useState(false);
   const [recordData, setRecordData]: any = useState([]);
   useEffect(() => {
     AsyncStorage.getItem("userIdx").then((value) => {
@@ -42,68 +24,89 @@ export const Record = () => {
       axios
         .get(`https://jaksimfriend.site/my-challenges/${userIdx}/record`)
         .then(function (response) {
-          console.warn(response.data.result);
-          setRecordData(response.data);
+          if (response.data.result[0] === undefined) {
+            setRecordEmpty(true);
+          } else {
+            setRecordEmpty(false);
+            setRecordData(response.data.result[0]);
+          }
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);
   return (
-    <Wrapper>
-      <ScrollView>
-        <InfoWrapper>
-          <Date>2022년</Date>
-          <Number>{data.length}</Number>
-        </InfoWrapper>
-        {recordData === undefined ? (
-          "undefined"
-        ) : (
-          <>
-            {data.map((item, index) => {
-              const [received, setReceived] = useState(false); //data
-              const 보상받기 = () => {
-                setModalVisible(true);
-                setReceived(true);
-              };
-              return (
-                <Box key={index} onPress={goToProgressInfo}>
-                  <Header>
-                    <Title>{item.title}</Title>
-                    <CategoryButton>
-                      <Category>{item.category}</Category>
-                    </CategoryButton>
-                  </Header>
-                  <Body>
-                    <Left>
-                      <DateTwo>{item.date}</DateTwo>에{"\n"}
-                      <Percentage>{item.percentage}</Percentage>로 종료되었습니다
-                    </Left>
-                    {received ? (
-                      <RecieveButton disabled>
-                        <Text style={{ color: "#ffffff" }}>보상 받음</Text>
-                      </RecieveButton>
-                    ) : (
-                      <View style={{ marginLeft: 20 }}>
-                        <GradientButtons onPress={보상받기} Title="보상 받기" />
-                      </View>
-                    )}
-                  </Body>
-                </Box>
-              );
-            })}
-          </>
-        )}
-      </ScrollView>
-      <RecieveModal />
-    </Wrapper>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <Wrapper>
+        <View style={styles.topView}>
+          <TouchableOpacity style={{ marginLeft: -5 }} onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={25} color="#101647" />
+          </TouchableOpacity>
+          <Text style={styles.topText}>기록</Text>
+          <Ionicons name="arrow-back" size={25} color="#0000" />
+        </View>
+        <ScrollView>
+          {recordEmpth ? (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyText}>기록이 없어요</Text>
+            </View>
+          ) : (
+            <>
+              <InfoWrapper>
+                <Date>{recordData.year}년</Date>
+                <Number>{recordData.count}</Number>
+              </InfoWrapper>
+              {recordData.histories?.map((item: any, index: number) => {
+                return (
+                  <Box key={index}>
+                    <Header>
+                      <Title>{item.title}</Title>
+                      <CategoryButton>
+                        <Category>{item.categoryName}</Category>
+                      </CategoryButton>
+                    </Header>
+                    <Body>
+                      <Left>
+                        <DateTwo>{item.endDate}</DateTwo>에{"\n"}
+                        <Percentage>{item.percent}%</Percentage>로 종료되었습니다
+                      </Left>
+                      {item.rewardStatus === 1 ? (
+                        <RecieveButton disabled>
+                          <Text style={{ color: "#ffffff" }}>보상 받음</Text>
+                        </RecieveButton>
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate("ProgressDetailTopTab");
+                            setProgressIndex(item.challengeIdx);
+                            setProgressTitle(item.title);
+                          }}
+                        >
+                          <LinearGradient
+                            style={{ borderRadius: 15, paddingVertical: 12, paddingHorizontal: 25 }}
+                            colors={["#947BEA", "#1151E5"]}
+                          >
+                            <Text style={{ color: "#fff" }}>보상 받기</Text>
+                          </LinearGradient>
+                        </TouchableOpacity>
+                      )}
+                    </Body>
+                  </Box>
+                );
+              })}
+            </>
+          )}
+        </ScrollView>
+        <RecieveModal />
+      </Wrapper>
+    </SafeAreaView>
   );
 };
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 30px 15px 0 15px;
+  padding: 0 5%;
 `;
 const InfoWrapper = styled.View`
   flex-direction: row;
@@ -118,7 +121,7 @@ const Number = styled.Text`
   font-weight: 400;
   margin-left: 5px;
 `;
-const Box = styled.TouchableOpacity`
+const Box = styled.View`
   background-color: #f6f5fb;
   margin-top: 20px;
   padding: 25px 25px 15px 25px;
@@ -160,7 +163,34 @@ const Percentage = styled.Text`
   font-weight: 600;
 `;
 const RecieveButton = styled.TouchableOpacity`
-  padding: 15px 20px;
+  padding: 12px 25px;
   background-color: #bfc7d7;
   border-radius: 15px;
 `;
+
+const styles = StyleSheet.create({
+  topView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 5,
+    marginBottom: "5%",
+  },
+  topText: {
+    color: "#101647",
+    fontSize: 18,
+    fontWeight: "900",
+    alignSelf: "center",
+  },
+  emptyBox: {
+    backgroundColor: "#F6F5FB",
+    padding: 45,
+    borderRadius: 15,
+    alignItems: "center",
+  },
+  emptyText: {
+    color: "#6F81A9",
+    alignSelf: "center",
+    fontSize: 18,
+  },
+});

@@ -15,7 +15,6 @@ export const StateNav = () => {
       screenOptions={{
         headerTitle: () => false,
         headerShadowVisible: false,
-        headerRightContainerStyle: { paddingRight: 20 },
       }}
     >
       <Stack.Screen
@@ -24,10 +23,10 @@ export const StateNav = () => {
         options={{
           headerTitle: "현황",
           headerTitleAlign: "center",
-          headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+          headerTitleStyle: { fontSize: 18, fontWeight: "900" },
           headerRight: () => (
             <TouchableOpacity onPress={goToDetail}>
-              <Text style={{ color: "#054de4" }}>상세</Text>
+              <Text style={{ color: "#054de4", fontSize: 15, marginRight: 18 }}>상세</Text>
             </TouchableOpacity>
           ),
         }}

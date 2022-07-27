@@ -1,62 +1,22 @@
-import { View, Button, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, Dimensions, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-  KakaoOAuthToken,
-  KakaoProfile,
-  getProfile as getKaakaoProfile,
-  login,
-  logout,
-} from "@react-native-seoul/kakao-login";
+import { KakaoOAuthToken, login, logout } from "@react-native-seoul/kakao-login";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { isLoggedInAtom, isUserAtom } from "../../../atom";
-import { GradientButtons } from "../../components/GradientButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-export const KakaoLogin = () => {
-  const [userIndex, setUserIndex] = useState(0);
-  AsyncStorage.getItem("userIdx", (err, result: any) => {
-    setUserIndex(parseInt(result));
-  });
-  const getProfile = () => {
-    axios
-      .get(`https://jaksimfriend.site/profiles/${userIndex}`)
-      .then(function (response) {
-        console.warn(response.data.result);
-      })
-      .catch(function (error) {
-        console.warn(error);
-      });
-  };
-
-  const showChallenges = () => {
-    axios
-      .get(`https://jaksimfriend.site/my-challenges/${userIndex}/progress`, {})
-      .then((response) => {
-        console.warn(response.data.result);
-      })
-      .catch((error) => console.log(error.message));
-  };
-
-  // 카카오 프로필 정보 불러오기
-  // const getKakaoProfile = async (): Promise<void> => {
-  //   const profile: KakaoProfile = await getKaakaoProfile();
-
-  //   console.warn(JSON.stringify(profile));
-  // };
-
-  return (
-    <View>
-      <Button title="프로필홈 정보 불러오기" onPress={getProfile} />
-      {/* <Button title="카카오프로필정보 불러오기" onPress={getKakaoProfile} /> */}
-      <Button title="챌린지 정보 보여주기" onPress={showChallenges} />
-    </View>
-  );
-};
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export const KakaoSignIn = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserAtom);
+  const [fcmToken, setFcmToken]: any = useState();
+
+  useEffect(() => {
+    AsyncStorage.getItem("fcmtoken").then((value) => {
+      setFcmToken(value);
+    });
+  }, []);
 
   const signInWithKakao = async (): Promise<void> => {
     const token: KakaoOAuthToken = await login();
@@ -67,6 +27,7 @@ export const KakaoSignIn = () => {
         {
           headers: {
             "KAKAO-ACCESS-TOKEN": JSON.stringify(token.accessToken),
+            "DEVICE-TOKEN": fcmToken,
           },
         },
       )
@@ -81,32 +42,64 @@ export const KakaoSignIn = () => {
         await axios
           .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
           .then(function (response) {
-            if (response.data.result[0].nickName?.length > 0) {
+            if (response.data.result[0].nickName === null) {
+              setIsUser(false);
+            } else {
               setIsUser(true);
             }
             setIsLoggedIn(true);
           })
           .catch(function (error) {
-            console.warn(error);
+            console.log(error);
           });
       })
       .catch(function (error) {
-        console.warn(error);
+        console.log(error);
       });
   };
-
-  return <GradientButtons onPress={signInWithKakao} Title="카카오 계정으로 시작하기" />;
+  return (
+    <TouchableOpacity onPress={signInWithKakao} style={styles.kakaoButton}>
+      <Image
+        resizeMode="contain"
+        source={require("../../assets/KakaoLogo.png")}
+        style={styles.logo}
+      />
+      <Text style={{ fontSize: 16, marginLeft: "23%" }}>카카오 로그인</Text>
+    </TouchableOpacity>
+  );
 };
 
 export const LogOutWithKakao = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
 
-  const logOut = async (): Promise<void> => {
-    const message = await logout();
-    console.log(message);
+  const logOutDelete = () => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .delete(`https://jaksimfriend.site/users/${userIdx}/logout`)
+        .then(function (response) {
+          console.log(response.data.result);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
+  };
+
+  const logOut = async () => {
+    logOutDelete();
     AsyncStorage.removeItem("jwt");
     AsyncStorage.removeItem("userIdx");
-
+    try {
+      await logout();
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.log(error);
+    }
     setIsLoggedIn(false);
   };
   return (
@@ -116,6 +109,7 @@ export const LogOutWithKakao = () => {
   );
 };
 
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   confirmButton: {
     borderRadius: 10,
@@ -129,5 +123,17 @@ const styles = StyleSheet.create({
   confirmButtonText: {
     fontSize: 16,
     color: "#fff",
+  },
+  kakaoButton: {
+    flexDirection: "row",
+    backgroundColor: "#FEE500",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  logo: {
+    width: width * 0.06,
+    height: width * 0.06,
+    marginLeft: width * 0.06,
   },
 });

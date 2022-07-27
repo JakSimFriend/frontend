@@ -1,13 +1,34 @@
 import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { reportModalOne, reportModalTwo } from "../../../atom";
+import { progressIndexAtom, reportModalOne, reportModalTwo } from "../../../atom";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ReportModalOne() {
+  const progressIndex = useRecoilValue(progressIndexAtom);
   const modalVisible = useRecoilValue(reportModalOne);
   const setModalOneVisible = useSetRecoilState(reportModalOne);
   const setModalTwoVisible = useSetRecoilState(reportModalTwo);
+
+  const postReport = () => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      const userIdx = value;
+      axios
+        .post("https://jaksimfriend.site/settings/report", {
+          userIdx: userIdx,
+          challengeIdx: progressIndex,
+          certificationIdx: 0,
+        })
+        .then(function (response) {
+          console.log("성공");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
+  };
+
   return (
     <Modal visible={modalVisible} transparent={true}>
       <View style={styles.background}>

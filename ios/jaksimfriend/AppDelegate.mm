@@ -5,7 +5,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <RNKakaoLogins.h>
-
+#import <RNGoogleSignin/RNGoogleSignin.h>
 #import "RNSplashScreen.h"
 #import <React/RCTAppSetupUtils.h>
 

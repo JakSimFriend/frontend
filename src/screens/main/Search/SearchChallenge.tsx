@@ -21,9 +21,11 @@ import moment from "moment";
 import { GradientButtons } from "../../../components/GradientButtons";
 import ChallengeApplyModal from "../../../components/organisms/ChallengeApplyModal";
 import { useSetRecoilState } from "recoil";
-import { applyModalAtom } from "../../../../atom";
+import { applyModalAtom, onDevelopModalAtom } from "../../../../atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import LinearGradient from "react-native-linear-gradient";
+import OnDevelopModal from "../../../components/organisms/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -39,6 +41,7 @@ type RouteParams = {
 export const SearchChallenge = ({ route }: RouteParams) => {
   const { title, schedule, members, challengeIdx } = route.params;
   const setModalVisible = useSetRecoilState(applyModalAtom);
+  const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const upValue = useState(new Animated.Value(0))[0];
   const sheetUp = () => {
@@ -81,7 +84,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
           setSearchData(response.data.result);
         })
         .catch(function (error) {
-          console.warn(error);
+          console.log(error);
         });
     });
   }, []);
@@ -101,6 +104,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         });
     });
   };
+
   return (
     <Wrapper>
       <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
@@ -121,7 +125,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
             <CalendarIcon />
           </IconWrapper>
           <TextWrapper>
-            <Text style={{ marginTop: 9 }}>{searchData.date}</Text>
+            <Text style={{ marginTop: 12, marginLeft: -2 }}>{searchData.date}</Text>
           </TextWrapper>
         </InfoWrapper>
         <InfoWrapper>
@@ -152,21 +156,18 @@ export const SearchChallenge = ({ route }: RouteParams) => {
           </TextWrapper>
         </InfoWrapper>
       </Infos>
-      <ChallengeCash>
-        <ChallengeCashText>도전 캐시</ChallengeCashText>
-        <ChallengeCashText>{searchData.pee}C</ChallengeCashText>
-      </ChallengeCash>
-      <MyCash>
-        <Text>내 캐시</Text>
-        <Text>{searchData.myPoint}C</Text>
-      </MyCash>
+      <View style={styles.cashWrapper}>
+        <ChallengeCash>
+          <ChallengeCashText>도전 캐시</ChallengeCashText>
+          <ChallengeCashText>{searchData.pee}C</ChallengeCashText>
+        </ChallengeCash>
+        <MyCash>
+          <Text>내 캐시</Text>
+          <Text>{searchData.myPoint}C</Text>
+        </MyCash>
+      </View>
       <Buttons>
-        <TouchableOpacity
-          style={styles.shareButton}
-          onPress={() => {
-            console.warn("공유할래용");
-          }}
-        >
+        <TouchableOpacity style={styles.shareButton} onPress={()=>{setModalTwoVisible(true)}}>
           <Text>공유할래요</Text>
         </TouchableOpacity>
         {searchData.existStatus === 1 ? (
@@ -174,8 +175,12 @@ export const SearchChallenge = ({ route }: RouteParams) => {
             <Text style={{ color: "#ffffff" }}>이미 신청했어요</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.applyButton} onPress={ShowBottomSheet}>
-            <Text style={{ color: "#ffffff" }}>신청할게요</Text>
+          <TouchableOpacity onPress={ShowBottomSheet}>
+            <LinearGradient style={styles.applyButton} colors={["#947BEA", "#1151E5"]}>
+              <Text style={{ color: "#ffffff", paddingVertical: 20, paddingHorizontal: "15%" }}>
+                신청할게요
+              </Text>
+            </LinearGradient>
           </TouchableOpacity>
         )}
       </Buttons>
@@ -211,27 +216,29 @@ export const SearchChallenge = ({ route }: RouteParams) => {
       </Modal>
       {/* 모달 */}
       <ChallengeApplyModal />
+      <OnDevelopModal />
     </Wrapper>
   );
 };
 const styles = StyleSheet.create({
   shareButton: {
     backgroundColor: "#ffffff",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
+    paddingVertical: 20,
+    paddingHorizontal: "15%",
+    marginRight: 5,
     borderRadius: 15,
   },
   CompletedButton: {
     backgroundColor: "#bfc7d7",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingVertical: 20,
+    paddingHorizontal: "11%",
+    marginLeft: 5,
     borderRadius: 15,
   },
   applyButton: {
     backgroundColor: "#5A69E8",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
     borderRadius: 15,
+    alignSelf: "center",
   },
   background: {
     flex: 1,
@@ -266,11 +273,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#6F81A9",
   },
+  cashWrapper: {
+    backgroundColor: "#ffffff",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+    marginTop: 20,
+    marginBottom: 30,
+  },
 });
 const Wrapper = styled.View`
   flex: 1;
   background-color: #f6f5fb;
-  padding: 100px 20px 0 20px;
+  padding: 100px 5% 0 5%;
 `;
 const Title = styled.Text`
   font-size: 22px;
@@ -297,7 +313,6 @@ const TextWrapper = styled.View`
   margin-left: 20px;
 `;
 const ChallengeCash = styled.View`
-  margin-top: 20px;
   background-color: #101647;
   padding: 22px;
   border-radius: 15px;
@@ -315,11 +330,10 @@ const MyCash = styled.View`
   border-radius: 15px;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 30px;
 `;
 const Buttons = styled.View`
   flex-direction: row;
-  justify-content: space-around;
+  align-self: center;
 `;
 const TopText = styled.Text`
   font-size: 12px;

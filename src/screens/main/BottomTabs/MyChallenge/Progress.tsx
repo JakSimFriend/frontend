@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Animated,
+  Dimensions,
   Modal,
   Platform,
   SafeAreaView,
@@ -24,16 +25,21 @@ import { Emo } from "../../../../assets/images";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import LinearGradient from "react-native-linear-gradient";
 
 export const Progress = React.memo(() => {
   const setProgressIndex = useSetRecoilState(progressIndexAtom);
   const setProgressTitle = useSetRecoilState(progressTitleAtom);
   const [nickName, setNickname] = useState("");
+  const [profile, setProfile] = useState("");
+  const { width } = Dimensions.get("window");
 
   const MYCOLOR = "#5266E8",
     OTHERSCOLOR = "#BFC7D7";
 
   const [reactionType, setReactionType] = useState("");
+  const [challengeIdx, setChallengeIdx] = useState(0);
+  const [membersIdx, setMembersIdx] = useState(0);
   const navigation: any = useNavigation();
 
   //바텀시트
@@ -57,23 +63,24 @@ export const Progress = React.memo(() => {
   const ShowBottomSheet = (item: any) => {
     sheetUp();
     setBottomSheetVisible(true);
-    setNickname(item);
+    setNickname(item.nickName);
+    setProfile(item.profile);
   };
   const HideBottomSheet = () => {
     sheetDown();
     setTimeout(() => {
       setBottomSheetVisible(() => false);
     }, 300);
-    setReactionType("리액션 선택"); //data리셋
+    setReactionType("리액션 선택"); // data리셋
     setEmoticonIndex(10);
   };
   const SelectReaction = () => {
+    setReactionType("리액션 선택"); // data리셋
+    setEmoticonIndex(10);
+    postReaction();
     sheetDown();
     setBottomSheetVisible(() => false);
     setModalVisible(true);
-    //이모티콘 data전송 후 => 리셋
-    setReactionType("리액션 선택"); //data리셋
-    setEmoticonIndex(10);
   };
 
   //바텀시트 이모티콘
@@ -81,40 +88,60 @@ export const Progress = React.memo(() => {
   const emoticonDetail = ["기쁨", "웃음", "불만", "미안", "놀람", "멋져"];
   const [emoticonIndex, setEmoticonIndex] = useState(10);
 
-  const [progressDatas, setProgressDatas]: any = useState([]);
+  // data
   const [userIndex, setUserIndex]: any = useState();
-  AsyncStorage.getItem("userIdx").then((value) => {
-    setUserIndex(value);
-  });
+  const [listEmpty, setListEmpty] = useState(false);
+  const [progressDatas, setProgressDatas]: any = useState([]);
   useEffect(() => {
+    AsyncStorage.getItem("userIdx").then((value) => {
+      setUserIndex(value);
+    });
     AsyncStorage.getItem("userIdx").then((value) => {
       const userIdx = value;
       axios
         .get(`https://jaksimfriend.site/my-challenges/${userIdx}/progress`)
         .then(function (response) {
-          setProgressDatas(response.data.result[0]);
+          if (response.data.result === undefined) {
+            setListEmpty(true);
+          } else {
+            setListEmpty(false);
+            setProgressDatas(response.data.result[0]);
+          }
         })
         .catch(function (error) {
-          console.warn(error);
+          setListEmpty(true);
         });
     });
   }, []);
 
-  // acordion
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const Accordion = () => {
-    setIsCollapsed(!isCollapsed);
+  const postReaction = () => {
+    axios
+      .post("https://jaksimfriend.site/fcm/reaction", {
+        senderIdx: userIndex,
+        receiverIdx: membersIdx,
+        reactionIdx: emoticonIndex + 1,
+        challengeIdx: challengeIdx,
+      })
+      .then(function (response) {
+        console.log("성공");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      {/* <StatusBar backgroundColor={"#1016474D"}></StatusBar> */}
       <ProgressWrapper>
         <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
           {/* 진행 중 */}
-          <View style={styles.textWrapper}>
+          <View style={[styles.textWrapper, { marginTop: 30 }]}>
             <Text style={styles.title}>진행 중</Text>
-            <Text style={styles.number}>{progressDatas.proceedingCount}</Text>
+            <Text style={styles.number}>
+              {progressDatas.proceedingCount ? progressDatas.proceedingCount : 0}
+            </Text>
           </View>
-          {progressDatas.proceedingCount === 0 ? (
+          {progressDatas.proceedingCount === 0 || listEmpty ? (
             <View style={styles.emptyBox}>
               <Text style={styles.emptyText}>진행하고 있는 도전작심이 없어요</Text>
             </View>
@@ -122,129 +149,246 @@ export const Progress = React.memo(() => {
             <>
               {progressDatas.proceedings?.map((item: any, index: number) => {
                 return (
-                  <TouchableWithoutFeedback onPress={Accordion} key={index}>
-                    <View style={styles.accordionWrapper}>
-                      <View style={styles.titleWrapper}>
-                        <Text style={styles.accordionTitle}>{item.title}</Text>
-                        <View style={styles.dropdownButton}>
-                          {!isCollapsed ? (
-                            <Arrow name="chevron-up" size={15} />
+                  <View key={index}>
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        // index가 동일하면 0 반환 = collapsible 닫히기
+                        setChallengeIdx(challengeIdx === item.challengeIdx ? 0 : item.challengeIdx);
+                      }}
+                    >
+                      <View style={styles.accordionWrapper}>
+                        <View style={styles.titleWrapper}>
+                          <Text style={styles.accordionTitle}>{item.title}</Text>
+                          <View style={styles.dropdownButton}>
+                            {item.challengeIdx === challengeIdx ? (
+                              <Arrow name="chevron-up" size={15} />
+                            ) : (
+                              <Arrow name="chevron-down" size={15} />
+                            )}
+                          </View>
+                        </View>
+
+                        {/* accordion 외부내용 */}
+                        {item.members?.map((items: any, index: number) => {
+                          return (
+                            <Collapsible
+                              collapsed={item.challengeIdx === challengeIdx ? true : false}
+                              key={index}
+                            >
+                              {items.userIdx === parseInt(userIndex) ? (
+                                <>
+                                  <Text style={styles.accordionMyState}>
+                                    내 달성률 {items.percent}%
+                                  </Text>
+                                  <View style={styles.barShadow}>
+                                    <ProgressBar.Bar
+                                      progress={items.percent / 100}
+                                      width={width * 0.8}
+                                      height={16}
+                                      borderRadius={30}
+                                      color={"#5266E8"}
+                                      style={{
+                                        borderColor: "#ffffff",
+                                        backgroundColor: "#ffffff",
+                                      }}
+                                    />
+                                  </View>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </Collapsible>
+                          );
+                        })}
+
+                        {/* accordion 내부내용 */}
+                        {item.members?.map((items: any, index: number) => {
+                          return (
+                            <View key={index}>
+                              <Collapsible
+                                collapsed={item.challengeIdx === challengeIdx ? false : true}
+                                style={styles.innerDataWrapper}
+                              >
+                                <View style={styles.innerData}>
+                                  <View style={styles.pictureWrapper}>
+                                    <Logo
+                                      style={styles.picture}
+                                      resizeMode="contain"
+                                      source={{
+                                        uri: items.profile,
+                                      }}
+                                    />
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        ShowBottomSheet(items);
+                                        setMembersIdx(items.userIdx);
+                                      }}
+                                    >
+                                      <View style={styles.reactionButton}>
+                                        <Logo resizeMode="contain" source={Emo} />
+                                      </View>
+                                    </TouchableOpacity>
+                                  </View>
+                                  <View>
+                                    <Text style={styles.innerTitle}>
+                                      {items.nickName}
+                                      <Text style={styles.innerPercentage}> {items.percent}%</Text>
+                                    </Text>
+                                    <View style={styles.barShadow}>
+                                      <ProgressBar.Bar
+                                        progress={items.percent / 100}
+                                        width={width * 0.6}
+                                        height={16}
+                                        borderRadius={30}
+                                        color={
+                                          items.userIdx.toString() === userIndex
+                                            ? MYCOLOR
+                                            : OTHERSCOLOR
+                                        }
+                                        style={{
+                                          borderColor: "#ffffff",
+                                          backgroundColor: "#ffffff",
+                                        }}
+                                      />
+                                    </View>
+                                  </View>
+                                </View>
+                              </Collapsible>
+                            </View>
+                          );
+                        })}
+
+                        {/* 바깥 버튼 */}
+                        <View style={styles.accordionButtons}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              navigation.navigate("ProgressDetailTopTab");
+                              setProgressIndex(item.challengeIdx);
+                              setProgressTitle(item.title);
+                            }}
+                            style={styles.detailButton}
+                          >
+                            <Text style={styles.detailButtonText}>상세 보기</Text>
+                          </TouchableOpacity>
+                          {item.certification === 1 ? (
+                            <TouchableOpacity
+                              style={styles.completedButton}
+                              onPress={() => {
+                                navigation.navigate("ProgressCertified", {
+                                  challengeIdx: item.challengeIdx,
+                                  certification: item.certification,
+                                });
+                              }}
+                            >
+                              <Text style={styles.completedButtonText}>인증완료</Text>
+                            </TouchableOpacity>
                           ) : (
-                            <Arrow name="chevron-down" size={15} />
+                            <TouchableOpacity
+                              onPress={() => {
+                                navigation.navigate("ProgressCertified", {
+                                  challengeIdx: item.challengeIdx,
+                                  certification: item.certification,
+                                });
+                              }}
+                            >
+                              <LinearGradient
+                                style={{
+                                  borderRadius: 15,
+                                  paddingVertical: 12,
+                                  paddingHorizontal: 25,
+                                }}
+                                colors={["#947BEA", "#1151E5"]}
+                              >
+                                <Text style={styles.completedButtonText}>인증하기</Text>
+                              </LinearGradient>
+                            </TouchableOpacity>
                           )}
                         </View>
                       </View>
+                    </TouchableWithoutFeedback>
 
-                      {/* accordion 외부내용 */}
-                      {progressDatas.proceedings[0]?.members?.map((item: any, index: number) => {
-                        return (
-                          <Collapsible collapsed={!isCollapsed} key={index}>
-                            {item.userIdx === parseInt(userIndex) ? (
-                              <>
-                                <Text style={styles.accordionMyState}>
-                                  내 달성률 {item.percent}%
-                                </Text>
-                                <ProgressBar.Bar
-                                  progress={item.percent / 100}
-                                  width={330}
-                                  height={12}
-                                  borderRadius={30}
-                                  color={MYCOLOR}
-                                />
-                              </>
-                            ) : (
-                              <></>
-                            )}
-                          </Collapsible>
-                        );
-                      })}
-
-                      {/* accordion 내부내용 */}
-                      {progressDatas.proceedings[0]?.members?.map((items: any, index: number) => {
-                        return (
-                          <View key={index}>
-                            <Collapsible collapsed={isCollapsed} style={styles.innerDataWrapper}>
-                              <View style={styles.innerData}>
+                    {/* 바텀 모달 시트 */}
+                    <Modal visible={bottomSheetVisible} transparent={true}>
+                      <TouchableWithoutFeedback onPress={HideBottomSheet}>
+                        <View style={styles.background}>
+                          <Animated.View
+                            style={{
+                              marginBottom: upValue,
+                            }}
+                          >
+                            <TouchableWithoutFeedback>
+                              <View style={styles.container}>
                                 <View style={styles.pictureWrapper}>
                                   <Logo
                                     style={styles.picture}
                                     resizeMode="contain"
                                     source={{
-                                      uri: items.profile,
+                                      uri: profile,
                                     }}
                                   />
-                                  <TouchableOpacity
-                                    onPress={() => {
-                                      ShowBottomSheet(items.nickName);
-                                    }}
-                                  >
-                                    <View style={styles.reactionButton}>
-                                      <Logo resizeMode="contain" source={Emo} />
-                                    </View>
-                                  </TouchableOpacity>
+                                  <View>
+                                    <TextOne>
+                                      <Text style={styles.text1Name}>{nickName}</Text>
+                                      님에게{"\n"}
+                                      <View style={styles.text2}>
+                                        {reactionType.length > 2 ? (
+                                          <View style={styles.reactionSelectTextWrapper}>
+                                            <Text style={styles.reactionSelectText}>
+                                              {reactionType}
+                                            </Text>
+                                          </View>
+                                        ) : (
+                                          <Text style={styles.reactionSelectedText}>
+                                            {reactionType}
+                                          </Text>
+                                        )}
+                                        <Text style={styles.text3}>리액션을 보낼게요</Text>
+                                      </View>
+                                    </TextOne>
+                                  </View>
                                 </View>
-                                <View>
-                                  <Text style={styles.innerTitle}>
-                                    {items.nickName}
-                                    <Text style={styles.innerPercentage}> {items.percent}%</Text>
-                                  </Text>
-                                  <ProgressBar.Bar
-                                    progress={items.percent / 100}
-                                    width={250}
-                                    height={12}
-                                    borderRadius={30}
-                                    color={OTHERSCOLOR}
-                                  />
+                                <View style={styles.reactionBox}>
+                                  {emoticons.map((items, index) => {
+                                    return (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          setEmoticonIndex(index);
+                                          setReactionType(emoticonDetail[index]);
+                                        }}
+                                        key={index}
+                                        style={
+                                          emoticonIndex === index
+                                            ? styles.emoticonSelectedWrapper
+                                            : styles.emoticonWrapper
+                                        }
+                                      >
+                                        <Text style={styles.emoticon}>{items}</Text>
+                                      </TouchableOpacity>
+                                    );
+                                  })}
                                 </View>
+                                <GradientButtons onPress={SelectReaction} Title="보낼래요" />
                               </View>
-                            </Collapsible>
-                          </View>
-                        );
-                      })}
-
-                      {/* 바깥 버튼 */}
-                      <View style={styles.accordionButtons}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            navigation.navigate("ProgressDetailTopTab");
-                            setProgressIndex(item.challengeIdx);
-                            setProgressTitle(item.title);
-                          }}
-                          style={styles.detailButton}
-                        >
-                          <Text style={styles.detailButtonText}>상세 보기</Text>
-                        </TouchableOpacity>
-                        {item.certification === 0 ? (
-                          <TouchableOpacity
-                            style={styles.certifyButton}
-                            onPress={() => {
-                              navigation.navigate("ProgressCertified", {
-                                challengeIdx: item.challengeIdx,
-                              });
-                            }}
-                          >
-                            <Text style={styles.completedButtonText}>인증하기</Text>
-                          </TouchableOpacity>
-                        ) : (
-                          <TouchableOpacity style={styles.completedButton} disabled>
-                            <Text style={styles.completedButtonText}>인증완료</Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    </View>
-                  </TouchableWithoutFeedback>
+                            </TouchableWithoutFeedback>
+                          </Animated.View>
+                        </View>
+                      </TouchableWithoutFeedback>
+                    </Modal>
+                  </View>
                 );
               })}
             </>
           )}
 
           {/* 시작 전 */}
-          <View style={styles.textWrapper}>
+          <View style={[styles.textWrapper, { marginTop: 50 }]}>
             <Text style={styles.title}>시작 전</Text>
-            <Text style={styles.number}>{progressDatas.beforeCount}</Text>
+            <Text style={styles.number}>
+              {progressDatas.beforeCount ? progressDatas.beforeCount : 0}
+            </Text>
           </View>
-          {progressDatas.beforeCount === 0 ? (
-            <View style={styles.emptyBox}>
+          {progressDatas.beforeCount === 0 || listEmpty ? (
+            <View style={[styles.emptyBox, { marginBottom: 30 }]}>
               <Text style={styles.emptyText}>시작을 기다리는 도전작심이 없어요</Text>
             </View>
           ) : (
@@ -310,63 +454,6 @@ export const Progress = React.memo(() => {
           )}
         </ScrollView>
 
-        {/* 바텀 모달 시트 */}
-        <Modal visible={bottomSheetVisible} transparent={true}>
-          <TouchableWithoutFeedback onPress={HideBottomSheet}>
-            <View style={styles.background}>
-              <Animated.View
-                style={{
-                  marginBottom: upValue,
-                }}
-              >
-                <TouchableWithoutFeedback>
-                  <View style={styles.container}>
-                    <View style={styles.pictureWrapper}>
-                      <View style={styles.picture}></View>
-                      <View>
-                        <TextOne>
-                          <Text style={styles.text1Name}>{nickName}</Text>
-                          님에게{"\n"}
-                          <View style={styles.text2}>
-                            {reactionType.length > 2 ? (
-                              <View style={styles.reactionSelectTextWrapper}>
-                                <Text style={styles.reactionSelectText}>{reactionType}</Text>
-                              </View>
-                            ) : (
-                              <Text style={styles.reactionSelectedText}>{reactionType}</Text>
-                            )}
-                            <Text style={styles.text3}>리액션을 보낼게요</Text>
-                          </View>
-                        </TextOne>
-                      </View>
-                    </View>
-                    <View style={styles.reactionBox}>
-                      {emoticons.map((item, index) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setEmoticonIndex(index);
-                              setReactionType(emoticonDetail[index]);
-                            }}
-                            key={index}
-                            style={
-                              emoticonIndex === index
-                                ? styles.emoticonSelectedWrapper
-                                : styles.emoticonWrapper
-                            }
-                          >
-                            <Text style={styles.emoticon}>{item}</Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </View>
-                    <GradientButtons onPress={SelectReaction} Title="보낼래요" />
-                  </View>
-                </TouchableWithoutFeedback>
-              </Animated.View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
         <ReactionModal />
       </ProgressWrapper>
     </SafeAreaView>
@@ -376,6 +463,7 @@ export const Progress = React.memo(() => {
 const ProgressWrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
+  margin-left: 5%;
 `;
 const ChallengeBox = styled.View`
   padding: 20px 10px;
@@ -444,9 +532,7 @@ const TextOne = styled.Text`
 
 const styles = StyleSheet.create({
   textWrapper: {
-    marginTop: 20,
     flexDirection: "row",
-    paddingLeft: 10,
   },
   title: {
     color: "#000000",
@@ -466,6 +552,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginTop: 20,
     alignItems: "center",
+    marginRight: "5%",
   },
   emptyText: {
     color: "#6F81A9",
@@ -474,6 +561,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 20,
     marginTop: 10,
+    marginRight: "5%",
     borderRadius: 10,
     backgroundColor: "#F6F5FB",
   },
@@ -486,7 +574,7 @@ const styles = StyleSheet.create({
   },
   dropdownButton: {
     alignItems: "flex-end",
-    marginTop: -10,
+    marginTop: -15,
   },
   accordionMyState: {
     color: "#6F81A9",
@@ -494,6 +582,7 @@ const styles = StyleSheet.create({
   },
   innerDataWrapper: {
     flexDirection: "column",
+    marginTop: 5,
   },
   innerData: {
     flexDirection: "row",
@@ -522,13 +611,19 @@ const styles = StyleSheet.create({
   innerPercentage: {
     marginLeft: 10,
   },
+  barShadow: {
+    shadowColor: "#D9D9D9",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 2,
+  },
   accordionButtons: {
     marginTop: 25,
     justifyContent: "flex-end",
     flexDirection: "row",
   },
   detailButton: {
-    paddingVertical: 15,
+    paddingVertical: 12,
     paddingHorizontal: 25,
     backgroundColor: "#ffffff",
     marginRight: 15,
@@ -537,17 +632,10 @@ const styles = StyleSheet.create({
   detailButtonText: {
     color: "#054de4",
   },
-  certifyButton: {
-    backgroundColor: "#054de4",
-    borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    alignItems: "center",
-  },
   completedButton: {
     backgroundColor: "#BFC7D7",
     borderRadius: 10,
-    paddingVertical: 15,
+    paddingVertical: 12,
     paddingHorizontal: 25,
     alignItems: "center",
   },

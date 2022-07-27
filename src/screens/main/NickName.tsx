@@ -68,7 +68,6 @@ export const NickName = () => {
       .post("https://jaksimfriend.site/users/nickname", {
         userIdx: userIndex,
         nickName: nickName,
-        // 추천인
         recommendedIdx: 1,
       })
       .then(function (response) {
@@ -85,13 +84,23 @@ export const NickName = () => {
         nickName: nickName,
       })
       .then(function (response) {
-        console.warn(response.data);
+        if (response.data.code === 3015) {
+          setModalVisible2(true);
+          setGuideColor3(BLACK);
+          setNickNameColor(RED);
+          setButtonColor1(GREY_BUTTON);
+        } else if (response.data.code === 1000) {
+          setModalVisible1(true);
+          setButtonColor1(BLACK);
+          setGuideColor3(BLUE);
+          setNickNameColor(BLUE);
+        }
       })
       .catch(function (error) {
-        // 여기에 기존 프론트 중복 닉네임 쓸 수 없어요 적용하면됨
-        console.warn(error);
+        console.log(error);
       });
   };
+
   //추천인 확인
   const checkUser = () => {
     axios
@@ -100,14 +109,23 @@ export const NickName = () => {
         nickName: nickName2,
       })
       .then(function (response) {
-        console.warn(response.data);
-        //result code : 1000이면 포인트 1000 지급, 에러뜨면 해당 콘솔 및 반응띄우기
+        if (response.data.code === 3016) {
+          setModalVisible4(true);
+          setGuideColor4(BLACK);
+          setNickNameColor2(RED);
+          setButtonColor2(GREY_BUTTON);
+        } else if (response.data.code === 1000) {
+          setModalVisible3(true);
+          setButtonColor2(BLACK);
+          setGuideColor4(BLUE);
+          setNickNameColor2(BLUE);
+        }
       })
       .catch(function (error) {
-        console.warn(error);
-        //에러 코드에 따라
+        console.log(error);
       });
   };
+
   const GREY = "#6F81A9",
     BLACK = "#101647",
     RED = "#D75858",
@@ -163,32 +181,6 @@ export const NickName = () => {
   const [modalVisible3, setModalVisible3] = useState(false);
   const [modalVisible4, setModalVisible4] = useState(false);
 
-  const onPress1 = () => {
-    if (nickName.length % 2) {
-      setModalVisible1(true);
-      setButtonColor1(BLACK);
-      setGuideColor3(BLUE);
-    } else {
-      setModalVisible2(true);
-      setGuideColor3(BLACK);
-      setNickNameColor(RED);
-      setButtonColor1(GREY_BUTTON);
-    }
-  };
-
-  const onPress2 = () => {
-    if (nickName2.length % 2) {
-      setModalVisible3(true);
-      setButtonColor2(BLACK);
-      setGuideColor4(BLUE);
-    } else {
-      setModalVisible4(true);
-      setGuideColor4(BLACK);
-      setNickNameColor2(RED);
-      setButtonColor2(GREY_BUTTON);
-    }
-  };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <Wrapper>
@@ -210,10 +202,7 @@ export const NickName = () => {
             <TouchableOpacity
               style={[styles.nickNameButton, { backgroundColor: buttonColor1 }]}
               disabled={buttonColor1 == BLUE ? false : true}
-              onPress={() => {
-                onPress1();
-                checkNickName();
-              }}
+              onPress={checkNickName}
             >
               <Text style={styles.nickNameButtonText}>중복 확인</Text>
             </TouchableOpacity>
@@ -256,10 +245,7 @@ export const NickName = () => {
             <TouchableOpacity
               style={[styles.nickNameButton, { backgroundColor: buttonColor2 }]}
               disabled={buttonColor2 == BLUE ? false : true}
-              onPress={() => {
-                onPress2();
-                checkUser();
-              }}
+              onPress={checkUser}
             >
               <Text style={styles.nickNameButtonText}>찾아 보기</Text>
             </TouchableOpacity>
