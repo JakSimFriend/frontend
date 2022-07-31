@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   Animated,
   Dimensions,
-  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -16,23 +14,22 @@ import {
   View,
 } from "react-native";
 import styled from "styled-components/native";
-import { GradientButtons } from "../../../../components/GradientButtons";
+import { GradientButtons } from "../../../../components/atoms/GradientButtons";
 import {
   CalendarIcon,
   ClockIconTwo,
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../../components/TabIcon";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from "../../../../components/atoms/TabIcon";
 import axios from "axios";
-import ChallengeApplyModal from "../../../../components/organisms/ChallengeApplyModal";
-import { useSetRecoilState } from "recoil";
-import { applyModalAtom, onDevelopModalAtom } from "../../../../../atom";
+import ChallengeApplyModal from "../../../../components/organisms/Modal/ChallengeApplyModal";
+import OnDevelopModal from "../../../../components/organisms/Modal/OnDevelopModal";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { applyModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../../atom";
 import LinearGradient from "react-native-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import OnDevelopModal from "../../../../components/organisms/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -46,10 +43,13 @@ type RouteParams = {
 };
 
 export const HomeChallengeInfo = ({ route }: RouteParams) => {
+  const navigation = useNavigation();
   const { title, schedule, members, challengeIdx } = route.params;
-
   const setModalVisible = useSetRecoilState(applyModalAtom);
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
+  const [infoData, setInfoData]: any = useState([]);
+  const cashAvailable = infoData.pee < infoData.myPoint ? true : false;
 
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const upValue = useState(new Animated.Value(0))[0];
@@ -83,39 +83,29 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
     setModalVisible(true);
   };
 
-  const [infoData, setInfoData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
-        .then(function (response) {
-          setInfoData(response.data.result);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
+      .then(function (response) {
+        setInfoData(response.data.result);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
   const joinChallenge = () => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .post(`https://jaksimfriend.site/challenges/join`, {
-          userIdx: userIdx,
-          challengeIdx: challengeIdx,
-        })
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .post(`https://jaksimfriend.site/challenges/join`, {
+        userIdx: userIdx,
+        challengeIdx: challengeIdx,
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
-  // const onClickOpenChat = useCallback(() => {
-  //   Linking.openURL(`https://reactnative.dev/docs/linking`);
-  // }, []);
 
   const link =
     Platform.OS === "ios"
@@ -142,8 +132,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
       console.log(error);
     }
   };
-  const moneyAvailable = infoData.pee < infoData.myPoint ? true : false;
-  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <View style={styles.topView}>
@@ -216,6 +205,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
             style={styles.shareButton}
             onPress={() => {
               setModalTwoVisible(true);
+              // onShare();
             }}
           >
             <Text>공유할래요</Text>
@@ -264,7 +254,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        <ChallengeApplyModal money={moneyAvailable} />
+        <ChallengeApplyModal money={cashAvailable} />
         <OnDevelopModal />
       </Wrapper>
     </SafeAreaView>

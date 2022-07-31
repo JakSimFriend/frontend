@@ -1,20 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
-import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
+import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/atoms/TabIcon";
 import { StackNavigationProp } from "@react-navigation/stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import useQuery from "react-query";
+import { useQuery } from "react-query";
+import { useRecoilValue } from "recoil";
+import { myIndicatorAtom, userIndexAtom } from "../../../../../atom";
 
 type StackParamList = {
   RecruitPage: {
@@ -32,33 +25,36 @@ type NavigationProps = StackNavigationProp<StackParamList>;
 
 export const Request = () => {
   const navigation = useNavigation<NavigationProps>();
-
-  const [userIndex, setUserIndex] = useState(0);
-  AsyncStorage.getItem("userIdx", (err, result: any) => {
-    setUserIndex(parseInt(result));
-  });
+  const myIndicator = useRecoilValue(myIndicatorAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
 
   const [listEmpty, setListEmpty] = useState(false);
   const [recruitData, setRecruitData]: any = useState([]);
-  useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${userIdx}/application`)
-        .then((response) => {
-          setRecruitData(response.data.result[0]);
-          setListEmpty(false);
-          if (response.data.result === undefined) {
-            setListEmpty(true);
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
+  const GetData = () => {
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${userIdx}/application`)
+      .then((response) => {
+        setListEmpty(false);
+        if (response.data.result === undefined) {
           setListEmpty(true);
-        });
-    });
-  }, []);
+        } else {
+          setListEmpty(false);
+          setRecruitData(response.data.result[0]);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setListEmpty(true);
+      });
+  };
+  useEffect(() => {
+    GetData();
+  }, [myIndicator]);
 
+  // const [userIndex, setUserIndex] = useState(0);
+  // AsyncStorage.getItem("userIdx", (err, result: any) => {
+  //   setUserIndex(parseInt(result));
+  // });
   // const getUserWithAxios = async () => {
   //   const { data } = await axios.get(
   //     `https://jaksimfriend.site/my-challenges/${userIndex}/application`,

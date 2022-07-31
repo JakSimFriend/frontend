@@ -6,33 +6,30 @@ import {
   HomeClockBlue,
   HomeUserBlue,
   HomeCamera,
-} from "../../../../../components/TabIcon";
+} from "../../../../../components/atoms/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar, LocaleConfig } from "react-native-calendars";
-import { GradientButtons } from "../../../../../components/GradientButtons";
+import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { progressIndexAtom } from "../../../../../../atom";
+import { progressIndexAtom, userIndexAtom } from "../../../../../../atom";
 
 export const ProgressPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
   const navigation: any = useNavigation();
   const [data, setData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-info`)
-        .then(function (response) {
-          setData(response.data.result[0]);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-info`)
+      .then(function (response) {
+        setData(response.data.result[0]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
 
   LocaleConfig.locales["fr"] = {
@@ -120,7 +117,7 @@ export const ProgressPage = () => {
                           <Logo
                             style={{ width: 25, height: 25 }}
                             resizeMode="contain"
-                            source={require("../../../../../assets/Emo.png")}
+                            source={require("../../../../../assets/images/Emo.png")}
                           />
                         </View>
                       </View>
@@ -131,9 +128,9 @@ export const ProgressPage = () => {
                     </View>
                     <PercentageInfo>
                       {item.percent === 100 ? (
-                        <Percentage style={{ color: "#676de8" }}>{item.percent}</Percentage>
+                        <Percentage style={{ color: "#676de8" }}>{item.percent}%</Percentage>
                       ) : (
-                        <Percentage style={{ color: "#000" }}>{item.percent}</Percentage>
+                        <Percentage style={{ color: "#000" }}>{item.percent}%</Percentage>
                       )}
                       <LastCertified>{item.certification}</LastCertified>
                     </PercentageInfo>

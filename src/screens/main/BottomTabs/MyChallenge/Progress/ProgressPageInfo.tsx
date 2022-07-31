@@ -7,9 +7,10 @@ import {
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../../../components/TabIcon";
+} from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRecoilValue } from "recoil";
+import { userIndexAtom } from "../../../../../../atom";
 
 type RouteParams = {
   route: {
@@ -21,18 +22,16 @@ type RouteParams = {
 
 export const ProgressPageInfo = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
+  const userIdx = useRecoilValue(userIndexAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/detail`)
-        .then(function (response) {
-          setData(response.data.result);
-        })
-        .catch((error) => console.log(error.message));
-    });
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/detail`)
+      .then(function (response) {
+        setData(response.data.result);
+      })
+      .catch((error) => console.log(error.message));
   }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>

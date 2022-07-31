@@ -13,23 +13,29 @@ import {
   View,
 } from "react-native";
 import styled from "styled-components/native";
-import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/TabIcon";
+import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/atoms/TabIcon";
 import Collapsible from "react-native-collapsible";
 import * as ProgressBar from "react-native-progress";
 import Arrow from "react-native-vector-icons/FontAwesome";
-import { GradientButtons } from "../../../../components/GradientButtons";
-import ReactionModal from "../../../../components/organisms/ReactionModal";
-import { useSetRecoilState } from "recoil";
-import { progressIndexAtom, progressTitleAtom, reactionModalAtom } from "../../../../../atom";
-import { Emo } from "../../../../assets/images";
+import { GradientButtons } from "../../../../components/atoms/GradientButtons";
+import ReactionModal from "../../../../components/organisms/Modal/ReactionModal";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  myIndicatorAtom,
+  progressIndexAtom,
+  progressTitleAtom,
+  reactionModalAtom,
+  userIndexAtom,
+} from "../../../../../atom";
+import { Emo } from "../../../../assets/images/images";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import LinearGradient from "react-native-linear-gradient";
 
 export const Progress = React.memo(() => {
   const setProgressIndex = useSetRecoilState(progressIndexAtom);
   const setProgressTitle = useSetRecoilState(progressTitleAtom);
+  const myIndicator = useRecoilValue(myIndicatorAtom);
   const [nickName, setNickname] = useState("");
   const [profile, setProfile] = useState("");
   const { width } = Dimensions.get("window");
@@ -71,11 +77,11 @@ export const Progress = React.memo(() => {
     setTimeout(() => {
       setBottomSheetVisible(() => false);
     }, 300);
-    setReactionType("리액션 선택"); // data리셋
+    setReactionType("리액션 선택");
     setEmoticonIndex(10);
   };
   const SelectReaction = () => {
-    setReactionType("리액션 선택"); // data리셋
+    setReactionType("리액션 선택");
     setEmoticonIndex(10);
     postReaction();
     sheetDown();
@@ -89,35 +95,32 @@ export const Progress = React.memo(() => {
   const [emoticonIndex, setEmoticonIndex] = useState(10);
 
   // data
-  const [userIndex, setUserIndex]: any = useState();
+  const userIdx = useRecoilValue(userIndexAtom);
   const [listEmpty, setListEmpty] = useState(false);
   const [progressDatas, setProgressDatas]: any = useState([]);
-  useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      setUserIndex(value);
-    });
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${userIdx}/progress`)
-        .then(function (response) {
-          if (response.data.result === undefined) {
-            setListEmpty(true);
-          } else {
-            setListEmpty(false);
-            setProgressDatas(response.data.result[0]);
-          }
-        })
-        .catch(function (error) {
+  const getData = () => {
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${userIdx}/progress`)
+      .then(function (response) {
+        if (response.data.result === undefined) {
           setListEmpty(true);
-        });
-    });
-  }, []);
+        } else {
+          setListEmpty(false);
+          setProgressDatas(response.data.result[0]);
+        }
+      })
+      .catch(function (error) {
+        setListEmpty(true);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, [myIndicator]);
 
   const postReaction = () => {
     axios
       .post("https://jaksimfriend.site/fcm/reaction", {
-        senderIdx: userIndex,
+        senderIdx: userIdx,
         receiverIdx: membersIdx,
         reactionIdx: emoticonIndex + 1,
         challengeIdx: challengeIdx,
@@ -134,7 +137,6 @@ export const Progress = React.memo(() => {
       {/* <StatusBar backgroundColor={"#1016474D"}></StatusBar> */}
       <ProgressWrapper>
         <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
-          {/* 진행 중 */}
           <View style={[styles.textWrapper, { marginTop: 30 }]}>
             <Text style={styles.title}>진행 중</Text>
             <Text style={styles.number}>
@@ -152,7 +154,6 @@ export const Progress = React.memo(() => {
                   <View key={index}>
                     <TouchableWithoutFeedback
                       onPress={() => {
-                        // index가 동일하면 0 반환 = collapsible 닫히기
                         setChallengeIdx(challengeIdx === item.challengeIdx ? 0 : item.challengeIdx);
                       }}
                     >
@@ -175,7 +176,7 @@ export const Progress = React.memo(() => {
                               collapsed={item.challengeIdx === challengeIdx ? true : false}
                               key={index}
                             >
-                              {items.userIdx === parseInt(userIndex) ? (
+                              {items.userIdx === userIdx ? (
                                 <>
                                   <Text style={styles.accordionMyState}>
                                     내 달성률 {items.percent}%
@@ -241,7 +242,7 @@ export const Progress = React.memo(() => {
                                         height={16}
                                         borderRadius={30}
                                         color={
-                                          items.userIdx.toString() === userIndex
+                                          items.userIdx.toString() === userIdx
                                             ? MYCOLOR
                                             : OTHERSCOLOR
                                         }
@@ -262,7 +263,7 @@ export const Progress = React.memo(() => {
                         <View style={styles.accordionButtons}>
                           <TouchableOpacity
                             onPress={() => {
-                              navigation.navigate("ProgressDetailTopTab");
+                              navigation.navigate("ProgressTopbarNav");
                               setProgressIndex(item.challengeIdx);
                               setProgressTitle(item.title);
                             }}

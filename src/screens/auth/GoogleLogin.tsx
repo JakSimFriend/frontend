@@ -25,9 +25,8 @@ export const GoogleSignIn = () => {
     // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     // auth().signInWithCredential(googleCredential);
 
-    // 서버로 jwt요청
     await GoogleSignin.signIn()
-      .then((data) => {
+      .then(() => {
         GoogleSignin.getTokens().then((res) => {
           axios
             .post(
@@ -36,7 +35,7 @@ export const GoogleSignIn = () => {
               {
                 headers: {
                   "GOOGLE-ACCESS-TOKEN": res.accessToken,
-                  "DEVICE-TOKEN": fcmToken,
+                  // "DEVICE-TOKEN": fcmToken,
                 },
               },
             )
@@ -67,7 +66,7 @@ export const GoogleSignIn = () => {
         });
       })
       .catch((error) => {
-        console.log("에러");
+        console.log(error);
       });
   };
 
@@ -76,10 +75,10 @@ export const GoogleSignIn = () => {
       <TouchableOpacity onPress={googleLogin} style={styles.kakaoButton}>
         <Image
           resizeMode="contain"
-          source={require("../../assets/GoogleButton.png")}
+          source={require("../../assets/images/GoogleButton.png")}
           style={styles.logo}
         />
-        <Text style={styles.buttonText}>sign in with Google</Text>
+        <Text style={styles.buttonText}>signd in with Google</Text>
       </TouchableOpacity>
     </>
   );
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor:"#D5D5D5"
+    borderColor: "#D5D5D5",
   },
   logo: {
     width: width * 0.12,

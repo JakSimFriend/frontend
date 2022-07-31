@@ -1,36 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from "react-native";
 import styled from "styled-components/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { a, b, c, d, e, f, g, h } from "../../../../assets/images";
+import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useRecoilValue } from "recoil";
+import { userIndexAtom } from "../../../../../atom";
 
 export const Detail = () => {
   const icons = [a, b, c, d, e, f, g, h];
+  const navigation = useNavigation();
   const [detailEmpty, setDetailEmpty] = useState(true);
   const [detailData, setDetailData]: any = useState([]);
+  const userIdx = useRecoilValue(userIndexAtom);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/status/${userIdx}/detail`)
-        .then(function (response) {
-          if (response.data.code === 3049) {
-            setDetailEmpty(true);
-          } else if (response.data.code === 1000) {
-            setDetailEmpty(false);
-            setDetailData(response.data);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+    axios
+      .get(`https://jaksimfriend.site/status/${userIdx}/detail`)
+      .then(function (response) {
+        if (response.data.code === 3049) {
           setDetailEmpty(true);
-        });
-    });
+        } else if (response.data.code === 1000) {
+          setDetailEmpty(false);
+          setDetailData(response.data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        setDetailEmpty(true);
+      });
   }, []);
-  const navigation = useNavigation();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <Wrapper>

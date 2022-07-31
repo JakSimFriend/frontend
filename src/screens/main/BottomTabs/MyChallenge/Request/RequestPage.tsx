@@ -15,15 +15,14 @@ import {
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../../../components/TabIcon";
-import ChallengeCancelModal from "../../../../../components/organisms/ChallengeCancelModal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from "../../../../../components/atoms/TabIcon";
+import ChallengeCancelModal from "../../../../../components/organisms/Modal/ChallengeCancelModal";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { useSetRecoilState } from "recoil";
-import { cancelModalAtom, onDevelopModalAtom } from "../../../../../../atom";
-import OnDevelopModal from "../../../../../components/organisms/OnDevelopModal";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { cancelModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../../../atom";
+import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -36,33 +35,28 @@ type RouteParams = {
 
 export const RequestPage = ({ route }: RouteParams) => {
   const { challengeIdx, waitingIdx } = route.params;
+  const userIdx = useRecoilValue(userIndexAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
-        .then(function (response) {
-          setData(response.data.result);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
+      .then(function (response) {
+        setData(response.data.result);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
   const cancelChallenge = () => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .patch(`https://jaksimfriend.site/challenges/${waitingIdx}/${userIdx}/cancel`)
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .patch(`https://jaksimfriend.site/challenges/${waitingIdx}/${userIdx}/cancel`)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const navigation = useNavigation();

@@ -3,7 +3,7 @@ import { Platform, SafeAreaView, StatusBar, Text, View } from "react-native";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
 import { isLoggedInAtom, isUserAtom } from "../../../atom";
-import { GradientButtons } from "../../components/GradientButtons";
+import { GradientButtons } from "../../components/atoms/GradientButtons";
 import { KakaoSignIn } from "./KakaoLogin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";

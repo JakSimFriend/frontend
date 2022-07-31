@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StatusBar, Text } from "react-native";
 import styled from "styled-components/native";
-import { GradientButtons } from "../../../../../components/GradientButtons";
+import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import {
   CalendarIcon,
   ClockIconTwo,
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../../../components/TabIcon";
+} from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { onDevelopModalAtom } from "../../../../../../atom";
-import { useSetRecoilState } from "recoil";
-import OnDevelopModal from "../../../../../components/organisms/OnDevelopModal";
+import { onDevelopModalAtom, userIndexAtom } from "../../../../../../atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -25,19 +25,17 @@ type RouteParams = {
 
 export const RecruitPageInfo = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
+  const userIdx = useRecoilValue(userIndexAtom);
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/detail`)
-        .then(function (response) {
-          setData(response.data.result);
-        })
-        .catch((error) => console.log(error.message));
-    });
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/detail`)
+      .then(function (response) {
+        setData(response.data.result);
+      })
+      .catch((error) => console.log(error.message));
   }, []);
 
   return (

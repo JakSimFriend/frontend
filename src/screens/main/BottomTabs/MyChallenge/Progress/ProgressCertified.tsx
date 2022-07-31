@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { ImageBackground, Platform, SafeAreaView } from "react-native";
 import styled from "styled-components/native";
 import Cameras from "react-native-vector-icons/AntDesign";
-import { GradientButtons } from "../../../../../components/GradientButtons";
+import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import { useNavigation } from "@react-navigation/native";
 import { launchImageLibrary } from "react-native-image-picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { useRecoilState } from "recoil";
-import { CertifiedAtom, CertifiedFailAtom } from "../../../../../../atom";
-import CertifiedModal from "../../../../../components/organisms/CertifiedModal";
-import CertifiedFailModal from "../../../../../components/organisms/CertifiedFailModal";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { CertifiedAtom, CertifiedFailAtom, userIndexAtom } from "../../../../../../atom";
+import CertifiedModal from "../../../../../components/organisms/Modal/CertifiedModal";
+import CertifiedFailModal from "../../../../../components/organisms/Modal/CertifiedFailModal";
 
 type RouteParams = {
   route: {
@@ -32,6 +31,7 @@ export const ProgressCertified = ({ route }: RouteParams) => {
   const [certified, setCertified] = useState(false);
   const [modalVisible, setModalVisible] = useRecoilState(CertifiedAtom);
   const [modalTwoVisible, setModalTwoVisible] = useRecoilState(CertifiedFailAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
   const [modalIndex, setModalIndex] = useState(10);
   const [certifiedPercent, setCertifiedPercent]: any = useState([]);
 
@@ -65,32 +65,29 @@ export const ProgressCertified = ({ route }: RouteParams) => {
     const headers = {
       "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
     };
-    await AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .post(
-          `https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/certification`,
-          formdata,
-          { headers: headers },
-        )
-        .then((response) => {
-          if (response.data.code === 3035) {
-            setModalIndex(1);
-          } else if (response.data.code === 1000) {
-            setCertifiedPercent(response.data.result);
-            setModalIndex(0);
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log("Error", error.message);
-          }
-        });
-    });
+    await axios
+      .post(
+        `https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/certification`,
+        formdata,
+        { headers: headers },
+      )
+      .then((response) => {
+        if (response.data.code === 3035) {
+          setModalIndex(1);
+        } else if (response.data.code === 1000) {
+          setCertifiedPercent(response.data.result);
+          setModalIndex(0);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
   };
   const openModal = () => {
     modalIndex === 0 ? setModalVisible(true) : setModalTwoVisible(true);

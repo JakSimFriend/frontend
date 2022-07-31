@@ -2,57 +2,60 @@ import React, { useEffect, useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import Alarm from "react-native-vector-icons/MaterialCommunityIcons";
-import ReportModalOne from "../../../../../components/organisms/ReportModalOne";
-import ReportModalTwo from "../../../../../components/organisms/ReportModalTwo";
+import ReportModalOne from "../../../../../components/organisms/Modal/ReportModalOne";
+import ReportModalTwo from "../../../../../components/organisms/Modal/ReportModalTwo";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { onDevelopModalAtom, progressIndexAtom, reportModalOne } from "../../../../../../atom";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  onDevelopModalAtom,
+  progressIndexAtom,
+  reportModalOne,
+  userIndexAtom,
+} from "../../../../../../atom";
 import axios from "axios";
-import OnDevelopModal from "../../../../../components/organisms/OnDevelopModal";
+import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 export const ProgressNotification = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
   const setModalOneVisible = useSetRecoilState(reportModalOne);
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
+  const [notificationData, setNotificationData]: any = useState([]);
+  const [listEmpty, setListEmpty] = useState(false);
 
   const Report = () => {
     setModalOneVisible(true);
   };
-  const [notificationData, setNotificationData]: any = useState([]);
-  const [listEmpty, setListEmpty] = useState(false);
-  const [cancel, setCancelIndex] = useState(0);
-  useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/alerts/${progressIndex}/${userIdx}`)
-        .then((response) => {
-          if (response.data.result === undefined) {
-            setListEmpty(true);
-          } else {
-            setListEmpty(false);
-            setNotificationData(response.data.result);
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
+  const getData = () => {
+    axios
+      .get(`https://jaksimfriend.site/alerts/${progressIndex}/${userIdx}`)
+      .then((response) => {
+        if (response.data.code === 1000) {
+          setListEmpty(false);
+          setNotificationData(response.data.result);
+        } else {
           setListEmpty(true);
-        });
-    });
-  }, [cancel]);
-  const cancelChallenge = () => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .patch(`https://jaksimfriend.site/alerts/${cancel}/delete/${userIdx}`)
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setListEmpty(true);
+      });
   };
+  const deleteNotification = (item: any) => {
+    axios
+      .patch(`https://jaksimfriend.site/alerts/${item}/delete/${userIdx}`)
+      .then(function (response) {
+        console.log(response.data);
+        getData();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -80,8 +83,7 @@ export const ProgressNotification = () => {
                               </NoticeIcon>
                               <TouchableOpacity
                                 onPress={() => {
-                                  setCancelIndex(items.alertIdx);
-                                  cancelChallenge();
+                                  deleteNotification(items.alertIdx);
                                 }}
                               >
                                 <DeleteText>X</DeleteText>

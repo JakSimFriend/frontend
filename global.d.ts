@@ -24,6 +24,8 @@ declare namespace ReactNavigation {
     ProgressCertified:undefined;
     HomeChallengeInfo:undefined;
     ProgressPageInfo:undefined;
+    ProgressTopbarNav:undefined;
+    OpenChallengeNav:undefined;
   }
 }
 declare module 'react-query';

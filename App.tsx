@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import SplashScreen from "react-native-splash-screen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RecoilRoot } from "recoil";
-import MainNav from "./src/navigators/MainNav";
+import MainNav from "./src/navigation/MainNav";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "react-native-gesture-handler";
 import messaging from "@react-native-firebase/messaging";

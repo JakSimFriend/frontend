@@ -15,8 +15,9 @@ import moment from "moment";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Progress from "react-native-progress";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  createdFailModalAtom,
   createdModalAtom,
   dateAtom,
   numberAtom,
@@ -24,7 +25,8 @@ import {
   submitButtonAtom,
   timeAtom,
 } from "../../../../atom";
-import CreatedModal1 from "../../../components/organisms/CreatedModal";
+import CreatedModal1 from "../../../components/organisms/Modal/CreatedModal";
+import CreatedModal2 from "../../../components/organisms/Modal/CreatedFailModal";
 import axios from "axios";
 
 export const ChallengeOpenTwo = () => {
@@ -109,6 +111,7 @@ export const ChallengeOpenTwo = () => {
   }, []);
   const Width = Dimensions.get("window").width;
   const modalVisible = useRecoilValue(createdModalAtom);
+  const modalTwoVisible = useRecoilValue(createdFailModalAtom);
   return (
     <TouchableWithoutFeedback onPress={hideDropDown}>
       <Wrapper>
@@ -266,6 +269,7 @@ export const ChallengeOpenTwo = () => {
           confirmTextIOS="시간 설정하기"
         />
         <CreatedModal1 visible={modalVisible} />
+        <CreatedModal2 visible={modalTwoVisible} />
       </Wrapper>
     </TouchableWithoutFeedback>
   );

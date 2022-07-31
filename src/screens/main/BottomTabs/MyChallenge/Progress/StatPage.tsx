@@ -3,15 +3,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { GradientButtons } from "../../../../../components/GradientButtons";
+import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { progressIndexAtom, recieveModalAtom } from "../../../../../../atom";
-import RecieveModal from "../../../../../components/organisms/RecieveModal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { progressIndexAtom, recieveModalAtom, userIndexAtom } from "../../../../../../atom";
+import RecieveModal from "../../../../../components/organisms/Modal/RecieveModal";
 import axios from "axios";
 
 export const StatPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
   const todayDate = moment(new Date()).format("YYYY/MM/DD일 hh:mm 기준");
   const [received, setReceived] = useState(false);
   const [graphColor, setGraphColor] = useState("#947BEA");
@@ -21,39 +21,33 @@ export const StatPage = () => {
   const [data, setData]: any = useState([]);
   const [fill, setFill] = useState(0);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(
-          `https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-calculation`,
-        )
-        .then(function (response) {
-          setData(response.data.result);
-          setFill(response.data.result.achievement);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .get(
+        `https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-calculation`,
+      )
+      .then(function (response) {
+        setData(response.data.result);
+        setFill(response.data.result.achievement);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
   const postReward = () => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .post(`https://jaksimfriend.site/my-challenges/reward`, {
-          challengeIdx: progressIndex,
-          userIdx: userIdx,
-          achievement: data.achievement,
-          point: data.refundCash,
-          experience: data.experience,
-        })
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .post(`https://jaksimfriend.site/my-challenges/reward`, {
+        challengeIdx: progressIndex,
+        userIdx: userIdx,
+        achievement: data.achievement,
+        point: data.refundCash,
+        experience: data.experience,
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const 보상받기 = () => {

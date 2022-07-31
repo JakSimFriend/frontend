@@ -22,7 +22,6 @@ target 'jaksimfriend' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
 
   target 'jaksimfriendTests' do
     inherit! :complete

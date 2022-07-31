@@ -14,7 +14,7 @@ import {
   HomeClockBlue,
   HomeUserBlue,
   HomeCamera,
-} from "../../../../../components/TabIcon";
+} from "../../../../../components/atoms/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
@@ -22,6 +22,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { userIndexAtom } from "../../../../../../atom";
+import { useRecoilValue } from "recoil";
 
 type RouteParams = {
   route: {
@@ -33,20 +35,18 @@ type RouteParams = {
 
 export const BeforeStartPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
+  const userIdx = useRecoilValue(userIndexAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/before-info`)
-        .then(function (response) {
-          setData(response.data.result[0]);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/before-info`)
+      .then(function (response) {
+        setData(response.data.result[0]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
 
   const navigation: any = useNavigation();

@@ -13,6 +13,22 @@ export const jwtAtom = atom<string>({
   key: `jwt${uuid()}`,
   default: "",
 });
+export const userIndexAtom = atom<number>({
+  key: `userIdx${uuid()}`,
+  default: 0,
+});
+export const myIndicatorAtom = atom<boolean>({
+  key: `myIndicator${uuid()}`,
+  default: false,
+});
+export const stateIndicatorAtom = atom<boolean>({
+  key: `stateIndicator${uuid()}`,
+  default: false,
+});
+export const profileIndicatorAtom = atom<boolean>({
+  key: `profileIndicator${uuid()}`,
+  default: false,
+});
 
 export const tierAtom = atom<string>({
   key: `tier${uuid()}`,
@@ -28,6 +44,10 @@ export const submitButtonAtom = atom<boolean>({
 });
 export const createdModalAtom = atom<boolean>({
   key: `createdModalVisible${uuid()}`,
+  default: false,
+});
+export const createdFailModalAtom = atom<boolean>({
+  key: `createdTwoModalVisible${uuid()}`,
   default: false,
 });
 export const SignInAtom = atom<boolean>({

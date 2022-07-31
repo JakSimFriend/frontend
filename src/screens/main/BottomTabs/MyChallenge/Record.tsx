@@ -1,12 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
-import { progressIndexAtom, progressTitleAtom } from "../../../../../atom";
-import { GradientButtons } from "../../../../components/GradientButtons";
-import RecieveModal from "../../../../components/organisms/RecieveModal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { progressIndexAtom, progressTitleAtom, userIndexAtom } from "../../../../../atom";
+import RecieveModal from "../../../../components/organisms/Modal/RecieveModal";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import LinearGradient from "react-native-linear-gradient";
@@ -14,27 +12,25 @@ import LinearGradient from "react-native-linear-gradient";
 export const Record = () => {
   const setProgressIndex = useSetRecoilState(progressIndexAtom);
   const setProgressTitle = useSetRecoilState(progressTitleAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
   const navigation = useNavigation();
 
-  const [recordEmpth, setRecordEmpty] = useState(false);
+  const [recordEmpty, setRecordEmpty] = useState(false);
   const [recordData, setRecordData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${userIdx}/record`)
-        .then(function (response) {
-          if (response.data.result[0] === undefined) {
-            setRecordEmpty(true);
-          } else {
-            setRecordEmpty(false);
-            setRecordData(response.data.result[0]);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${userIdx}/record`)
+      .then(function (response) {
+        if (response.data.result[0] === undefined) {
+          setRecordEmpty(true);
+        } else {
+          setRecordEmpty(false);
+          setRecordData(response.data.result[0]);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -46,8 +42,8 @@ export const Record = () => {
           <Text style={styles.topText}>기록</Text>
           <Ionicons name="arrow-back" size={25} color="#0000" />
         </View>
-        <ScrollView>
-          {recordEmpth ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {recordEmpty ? (
             <View style={styles.emptyBox}>
               <Text style={styles.emptyText}>기록이 없어요</Text>
             </View>

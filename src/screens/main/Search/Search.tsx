@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
-  Animated,
   ImageBackground,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,104 +11,61 @@ import {
   View,
 } from "react-native";
 import styled from "styled-components/native";
-import { SearchIcon } from "../../../components/TabIcon";
-import { GradientButtons } from "../../../components/GradientButtons";
-import { HomeCalendar, HomeClock, HomeUser } from "../../../components/TabIcon";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SearchIcon } from "../../../components/atoms/TabIcon";
+import { GradientButtons } from "../../../components/atoms/GradientButtons";
+import { HomeCalendar, HomeClock, HomeUser } from "../../../components/atoms/TabIcon";
 import axios from "axios";
+import { userIndexAtom } from "../../../../atom";
+import { useRecoilValue } from "recoil";
+import { SearchCategory } from "../../../components/molecules/categories/SearchCategory";
 
 export const Search = () => {
   const navigation: any = useNavigation();
-  const categories = [
-    "전체",
-    "시사",
-    "독서",
-    "외국어",
-    "전공 기초",
-    "예술",
-    "습관",
-    "운동",
-    "기타",
-  ];
   const [categoryName, setCategoryName] = useState("전체");
   const [categoryIndex, setCategoryIndex] = useState(0);
   const [categoryEmpty, setCategoryEmpty] = useState(false);
-  const [searchInput, setSearchInput] = useState(""); // (검색input)
+  const [searchInput, setSearchInput] = useState("");
   const goToOpenChallenge = () => navigation.navigate("Category");
-  const DownValue = useState(new Animated.Value(0))[0];
 
   const [searchDatas, setSearchDatas]: any = useState([]);
+  const userIdx = useRecoilValue(userIndexAtom);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/searches/${categoryIndex}/${userIdx}`)
-        .then(function (response) {
+    axios
+      .get(`https://jaksimfriend.site/searches/${categoryIndex}/${userIdx}`)
+      .then(function (response) {
+        if (response.data.result === undefined) {
+          setCategoryEmpty(true);
+          console.log(response)
+        } else if (response.data.code === 1000) {
           setSearchDatas(response.data.result[0]);
           setCategoryEmpty(false);
-          if (response.data.result === undefined) {
-            setCategoryEmpty(true);
-          }
-        })
-        .catch(function (error) {
-          setCategoryEmpty(true);
-        });
-    });
+        }
+      })
+      .catch(function (error) {
+        setCategoryEmpty(true);
+        console.log(error);
+      });
   }, [categoryIndex]);
   return (
     <Wrapper>
-      <Animated.View
-        style={{
-          top: DownValue,
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: "#f6f5fb",
-            borderRadius: 15,
-            padding: 10,
-            width: "90%",
-            marginTop: 10,
-            flexDirection: "row",
-            marginLeft: "5%",
-          }}
-        >
+      <View style={styles.searchBar}>
+        <View style={styles.iconWrapper}>
           <SearchIcon />
-          <TextInput
-            style={{ marginLeft: 10 }}
-            placeholder="다양한 챌린지를 검색해보세요!"
-            placeholderTextColor="#6b7ba2"
-            onChangeText={(text) => setSearchInput(text)}
-          />
         </View>
-      </Animated.View>
-      <CategoryBox>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {categories.map((item, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  setCategoryName(item);
-                  setCategoryIndex(index);
-                }}
-                style={[
-                  categoryName === item ? styles.categoryBorderSelected : styles.categoryBorder,
-                  { marginLeft: 17,marginRight:5, alignSelf: "center" },
-                ]}
-              >
-                <Category style={categoryName === item ? styles.categorySelected : styles.category}>
-                  {item}
-                </Category>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </CategoryBox>
+        <TextInput
+          style={{ marginLeft: 10 }}
+          placeholder="다양한 챌린지를 검색해보세요!"
+          placeholderTextColor="#6b7ba2"
+          onChangeText={(text) => setSearchInput(text)}
+        />
+      </View>
+      <SearchCategory
+        categoryName={categoryName}
+        setCategoryName={setCategoryName}
+        setCategoryIndex={setCategoryIndex}
+      />
 
       <ScrollView>
-        {/* 모집중 검색 필터링 */}
-        {/* categoryEmpth?합치기 */}
         {categoryEmpty ? (
           <EmptyBox>
             <EmptyBoxText>아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!</EmptyBoxText>
@@ -189,27 +146,12 @@ export const Search = () => {
                       <>
                         <View style={styles.searchBox}>
                           <ImageBackground
-                            source={require("../../../assets/Book.png")}
+                            source={require("../../../assets/images/Book.png")}
                             blurRadius={25}
-                            style={{
-                              position: "absolute",
-                              zIndex: 1,
-                              width: "100%",
-                              height: "100%",
-                              justifyContent: "center",
-                            }}
+                            style={styles.blurBackground}
                             borderRadius={15}
                           >
-                            <Text
-                              style={{
-                                color: "#ffffff",
-                                textAlign: "center",
-                                fontSize: 25,
-                                fontWeight: "600",
-                              }}
-                            >
-                              마감
-                            </Text>
+                            <Text style={styles.blurText}>마감</Text>
                           </ImageBackground>
                           <View style={{ paddingVertical: 20, paddingHorizontal: 30 }}>
                             <View style={styles.searchHeader}>
@@ -259,27 +201,37 @@ export const Search = () => {
 };
 
 const styles = StyleSheet.create({
-  category: {
-    color: "#000000",
-    fontWeight: "300",
-  },
-  categorySelected: {
-    color: "#000000",
-    fontWeight: "600",
-  },
-  categoryBorder: {
-    paddingBottom: 10,
-  },
-  categoryBorderSelected: {
-    borderBottomColor: "#054DE4",
-    borderBottomWidth: 2,
-    paddingBottom: 10,
-  },
   searchBox: {
     backgroundColor: "#f6f5fb",
     borderRadius: 15,
     marginHorizontal: 20,
     marginVertical: 5,
+  },
+  searchBar: {
+    backgroundColor: "#f6f5fb",
+    borderRadius: 15,
+    padding: Platform.OS === "android" ? 0 : 10,
+    width: "90%",
+    marginTop: 10,
+    flexDirection: "row",
+    marginLeft: "5%",
+  },
+  blurBackground: {
+    position: "absolute",
+    zIndex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+  },
+  blurText: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontSize: 25,
+    fontWeight: "600",
+  },
+  iconWrapper: {
+    marginLeft: Platform.OS === "android" ? 10 : 0,
+    marginTop: Platform.OS === "android" ? 12 : 0,
   },
   searchHeader: {
     flexDirection: "row",
@@ -319,20 +271,6 @@ const styles = StyleSheet.create({
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-`;
-const CategoryBox = styled.View`
-  flex-direction: row;
-  margin-top: 30px;
-  justify-content: space-evenly;
-  align-items: center;
-  border-bottom-width: 2px;
-  border-bottom-color: #f6f5fb;
-  margin-bottom: 20px;
-`;
-const Category = styled.Text`
-  color: #000000;
-  font-size: 15px;
-  font-weight: 900;
 `;
 const EmptyBox = styled.View`
   padding: 40px 15px;

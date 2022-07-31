@@ -1,9 +1,9 @@
-import { TouchableOpacity, Text, StyleSheet, Dimensions, Image } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, Dimensions, Image, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { KakaoOAuthToken, login, logout } from "@react-native-seoul/kakao-login";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserAtom } from "../../../atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isLoggedInAtom, isUserAtom, userIndexAtom } from "../../../atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
@@ -12,14 +12,15 @@ export const KakaoSignIn = () => {
   const setIsUser = useSetRecoilState(isUserAtom);
   const [fcmToken, setFcmToken]: any = useState();
 
-  useEffect(() => {
-    AsyncStorage.getItem("fcmtoken").then((value) => {
-      setFcmToken(value);
-    });
-  }, []);
+  // useEffect(() => {
+  //   AsyncStorage.getItem("fcmtoken").then((value) => {
+  //     setFcmToken(value);
+  //   });
+  // }, []);
 
   const signInWithKakao = async (): Promise<void> => {
     const token: KakaoOAuthToken = await login();
+    
     axios
       .post(
         "https://jaksimfriend.site/users/kakao-login",
@@ -27,7 +28,7 @@ export const KakaoSignIn = () => {
         {
           headers: {
             "KAKAO-ACCESS-TOKEN": JSON.stringify(token.accessToken),
-            "DEVICE-TOKEN": fcmToken,
+            // "DEVICE-TOKEN": fcmToken,
           },
         },
       )
@@ -38,7 +39,6 @@ export const KakaoSignIn = () => {
         ]);
 
         axios.defaults.headers.common["X-ACCESS-TOKEN"] = response.data.result.jwt;
-
         await axios
           .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
           .then(function (response) {
@@ -61,50 +61,10 @@ export const KakaoSignIn = () => {
     <TouchableOpacity onPress={signInWithKakao} style={styles.kakaoButton}>
       <Image
         resizeMode="contain"
-        source={require("../../assets/KakaoLogo.png")}
+        source={require("../../assets/images/KakaoLogo.png")}
         style={styles.logo}
       />
       <Text style={{ fontSize: 16, marginLeft: "23%" }}>카카오 로그인</Text>
-    </TouchableOpacity>
-  );
-};
-
-export const LogOutWithKakao = () => {
-  const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-
-  const logOutDelete = () => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .delete(`https://jaksimfriend.site/users/${userIdx}/logout`)
-        .then(function (response) {
-          console.log(response.data.result);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
-  };
-
-  const logOut = async () => {
-    logOutDelete();
-    AsyncStorage.removeItem("jwt");
-    AsyncStorage.removeItem("userIdx");
-    try {
-      await logout();
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      await GoogleSignin.signOut();
-    } catch (error) {
-      console.log(error);
-    }
-    setIsLoggedIn(false);
-  };
-  return (
-    <TouchableOpacity onPress={logOut} style={styles.confirmButton}>
-      <Text style={styles.confirmButtonText}>로그아웃</Text>
     </TouchableOpacity>
   );
 };

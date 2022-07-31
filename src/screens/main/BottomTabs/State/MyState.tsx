@@ -3,34 +3,35 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styled from "styled-components/native";
 import { Wrapper } from "../../../../styles/styles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { a, b, c, d, e, f, g, h } from "../../../../assets/images";
-import { useRoute } from "@react-navigation/native";
+import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
+import { useRecoilValue } from "recoil";
+import { stateIndicatorAtom, userIndexAtom } from "../../../../../atom";
 
-export const MyState = () => {
+export const MyState = React.memo(() => {
   const icons = [a, b, c, d, e, f, g, h];
   const [statData, setStatData]: any = useState([]);
   const [categoryEmpty, setCategoryEmpty] = useState(false);
-  useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/status/${userIdx}`)
-        .then(function (response) {
-          if (response.data.code === 3049) {
-            setCategoryEmpty(true);
-          } else if (response.data.code === 1000) {
-            setCategoryEmpty(false);
-            setStatData(response.data.result[0]);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+  const stateIndicator = useRecoilValue(stateIndicatorAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
+  const getData = () => {
+    axios
+      .get(`https://jaksimfriend.site/status/${userIdx}`)
+      .then(function (response) {
+        if (response.data.code === 3049) {
           setCategoryEmpty(true);
-        });
-    });
-  }, []);
+        } else if (response.data.code === 1000) {
+          setCategoryEmpty(false);
+          setStatData(response.data.result[0]);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, [stateIndicator]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <Wrapper>
@@ -85,7 +86,7 @@ export const MyState = () => {
       </Wrapper>
     </SafeAreaView>
   );
-};
+});
 
 const SeasonTitle = styled.Text`
   margin-top: 15px;

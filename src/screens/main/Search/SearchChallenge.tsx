@@ -16,16 +16,14 @@ import {
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../components/TabIcon";
-import moment from "moment";
-import { GradientButtons } from "../../../components/GradientButtons";
-import ChallengeApplyModal from "../../../components/organisms/ChallengeApplyModal";
-import { useSetRecoilState } from "recoil";
-import { applyModalAtom, onDevelopModalAtom } from "../../../../atom";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from "../../../components/atoms/TabIcon";
+import { GradientButtons } from "../../../components/atoms/GradientButtons";
+import ChallengeApplyModal from "../../../components/organisms/Modal/ChallengeApplyModal";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { applyModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../atom";
 import axios from "axios";
 import LinearGradient from "react-native-linear-gradient";
-import OnDevelopModal from "../../../components/organisms/OnDevelopModal";
+import OnDevelopModal from "../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {
   route: {
@@ -42,6 +40,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
   const { title, schedule, members, challengeIdx } = route.params;
   const setModalVisible = useSetRecoilState(applyModalAtom);
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
+  const userIdx = useRecoilValue(userIndexAtom);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const upValue = useState(new Animated.Value(0))[0];
   const sheetUp = () => {
@@ -76,34 +75,30 @@ export const SearchChallenge = ({ route }: RouteParams) => {
 
   const [searchData, setSearchData]: any = useState("");
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
-        .then(function (response) {
-          setSearchData(response.data.result);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
+      .then(function (response) {
+        setSearchData(response.data.result);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
   const joinChallenge = () => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .post(`https://jaksimfriend.site/challenges/join`, {
-          userIdx: userIdx,
-          challengeIdx: challengeIdx,
-        })
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .post(`https://jaksimfriend.site/challenges/join`, {
+        userIdx: userIdx,
+        challengeIdx: challengeIdx,
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
+
+  const moneyAvailable = searchData.pee < searchData.myPoint ? true : false;
 
   return (
     <Wrapper>
@@ -167,7 +162,12 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         </MyCash>
       </View>
       <Buttons>
-        <TouchableOpacity style={styles.shareButton} onPress={()=>{setModalTwoVisible(true)}}>
+        <TouchableOpacity
+          style={styles.shareButton}
+          onPress={() => {
+            setModalTwoVisible(true);
+          }}
+        >
           <Text>공유할래요</Text>
         </TouchableOpacity>
         {searchData.existStatus === 1 ? (
@@ -185,7 +185,7 @@ export const SearchChallenge = ({ route }: RouteParams) => {
         )}
       </Buttons>
 
-      {/* 바텀 시트(신청할게요) */}
+      {/* 바텀 시트 */}
       <Modal visible={bottomSheetVisible} transparent={true}>
         <TouchableWithoutFeedback onPress={HideBottomSheet}>
           <View style={styles.background}>
@@ -214,8 +214,8 @@ export const SearchChallenge = ({ route }: RouteParams) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      {/* 모달 */}
-      <ChallengeApplyModal />
+
+      <ChallengeApplyModal money={moneyAvailable} />
       <OnDevelopModal />
     </Wrapper>
   );

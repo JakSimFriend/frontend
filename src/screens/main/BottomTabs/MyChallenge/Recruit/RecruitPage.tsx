@@ -14,14 +14,15 @@ import {
   HomeClockBlue,
   HomeUserBlue,
   HomeCamera,
-} from "../../../../../components/TabIcon";
+} from "../../../../../components/atoms/TabIcon";
 import "moment/locale/ko";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useRecoilValue } from "recoil";
+import { userIndexAtom } from "../../../../../../atom";
 
 type RouteParams = {
   route: {
@@ -33,45 +34,36 @@ type RouteParams = {
 
 export const RecruitPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
+  const userIdx = useRecoilValue(userIndexAtom);
 
   const [recruitPageData, setRecruitPageData]: any = useState([]);
   useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/recruitment-info`)
-        .then(function (response) {
-          setRecruitPageData(response.data.result[0]);
-        })
-        .catch((error) => console.log(error.message));
-    });
+    axios
+      .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/recruitment-info`)
+      .then(function (response) {
+        setRecruitPageData(response.data.result[0]);
+      })
+      .catch((error) => console.log(error.message));
   }, []);
-
   const acceptJoin = (item: any) => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/accept`)
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/accept`)
+      .then(function (response) {
+        console.warn(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   const refuseJoin = (item: any) => {
-    AsyncStorage.getItem("userIdx").then((value) => {
-      const userIdx = value;
-      axios
-        .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/refuse`)
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+    axios
+      .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/refuse`)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const navigation: any = useNavigation();
