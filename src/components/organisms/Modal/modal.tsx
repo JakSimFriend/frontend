@@ -22,7 +22,7 @@ const ModalComponent = ({ isVisible, title, body, closeFn }: ModalProps) => {
               closeFn();
             }}
           >
-            <Ionicons name="close-outline" color="#101647" size={24} />
+            <Ionicons name="close-outline" color={Color.blue[1100]} size={24} />
           </TouchableOpacity>
           {body}
         </View>

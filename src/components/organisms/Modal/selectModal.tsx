@@ -6,14 +6,16 @@ import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-na
 export interface SelectModalProps {
   visible: boolean;
   title: string;
-  body: React.ReactChild;
+  body?: React.ReactChild;
   leftFn: () => void;
   leftContent: string;
-  rightFn: () => void;
+  rightFn: () => void | React.ReactChild;
   rightContent: string;
+  isRightIsJsx: boolean;
+  header?: string;
 }
 
-const SelectModal=({
+const SelectModal = ({
   visible,
   title,
   body,
@@ -21,26 +23,32 @@ const SelectModal=({
   leftContent,
   rightFn,
   rightContent,
-}: SelectModalProps)=> {
+  isRightIsJsx,
+  header,
+}: SelectModalProps) => {
   return (
     <Modal visible={visible} transparent={true}>
       <View style={styles.background}>
-        <View style={styles.container}>
+        <View style={{ ...styles.container, paddingTop: !header ? 26 : 30 }}>
           <Text style={styles.text1}>{title}</Text>
           {body}
           <View style={styles.bottomView}>
             <TouchableOpacity style={styles.cancelButton} onPress={() => leftFn()}>
               <Text style={styles.cancelButtonText}>{leftContent}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.confirmButton} onPress={() => rightFn()}>
-              <Text style={styles.confirmButtonText}>{rightContent}</Text>
-            </TouchableOpacity>
+            {isRightIsJsx ? (
+              rightFn()
+            ) : (
+              <TouchableOpacity style={styles.confirmButton} onPress={() => rightFn()}>
+                <Text style={styles.confirmButtonText}>{rightContent}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
     </Modal>
   );
-}
+};
 
 const styles = StyleSheet.create({
   background: {
@@ -51,7 +59,6 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: Color.white[100],
-    paddingTop: 30,
     paddingBottom: 16,
     paddingHorizontal: 16,
     borderRadius: 30,
@@ -63,13 +70,13 @@ const styles = StyleSheet.create({
   },
   text1: {
     fontWeight: "600",
-    fontSize: 28,
+    fontSize: 17,
     color: Color.black["blue"],
     lineHeight: 34,
   },
   text2: {
     fontWeight: "400",
-    fontSize: 17,
+    fontSize: 16,
     color: Color.black["blue"],
     marginTop: 30,
     lineHeight: 25,
@@ -112,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SelectModal
+export default SelectModal;

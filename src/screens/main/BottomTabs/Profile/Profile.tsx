@@ -20,9 +20,9 @@ import { Color } from "@src/assets/color";
 import { ProfileNavParamList } from "@src/navigation/BottomTabs/ProfileNav";
 
 import { profileIndicatorAtom, userIndexAtom } from "@src/../atom";
-import ModalComponent from "@src/components/organisms/Modal/modal";
+import ModalComponent from "@src/components/organisms/Modal/Modal";
 import { UserInfo } from "./interface/user.interface";
-import SelectModal from "@src/components/organisms/Modal/selectModal";
+import SelectModal from "@src/components/organisms/Modal/SelectModal";
 
 const pointIconName = [
   "gift-outline",
@@ -121,7 +121,6 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
           </View>
         </LinearGradient>
         <ScrollView
-          // style={{ flex: 1 }}
           bounces={false}
           onLayout={(e) => {
             setScrollViewHeight(e.nativeEvent.layout.height);

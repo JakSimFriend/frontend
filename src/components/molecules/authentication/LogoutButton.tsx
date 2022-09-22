@@ -8,6 +8,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export const LogOutWithKakao = () => {
+  console.log(1)
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const userIdx = useRecoilValue(userIndexAtom);
   const logOutDelete = () => {
