@@ -1,4 +1,5 @@
 import { StackScreenProps } from "@react-navigation/stack";
+import { Color } from "@src/assets/color";
 import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -498,17 +499,17 @@ export default function TOS({ navigation }: StackScreenProps<SettingNavParamList
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.topView}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color={Color.black["blue"]} />
+        </TouchableOpacity>
+        <Text style={styles.topText}>이용약관</Text>
+        <Ionicons name="arrow-back" size={24} color={Color.white[0]} />
+      </View>
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 20 }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.topView}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="#101647" />
-          </TouchableOpacity>
-          <Text style={styles.topText}>이용약관</Text>
-          <Ionicons name="arrow-back" size={24} color="#0000" />
-        </View>
         <Text style={styles.text}>{text}</Text>
       </ScrollView>
     </SafeAreaView>
@@ -518,7 +519,7 @@ export default function TOS({ navigation }: StackScreenProps<SettingNavParamList
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Color.white[0],
   },
   topView: {
     flexDirection: "row",
@@ -527,14 +528,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   topText: {
-    color: "#101647",
+    color: Color.black["blue"],
     fontSize: 17,
     fontWeight: "600",
     alignSelf: "center",
   },
   text: {
     fontSize: 14,
-    color: "#101647",
+    color: Color.black["blue"],
     marginTop: 20,
   },
 });
