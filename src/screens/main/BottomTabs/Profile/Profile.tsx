@@ -1,5 +1,8 @@
+import Clipboard from "@react-native-clipboard/clipboard";
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
 import {
   Image,
   SafeAreaView,
@@ -13,16 +16,13 @@ import { ScrollView } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import ProfileModal from "../../../../components/organisms/Modal/ProfileModal";
-import { ProfileNavParamList } from "../../../../navigation/BottomTabs/ProfileNav";
-import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { profileIndicatorAtom, userIndexAtom } from "../../../../../atom";
-import ModalComponent from "../../../../components/organisms/Modal/modal";
+import { Color } from "@src/assets/color";
+import { ProfileNavParamList } from "@src/navigation/BottomTabs/ProfileNav";
 
-type ProfileDataType = {
-  image: string;
-};
+import { profileIndicatorAtom, userIndexAtom } from "@src/../atom";
+import ModalComponent from "@src/components/organisms/Modal/modal";
+import { UserInfo } from "./interface/user.interface";
+import SelectModal from "@src/components/organisms/Modal/selectModal";
 
 const pointIconName = [
   "gift-outline",
@@ -39,41 +39,21 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   const [isDeveloperModalVisible, setIsDeveloperModalVisible] = useState<boolean>(false);
   const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
   const [scrollViewContentHeight, setScrollViewContentHeight] = useState<number>(0);
-  const [profileData, setProfileData] = useState<ProfileDataType>({
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/1600px-A_black_image.jpg?20201103073518",
-  });
 
-  const [profileDatas, setProfileDatas]: any = useState([]);
-  const [profilePoint, setProfilePoint] = useState("0");
+  const [profileData, setProfileData] = useState<UserInfo>();
   const getData = () => {
     axios
       .get(`https://jaksimfriend.site/profiles/${userIdx}`)
-      .then(function (response) {
-        if (response.data.result === undefined) {
-          console.log("data undefined");
-        } else {
-          setProfileDatas(response.data.result[0]);
-          setProfilePoint(
-            response.data.result[0].point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-          );
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .then((response) => setProfileData(response.data.result[0]))
+      .catch((error) => console.log(error));
   };
 
   const receiveReward = () => {
     // 광고보상받기
     axios
       .patch(`https://jaksimfriend.site/profiles/${userIdx}/reward`)
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -91,28 +71,32 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
           <Text style={styles.setting}>설정</Text>
         </TouchableOpacity>
         <View style={styles.profileView}>
-          <Image
-            source={{
-              uri: profileDatas.profile ? profileDatas.profile : profileData.image,
-            }}
-            style={styles.image}
-          />
+          {profileData?.profile ? (
+            <Image
+              source={{
+                uri: profileData?.profile,
+              }}
+              style={styles.image}
+            />
+          ) : (
+            <View style={{ ...styles.image, backgroundColor: "black" }} />
+          )}
           <View style={styles.profileRightView}>
             <View style={styles.nameView}>
-              <Text style={styles.nickName}>{profileDatas.nickName}</Text>
+              <Text style={styles.nickName}>{profileData?.nickName}</Text>
               <TouchableOpacity
                 style={styles.editButton}
                 onPress={() => navigation.navigate("ProfileEdit")}
               >
-                <AntDesign name="edit" size={20} color="#101647" />
+                <AntDesign name="edit" size={20} color={Color.blue[1100]} />
               </TouchableOpacity>
             </View>
-            <Text style={styles.introduce}>{profileDatas.promise}</Text>
+            <Text style={styles.introduce}>{profileData?.promise}</Text>
           </View>
         </View>
-        <LinearGradient style={styles.linearGradient} colors={["#947BEA", "#1151E5"]}>
+        <LinearGradient style={styles.linearGradient} colors={[Color.violet[100], Color.blue[400]]}>
           <Text style={styles.pointTitleText}>내 캐시</Text>
-          <Text style={styles.pointText}>{profilePoint}C</Text>
+          <Text style={styles.pointText}>{profileData?.point.toLocaleString()}C</Text>
           <View style={styles.pointButtonView}>
             <TouchableOpacity style={styles.pointButton} onPress={() => setIsModalVisible(true)}>
               <Text style={styles.pointButtonText}>초대하기</Text>
@@ -148,15 +132,17 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
               styles.bottomView,
               {
                 paddingBottom:
-                  profileDatas.points?.length < 4 ? scrollViewHeight - scrollViewContentHeight : 30,
+                  profileData?.points && profileData?.points?.length < 4
+                    ? scrollViewHeight - scrollViewContentHeight
+                    : 30,
               },
             ]}
           >
             <Text style={styles.bottomTitle}>내역 보기</Text>
-            {profileDatas.points?.length === 0 ? (
+            {profileData?.points?.length === 0 ? (
               <Text style={styles.emptyAlertText}>결제 내역이 없어요</Text>
             ) : (
-              profileDatas.points?.map((item: any, index: number) => (
+              profileData?.points?.map((item: any, index: number) => (
                 <View key={index} style={styles.pointListRow}>
                   <View style={styles.pointIconView}>
                     <Ionicons
@@ -173,7 +159,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
                             : 4
                         ]
                       }
-                      color="#101647"
+                      color={Color.blue[1100]}
                       size={24}
                     />
                   </View>
@@ -182,7 +168,9 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
                     <Text style={styles.pointDateText}>{item.createAt}</Text>
                   </View>
                   <View style={styles.pointColumnView}>
-                    <Text style={[styles.pointTypeText, { color: "#044DE4", textAlign: "right" }]}>
+                    <Text
+                      style={[styles.pointTypeText, { color: Color.blue[100], textAlign: "right" }]}
+                    >
                       {(item.point > 0 ? "+" : "") +
                         item.point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       C
@@ -197,18 +185,49 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
           </View>
         </ScrollView>
       </View>
-      <ProfileModal visible={isModalVisible} setVisible={setIsModalVisible} />
-      <ModalComponent
-        isVisible={isDeveloperModalVisible}
-        title="프로그램 개발중 입니다"
+      {/* <ProfileModal visible={isModalVisible} setVisible={setIsModalVisible} /> */}
+      <SelectModal
+        visible={isModalVisible}
+        title={`추천인 되고\n1,000C 받아가세요!`}
         body={
           <>
-            <ActivityIndicator size={30} color={"#044DE4"} />
             <Text
               style={{
                 fontWeight: "400",
                 fontSize: 17,
                 color: "#101647",
+                marginTop: 30,
+                lineHeight: 25,
+              }}
+            >
+              초대받은 사람이 추천인으로{"\n"}
+              <Text style={{ color: "#044DE4" }}>내 닉네임</Text>을 입력하면{"\n"}1,000C를 받을 수
+              있어요!
+            </Text>
+            <Text style={{ fontWeight: "400", fontSize: 17, color: "#6F81A9", marginTop: 50 }}>
+              앱 링크를 복사하시겠어요?
+            </Text>
+          </>
+        }
+        leftContent="취소"
+        rightContent="링크 복사"
+        leftFn={() => setIsModalVisible(false)}
+        rightFn={() => {
+          Clipboard.setString("https://www.apple.com/kr/app-store/");
+          setIsModalVisible(false);
+        }}
+      />
+      <ModalComponent
+        isVisible={isDeveloperModalVisible}
+        title="프로그램 개발중 입니다"
+        body={
+          <>
+            <ActivityIndicator size={30} color={Color.blue[100]} />
+            <Text
+              style={{
+                fontWeight: "400",
+                fontSize: 17,
+                color: Color.blue[1100],
                 marginTop: 70,
                 textAlign: "center",
               }}
@@ -228,11 +247,11 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Color.white[0],
   },
   setting: {
     fontSize: 14,
-    color: "#101647",
+    color: Color.blue[1100],
     marginVertical: 10,
     alignSelf: "flex-end",
     marginRight: 20,
@@ -259,14 +278,14 @@ const styles = StyleSheet.create({
   },
   nickName: {
     fontSize: 22,
-    color: "#101647",
+    color: Color.blue[1100],
     fontWeight: "700",
   },
   editButton: {
     marginLeft: 12,
   },
   introduce: {
-    color: "#101647",
+    color: Color.blue[1100],
     fontSize: 17,
   },
   linearGradient: {
@@ -277,11 +296,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   pointTitleText: {
-    color: "#fff",
+    color: Color.white[0],
     fontSize: 13,
   },
   pointText: {
-    color: "#fff",
+    color: Color.white[0],
     fontSize: 34,
     fontWeight: "700",
     marginTop: 4,
@@ -298,13 +317,13 @@ const styles = StyleSheet.create({
     borderRadius: 13,
   },
   pointButtonText: {
-    color: "#fff",
+    color: Color.white[0],
     textAlign: "center",
     fontSize: 16,
     fontWeight: "600",
   },
   bottomView: {
-    backgroundColor: "#fff",
+    backgroundColor: Color.white[0],
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     paddingTop: 30,
@@ -318,7 +337,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bottomTitle: {
-    color: "#101647",
+    color: Color.blue[1100],
     fontSize: 14,
     textAlign: "center",
     marginBottom: 30,
@@ -326,20 +345,20 @@ const styles = StyleSheet.create({
   },
   pointListRow: {
     borderBottomWidth: 1,
-    borderColor: "#BFC7D7",
+    borderColor: Color.gray[100],
     paddingBottom: 10,
     marginBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   emptyAlertText: {
-    color: "#6F81A9",
+    color: Color.blue[900],
     fontSize: 16,
     marginTop: 70,
     textAlign: "center",
   },
   pointIconView: {
-    backgroundColor: "#F5F5FB",
+    backgroundColor: Color.white[100],
     padding: 8,
     borderRadius: 13,
     marginRight: 10,
@@ -353,11 +372,11 @@ const styles = StyleSheet.create({
     paddingVertical: 1,
   },
   pointTypeText: {
-    color: "#101647",
+    color: Color.blue[1100],
     fontSize: 16,
   },
   pointDateText: {
-    color: "#BFC7D7",
+    color: Color.gray[100],
     fontSize: 12,
   },
 });

@@ -96,3 +96,9 @@ export const serverResponseStatusCode = {
   5003: "로그인 정보 조회에 실패했습니다.",
   5004: "파싱에 실패했습니다.",
 };
+
+export interface BaseResponse {
+  isSuccess: boolean;
+  code: number;
+  message: string;
+}

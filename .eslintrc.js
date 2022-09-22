@@ -4,6 +4,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
+  plugins: ["react", "@typescript-eslint", "unused-imports", "simple-import-sort"],
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -20,10 +21,30 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint", "unused-imports"],
+
   rules: {
     "prettier/prettier": ["error"],
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "import/order": [
+      "error",
+      {
+        groups: ["builtin", "external", ["parent", "sibling"], "index"],
+        pathGroups: [
+          {
+            pattern: "angular",
+            group: "external",
+            position: "before",
+          },
+        ],
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+        "newlines-between": "always",
+      },
+    ],
   },
 };
