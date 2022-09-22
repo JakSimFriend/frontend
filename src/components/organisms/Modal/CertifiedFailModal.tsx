@@ -35,6 +35,8 @@ export default function CertifiedFailModal({ visible }: Certified1Props) {
   );
 }
 
+
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,

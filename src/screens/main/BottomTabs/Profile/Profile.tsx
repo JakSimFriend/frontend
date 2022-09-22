@@ -1,6 +1,14 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -8,34 +16,33 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import ProfileModal from "../../../../components/organisms/Modal/ProfileModal";
 import { ProfileNavParamList } from "../../../../navigation/BottomTabs/ProfileNav";
 import axios from "axios";
-import OnDevelopModal from "../../../../components/organisms/Modal/OnDevelopModal";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { onDevelopModalAtom, profileIndicatorAtom, userIndexAtom } from "../../../../../atom";
-// import { TestIds, RewardedAd, RewardedAdEventType } from "@react-native-firebase/admob";
+import { useRecoilValue } from "recoil";
+import { profileIndicatorAtom, userIndexAtom } from "../../../../../atom";
+import ModalComponent from "../../../../components/organisms/Modal/modal";
 
 type ProfileDataType = {
   image: string;
 };
 
+const pointIconName = [
+  "gift-outline",
+  "person-add-outline",
+  "receipt-outline",
+  "wallet-outline",
+  "flag-outline",
+]; //Ionicons
+
 export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) => {
   const userIdx = useRecoilValue(userIndexAtom);
   const profileIndicator = useRecoilValue(profileIndicatorAtom);
-  const [modalVisible, setModalVisible] = useState(false);
-  const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
-  const [scrollViewHeight, setScrollViewHeight] = useState(0);
-  const [scrollViewContentHeight, setScrollViewContentHeight] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isDeveloperModalVisible, setIsDeveloperModalVisible] = useState<boolean>(false);
+  const [scrollViewHeight, setScrollViewHeight] = useState<number>(0);
+  const [scrollViewContentHeight, setScrollViewContentHeight] = useState<number>(0);
   const [profileData, setProfileData] = useState<ProfileDataType>({
     image:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/1600px-A_black_image.jpg?20201103073518",
   });
-
-  const pointIconName = [
-    "gift-outline",
-    "person-add-outline",
-    "receipt-outline",
-    "wallet-outline",
-    "flag-outline",
-  ]; //Ionicons
 
   const [profileDatas, setProfileDatas]: any = useState([]);
   const [profilePoint, setProfilePoint] = useState("0");
@@ -68,101 +75,74 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
         console.log(error);
       });
   };
-  
+
   useEffect(() => {
     getData();
   }, [profileIndicator]);
 
-  // (react native admob)루트파일의 firebase.json appiID 인식안됨 = 앱 실행 안됨
-
-  // const appId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
-  // const getAds = () => {
-  //   try {
-  //     //TestIds에 각 플랫폼 id넣어주면됨
-  //     const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
-  //       requestNonPersonalizedAdsOnly: true,
-  //     });
-  //     rewarded.onAdEvent((type, error, reward) => {
-  //       if (error) {
-  //         console.log("동영상을 불러오는 중 오류가 발생했어요", error);
-  //       }
-  //       if (type === RewardedAdEventType.LOADED) {
-  //         rewarded.show(); // 동영상 광고 띄우기
-  //       }
-  //       if (type === RewardedAdEventType.EARNED_REWARD) {
-  //         console.log("User earned reward of ", reward);
-  //         receiveReward();
-  //       }
-  //     });
-  //     rewarded.load();
-  //   } catch (error) {
-  //     console.log("catch error", error);
-  //   }
-  // };
-
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView
-        style={{ flex: 1 }}
-        bounces={false}
+      <View
         onLayout={(e) => {
-          setScrollViewHeight(e.nativeEvent.layout.height);
+          scrollViewContentHeight == 0 && setScrollViewContentHeight(e.nativeEvent.layout.height);
         }}
       >
-        <View
+        <TouchableOpacity onPress={() => navigation.navigate("SettingNav")}>
+          <Text style={styles.setting}>설정</Text>
+        </TouchableOpacity>
+        <View style={styles.profileView}>
+          <Image
+            source={{
+              uri: profileDatas.profile ? profileDatas.profile : profileData.image,
+            }}
+            style={styles.image}
+          />
+          <View style={styles.profileRightView}>
+            <View style={styles.nameView}>
+              <Text style={styles.nickName}>{profileDatas.nickName}</Text>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => navigation.navigate("ProfileEdit")}
+              >
+                <AntDesign name="edit" size={20} color="#101647" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.introduce}>{profileDatas.promise}</Text>
+          </View>
+        </View>
+        <LinearGradient style={styles.linearGradient} colors={["#947BEA", "#1151E5"]}>
+          <Text style={styles.pointTitleText}>내 캐시</Text>
+          <Text style={styles.pointText}>{profilePoint}C</Text>
+          <View style={styles.pointButtonView}>
+            <TouchableOpacity style={styles.pointButton} onPress={() => setIsModalVisible(true)}>
+              <Text style={styles.pointButtonText}>초대하기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.pointButton, { marginHorizontal: 10 }]}
+              onPress={() => {
+                setIsDeveloperModalVisible(true);
+                // getAds();
+              }}
+            >
+              <Text style={styles.pointButtonText}>충전하기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.pointButton}
+              onPress={() => {
+                setIsDeveloperModalVisible(true);
+              }}
+            >
+              <Text style={styles.pointButtonText}>인출하기</Text>
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+        <ScrollView
+          // style={{ flex: 1 }}
+          bounces={false}
           onLayout={(e) => {
-            scrollViewContentHeight == 0 && setScrollViewContentHeight(e.nativeEvent.layout.height);
+            setScrollViewHeight(e.nativeEvent.layout.height);
           }}
         >
-          <TouchableOpacity onPress={() => navigation.navigate("SettingNav")}>
-            <Text style={styles.setting}>설정</Text>
-          </TouchableOpacity>
-          <View style={styles.profileView}>
-            <Image
-              source={{
-                uri: profileDatas.profile ? profileDatas.profile : profileData.image,
-              }}
-              style={styles.image}
-            />
-            <View style={styles.profileRightView}>
-              <View style={styles.nameView}>
-                <Text style={styles.nickName}>{profileDatas.nickName}</Text>
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => navigation.navigate("ProfileEdit")}
-                >
-                  <AntDesign name="edit" size={20} color="#101647" />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.introduce}>{profileDatas.promise}</Text>
-            </View>
-          </View>
-          <LinearGradient style={styles.linearGradient} colors={["#947BEA", "#1151E5"]}>
-            <Text style={styles.pointTitleText}>내 캐시</Text>
-            <Text style={styles.pointText}>{profilePoint}C</Text>
-            <View style={styles.pointButtonView}>
-              <TouchableOpacity style={styles.pointButton} onPress={() => setModalVisible(true)}>
-                <Text style={styles.pointButtonText}>초대하기</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.pointButton, { marginHorizontal: 10 }]}
-                onPress={() => {
-                  setModalTwoVisible(true);
-                  // getAds();
-                }}
-              >
-                <Text style={styles.pointButtonText}>충전하기</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.pointButton}
-                onPress={() => {
-                  setModalTwoVisible(true);
-                }}
-              >
-                <Text style={styles.pointButtonText}>인출하기</Text>
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
           <View
             style={[
               styles.bottomView,
@@ -215,10 +195,32 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
               ))
             )}
           </View>
-        </View>
-      </ScrollView>
-      <ProfileModal visible={modalVisible} setVisible={setModalVisible} />
-      <OnDevelopModal />
+        </ScrollView>
+      </View>
+      <ProfileModal visible={isModalVisible} setVisible={setIsModalVisible} />
+      <ModalComponent
+        isVisible={isDeveloperModalVisible}
+        title="프로그램 개발중 입니다"
+        body={
+          <>
+            <ActivityIndicator size={30} color={"#044DE4"} />
+            <Text
+              style={{
+                fontWeight: "400",
+                fontSize: 17,
+                color: "#101647",
+                marginTop: 70,
+                textAlign: "center",
+              }}
+            >
+              현재 페이지는 준비중입니다.{`\n`}빠른 시일 내에 더욱 나은 모습으로 찾아뵙겠습니다.
+            </Text>
+          </>
+        }
+        closeFn={() => {
+          setIsDeveloperModalVisible(false);
+        }}
+      />
     </SafeAreaView>
   );
 };
