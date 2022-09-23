@@ -61,12 +61,12 @@ export const useAutoLogin = () => {
         const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
         if (RA.isNilOrEmpty(userInfo.nickName)) {
           setIsUserStatus("pending");
-          setUserInfo(userInfo)
         }
+        setIsUserStatus("success");
+        setUserInfo(userInfo);
       });
     } catch (error) {
       console.log(error);
-      return false;
     }
   };
 

@@ -8,9 +8,9 @@ import { UserInfo } from "@src/screens/main/BottomTabs/Profile/interface/user.in
 
 const getUserInfo = (userId: number) => axios.get(`/profiles/${userId}`);
 
-export const useUserInfo = (userIdx: number) => {
+export const useUserInfo = () => {
+  const userIdx = useRecoilValue(userIdxAtom);
   useEffect(() => {
-    console.log(userIdx);
     if (RA.isNotNilOrEmpty(userIdx)) {
       getUserInfo(userIdx as number).then(({ data }) => {
         console.log(R.head(data.result));
