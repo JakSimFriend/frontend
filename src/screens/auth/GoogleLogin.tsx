@@ -50,9 +50,9 @@ export const GoogleSignIn = () => {
                 .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
                 .then(function (response) {
                   if (response.data.result[0].nickName === null) {
-                    setIsUser(false);
+                    setIsUser("none");
                   } else {
-                    setIsUser(true);
+                    setIsUser("success");
                   }
                   setIsLoggedIn(true);
                 })

@@ -15,7 +15,7 @@ import { SearchIcon } from "../../../components/atoms/TabIcon";
 import { GradientButtons } from "../../../components/atoms/GradientButtons";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../components/atoms/TabIcon";
 import axios from "axios";
-import { userIndexAtom } from "../../../common/atom";
+import { userIdxAtom } from "../../../common/atom";
 import { useRecoilValue } from "recoil";
 import { SearchCategory } from "../../../components/molecules/categories/SearchCategory";
 
@@ -28,7 +28,7 @@ export const Search = () => {
   const goToOpenChallenge = () => navigation.navigate("Category");
 
   const [searchDatas, setSearchDatas]: any = useState([]);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   useEffect(() => {
     axios
       .get(`https://jaksimfriend.site/searches/${categoryIndex}/${userIdx}`)

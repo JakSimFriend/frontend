@@ -21,7 +21,7 @@ import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { cancelModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../../common/atom";
+import { cancelModalAtom, onDevelopModalAtom, userIdxAtom } from "../../../../../common/atom";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {
@@ -35,7 +35,7 @@ type RouteParams = {
 
 export const RequestPage = ({ route }: RouteParams) => {
   const { challengeIdx, waitingIdx } = route.params;
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {

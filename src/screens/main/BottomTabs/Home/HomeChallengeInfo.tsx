@@ -26,7 +26,7 @@ import axios from "axios";
 import ChallengeApplyModal from "../../../../components/organisms/Modal/ChallengeApplyModal";
 import OnDevelopModal from "../../../../components/organisms/Modal/OnDevelopModal";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { applyModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../common/atom";
+import { applyModalAtom, onDevelopModalAtom, userIdxAtom } from "../../../../common/atom";
 import LinearGradient from "react-native-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
@@ -47,7 +47,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
   const { title, schedule, members, challengeIdx } = route.params;
   const setModalVisible = useSetRecoilState(applyModalAtom);
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const [infoData, setInfoData]: any = useState([]);
   const cashAvailable = infoData.pee < infoData.myPoint ? true : false;
 

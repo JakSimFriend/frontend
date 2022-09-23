@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { KakaoOAuthToken, login, logout } from "@react-native-seoul/kakao-login";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserStatusAtom, userIndexAtom } from "../../common/atom";
+import { isLoggedInAtom, isUserStatusAtom, userIdxAtom } from "../../common/atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
@@ -43,9 +43,9 @@ export const KakaoSignIn = () => {
           .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
           .then(function (response) {
             if (response.data.result[0].nickName === null) {
-              setIsUser(false);
+              setIsUser('none');
             } else {
-              setIsUser(true);
+              setIsUser('success');
             }
             setIsLoggedIn(true);
           })

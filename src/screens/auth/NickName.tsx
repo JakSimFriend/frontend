@@ -18,14 +18,14 @@ import NickNameModal2 from "../../components/organisms/Modal/NickNameModal2";
 import NickNameModal3 from "../../components/organisms/Modal/NickNameModal3";
 import NickNameModal4 from "../../components/organisms/Modal/NickNameModal4";
 import axios from "axios";
-import { isLoggedInAtom, isUserStatusAtom, jwtAtom, userIndexAtom } from "../../common/atom";
+import { isLoggedInAtom, isUserStatusAtom, jwtAtom, userIdxAtom } from "../../common/atom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { unlink } from "@react-native-seoul/kakao-login";
 
 export const NickName = () => {
   const navigation = useNavigation();
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserStatusAtom);
 
@@ -34,13 +34,12 @@ export const NickName = () => {
     const subscription = AppState.addEventListener("change", (nextState) => {
       if (nextState === "background") {
         const kakaoSignOut = async (): Promise<void> => {
-          const message = await unlink();
           AsyncStorage.removeItem("jwt");
           AsyncStorage.removeItem("userIdx");
           AsyncStorage.removeItem("fcmtoken");
           signOutPatch();
           setIsLoggedIn(false);
-          setIsUser(false);
+          setIsUser("none");
         };
         kakaoSignOut();
       }
@@ -81,7 +80,6 @@ export const NickName = () => {
         nickName: nickName,
       })
       .then(function (response) {
-        console.warn(response.data);
         if (response.data.code === 3015) {
           setModalVisible2(true);
           setGuideColor3(BLACK);

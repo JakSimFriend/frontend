@@ -9,14 +9,14 @@ import { appleAuth, appleAuthAndroid } from "@invertase/react-native-apple-authe
 import { v4 as uuid } from "uuid";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../common/atom";
+import { userIdxAtom } from "../../../../common/atom";
 import { HomeCategory } from "../../../../components/molecules/categories/HomeCategory";
 import { HomeLists } from "../../../../components/molecules/challengeLists/HomeLists";
 
 export const Home = React.memo(() => {
   const navigation = useNavigation();
   const [userName, setUserName] = useState("유저");
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const goToSearch = () => navigation.navigate("Search");
   const goToOpenChallenge = () => navigation.navigate("Category");
 
@@ -111,17 +111,17 @@ export const Home = React.memo(() => {
     // Send the authorization code to your backend for verification
   }
 
-  useEffect(() => {
-    axios
-      .get(`https://jaksimfriend.site/profiles/${userIdx}`)
-      .then(function (response) {
-        setUserName(response.data.result[0].nickName);
-        // 닉네임 즉시 반영안됨
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`https://jaksimfriend.site/profiles/${userIdx}`)
+  //     .then(function (response) {
+  //       setUserName(response.data.result[0].nickName);
+  //       // 닉네임 즉시 반영안됨
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }, []);
   return (
     <HomeWrapper>
       <StatusBar barStyle={"dark-content"}></StatusBar>

@@ -14,11 +14,11 @@ import { GradientButtons } from "../../../../../components/atoms/GradientButtons
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { progressIndexAtom, userIndexAtom } from "../../../../../common/atom";
+import { progressIndexAtom, userIdxAtom } from "../../../../../common/atom";
 
 export const ProgressPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const navigation: any = useNavigation();
   const [data, setData]: any = useState([]);
   useEffect(() => {

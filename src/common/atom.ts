@@ -1,3 +1,4 @@
+import { UserInfo } from "@src/screens/main/BottomTabs/Profile/interface/user.interface";
 import { atom, atomFamily } from "recoil";
 import { v4 as uuid } from "uuid";
 
@@ -13,14 +14,14 @@ export const jwtAtom = atom<string>({
   key: `jwt${uuid()}`,
   default: "",
 });
-export const userInfoAtom = atom<{}>({
+export const userInfoAtom = atom<UserInfo | {}>({
   key: `userInfo${uuid()}`,
   default: {},
 });
 
-export const userIndexAtom = atom<number>({
+export const userIdxAtom = atom<number | null>({
   key: `userIdx${uuid()}`,
-  default: 0,
+  default: null,
 });
 export const myIndicatorAtom = atom<boolean>({
   key: `myIndicator${uuid()}`,

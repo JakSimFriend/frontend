@@ -10,7 +10,7 @@ import {
 } from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../common/atom";
+import { userIdxAtom } from "../../../../../common/atom";
 
 type RouteParams = {
   route: {
@@ -22,7 +22,7 @@ type RouteParams = {
 
 export const ProgressPageInfo = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {

@@ -21,7 +21,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { profileIndicatorAtom, userIndexAtom } from "../../../../common/atom";
+import { profileIndicatorAtom, userIdxAtom } from "../../../../common/atom";
 
 type ImageType = {
   name?: string | undefined;
@@ -31,7 +31,7 @@ type ImageType = {
 
 export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavParamList>) {
   const [profileIndicator, setProfileIndicator] = useRecoilState(profileIndicatorAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const [promise, setPromise] = useState("");
   const [disable, setDisable] = useState(true);
   const [textInputBorderColor, setTextInputBorderColor] = useState("#6F81A9");

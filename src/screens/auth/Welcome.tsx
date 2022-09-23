@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Platform, SafeAreaView, StatusBar, View } from "react-native";
 
 import styled from "styled-components/native";
@@ -7,6 +7,7 @@ import LinearGradient from "react-native-linear-gradient";
 
 import { GoogleSignIn } from "./GoogleLogin";
 import { useAutoLogin } from "@src/hook/useAutoLogin";
+import { useUserInfo } from "@src/hook/useUserInfo";
 
 const Welcome = () => {
   // 자동 로그인

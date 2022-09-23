@@ -11,7 +11,7 @@ import {
 } from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { onDevelopModalAtom, userIndexAtom } from "../../../../../common/atom";
+import { onDevelopModalAtom, userIdxAtom } from "../../../../../common/atom";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {
@@ -27,7 +27,7 @@ export const BeforeStartPageInfo = ({ route }: RouteParams) => {
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
 
   const [data, setData]: any = useState([]);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   useEffect(() => {
     axios
       .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/detail`)

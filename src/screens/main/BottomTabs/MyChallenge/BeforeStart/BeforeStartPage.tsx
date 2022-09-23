@@ -22,7 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { userIndexAtom } from "../../../../../common/atom";
+import { userIdxAtom } from "../../../../../common/atom";
 import { useRecoilValue } from "recoil";
 
 type RouteParams = {
@@ -35,7 +35,7 @@ type RouteParams = {
 
 export const BeforeStartPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
 
   const [data, setData]: any = useState([]);
   useEffect(() => {

@@ -24,7 +24,7 @@ export default function SignInModal({ visible }: SignInModal1Props) {
             onPress={() => {
               setModalVisible(false);
               setTimeout(() => {
-                setIsUser(true);
+                setIsUser("success");
               }, 200);
             }}
           >

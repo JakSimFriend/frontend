@@ -13,7 +13,7 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserStatusAtom, userIndexAtom } from "../../../common/atom";
+import { isLoggedInAtom, isUserStatusAtom, userIdxAtom } from "../../../common/atom";
 import { unlink } from "@react-native-seoul/kakao-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -31,7 +31,7 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
   const upValue = new Animated.Value(-500);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserStatusAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
 
   const sheetUp = () => {
     Animated.timing(upValue, {
@@ -87,7 +87,7 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
     AsyncStorage.removeItem("userIdx");
     AsyncStorage.removeItem("fcmtoken");
     setIsLoggedIn(false);
-    setIsUser(false);
+    setIsUser('none');
   };
 
   const signOutPatch = () => {

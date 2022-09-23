@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { launchImageLibrary } from "react-native-image-picker";
 import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { CertifiedAtom, CertifiedFailAtom, userIndexAtom } from "../../../../../common/atom";
+import { CertifiedAtom, CertifiedFailAtom, userIdxAtom } from "../../../../../common/atom";
 import CertifiedModal from "../../../../../components/organisms/Modal/CertifiedModal";
 import CertifiedFailModal from "../../../../../components/organisms/Modal/CertifiedFailModal";
 
@@ -31,7 +31,7 @@ export const ProgressCertified = ({ route }: RouteParams) => {
   const [certified, setCertified] = useState(false);
   const [modalVisible, setModalVisible] = useRecoilState(CertifiedAtom);
   const [modalTwoVisible, setModalTwoVisible] = useRecoilState(CertifiedFailAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const [modalIndex, setModalIndex] = useState(10);
   const [certifiedPercent, setCertifiedPercent]: any = useState([]);
 

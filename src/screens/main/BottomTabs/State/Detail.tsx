@@ -6,14 +6,14 @@ import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../common/atom";
+import { userIdxAtom } from "../../../../common/atom";
 
 export const Detail = () => {
   const icons = [a, b, c, d, e, f, g, h];
   const navigation = useNavigation();
   const [detailEmpty, setDetailEmpty] = useState(true);
   const [detailData, setDetailData]: any = useState([]);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   useEffect(() => {
     axios
       .get(`https://jaksimfriend.site/status/${userIdx}/detail`)

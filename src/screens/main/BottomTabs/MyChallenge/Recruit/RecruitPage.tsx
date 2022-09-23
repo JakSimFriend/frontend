@@ -22,7 +22,7 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../common/atom";
+import { userIdxAtom } from "../../../../../common/atom";
 
 type RouteParams = {
   route: {
@@ -34,7 +34,7 @@ type RouteParams = {
 
 export const RecruitPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
 
   const [recruitPageData, setRecruitPageData]: any = useState([]);
   useEffect(() => {

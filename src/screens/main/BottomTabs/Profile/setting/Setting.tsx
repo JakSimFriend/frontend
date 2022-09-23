@@ -9,7 +9,7 @@ import { SettingNavParamList } from "../../../../../navigation/SettingNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../common/atom";
+import { userIdxAtom } from "../../../../../common/atom";
 import { Color } from "@src/assets/color";
 import SelectModal from "@src/components/organisms/Modal/SelectModal";
 import { LogOutWithKakao } from "@src/components/molecules/authentication/LogoutButton";
@@ -18,7 +18,7 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
   const [switchEnable, setSwitchEnable] = useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
 
   useEffect(() => {
     AsyncStorage.getItem("alertButton").then((value) => {

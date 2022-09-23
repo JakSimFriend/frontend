@@ -6,14 +6,14 @@ import { Wrapper } from "../../../../styles/styles";
 import axios from "axios";
 import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { useRecoilValue } from "recoil";
-import { stateIndicatorAtom, userIndexAtom } from "../../../../common/atom";
+import { stateIndicatorAtom, userIdxAtom } from "../../../../common/atom";
 
 export const MyState = React.memo(() => {
   const icons = [a, b, c, d, e, f, g, h];
   const [statData, setStatData]: any = useState([]);
   const [categoryEmpty, setCategoryEmpty] = useState(false);
   const stateIndicator = useRecoilValue(stateIndicatorAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const getData = () => {
     axios
       .get(`https://jaksimfriend.site/status/${userIdx}`)

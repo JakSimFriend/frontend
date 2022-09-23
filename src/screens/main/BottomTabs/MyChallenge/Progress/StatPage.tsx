@@ -5,13 +5,13 @@ import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { progressIndexAtom, recieveModalAtom, userIndexAtom } from "../../../../../common/atom";
+import { progressIndexAtom, recieveModalAtom, userIdxAtom } from "../../../../../common/atom";
 import RecieveModal from "../../../../../components/organisms/Modal/RecieveModal";
 import axios from "axios";
 
 export const StatPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const todayDate = moment(new Date()).format("YYYY/MM/DD일 hh:mm 기준");
   const [received, setReceived] = useState(false);
   const [graphColor, setGraphColor] = useState("#947BEA");

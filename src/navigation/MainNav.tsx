@@ -17,7 +17,7 @@ import {
   tagsAtom,
   timeAtom,
   titleAtom,
-  userIndexAtom,
+  userIdxAtom,
 } from "../common/atom";
 import {
   Category,
@@ -52,7 +52,6 @@ import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/HomeChallenge
 import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/ProgressPageInfo";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { ProgressTopbarNav } from "./BottomTabs/MyChallenge/ProgressTopbarNav";
-import { useGetToken } from "@src/hook/useAutoLogin";
 
 const Stack = createStackNavigator();
 
@@ -73,12 +72,7 @@ const MainNav = () => {
   const goToMyChallenge = () => navigation.navigate("내챌린지");
   const goBack = () => navigation.goBack();
 
-  const [userIdx, setUserIdx] = useRecoilState(userIndexAtom);
-  useEffect(() => {
-    AsyncStorage.getItem("userIdx").then((value: any) => {
-      setUserIdx(parseInt(value));
-    });
-  }, []);
+  const [userIdx, setUserIdx] = useRecoilState(userIdxAtom);
 
   // signOut
   const signOutPatch = () => {
@@ -103,7 +97,7 @@ const MainNav = () => {
     AsyncStorage.removeItem("userIdx");
     AsyncStorage.removeItem("fcmtoken");
     setIsLoggedIn(false);
-    setIsUser(false);
+    setIsUser("none");
   };
 
   // 챌린지 개설
@@ -141,7 +135,6 @@ const MainNav = () => {
         console.warn(error);
       });
   };
-  console.log(isUser);
   return (
     <>
       {isLoggedIn ? (
@@ -154,7 +147,7 @@ const MainNav = () => {
             headerBackTitleVisible: false,
           }}
         >
-          {isUser ? (
+          {isUser === "success" ? (
             <Stack.Screen name="Home" component={LoggedInNav} />
           ) : (
             <>

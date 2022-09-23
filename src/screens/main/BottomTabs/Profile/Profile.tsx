@@ -19,7 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { Color } from "@src/assets/color";
 import { ProfileNavParamList } from "@src/navigation/BottomTabs/ProfileNav";
 
-import { profileIndicatorAtom, userIndexAtom } from "@src/common/atom";
+import { profileIndicatorAtom, userIdxAtom } from "@src/common/atom";
 import ModalComponent from "@src/components/organisms/Modal/Modal";
 import { UserInfo } from "./interface/user.interface";
 import SelectModal from "@src/components/organisms/Modal/SelectModal";
@@ -33,7 +33,7 @@ const pointIconName = [
 ]; //Ionicons
 
 export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) => {
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const profileIndicator = useRecoilValue(profileIndicatorAtom);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isDeveloperModalVisible, setIsDeveloperModalVisible] = useState<boolean>(false);

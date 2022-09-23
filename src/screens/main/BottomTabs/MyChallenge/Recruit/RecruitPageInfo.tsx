@@ -11,7 +11,7 @@ import {
 } from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { onDevelopModalAtom, userIndexAtom } from "../../../../../common/atom";
+import { onDevelopModalAtom, userIdxAtom } from "../../../../../common/atom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
@@ -25,7 +25,7 @@ type RouteParams = {
 
 export const RecruitPageInfo = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
 
   const [data, setData]: any = useState([]);

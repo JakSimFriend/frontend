@@ -25,7 +25,7 @@ import {
   progressIndexAtom,
   progressTitleAtom,
   reactionModalAtom,
-  userIndexAtom,
+  userIdxAtom,
 } from "../../../../common/atom";
 import { Emo } from "../../../../assets/images/images";
 import { useNavigation } from "@react-navigation/native";
@@ -95,7 +95,7 @@ export const Progress = React.memo(() => {
   const [emoticonIndex, setEmoticonIndex] = useState(10);
 
   // data
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const [listEmpty, setListEmpty] = useState(false);
   const [progressDatas, setProgressDatas]: any = useState([]);
   const getData = () => {

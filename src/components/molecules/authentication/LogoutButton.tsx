@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, userIndexAtom } from "../../../common/atom";
+import { isLoggedInAtom, userIdxAtom } from "../../../common/atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logout } from "@react-native-seoul/kakao-login";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -9,7 +9,7 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export const LogOutWithKakao = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const logOutDelete = () => {
     axios
       .delete(`https://jaksimfriend.site/users/${userIdx}/logout`)

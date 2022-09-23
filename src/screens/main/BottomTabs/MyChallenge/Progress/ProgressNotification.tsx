@@ -9,7 +9,7 @@ import {
   onDevelopModalAtom,
   progressIndexAtom,
   reportModalOne,
-  userIndexAtom,
+  userIdxAtom,
 } from "../../../../../common/atom";
 import axios from "axios";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
@@ -18,7 +18,7 @@ export const ProgressNotification = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
   const setModalOneVisible = useSetRecoilState(reportModalOne);
   const setModalTwoVisible = useSetRecoilState(onDevelopModalAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
   const [notificationData, setNotificationData]: any = useState([]);
   const [listEmpty, setListEmpty] = useState(false);
 

@@ -7,7 +7,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
-import { myIndicatorAtom, userIndexAtom } from "../../../../common/atom";
+import { myIndicatorAtom, userIdxAtom } from "../../../../common/atom";
 
 type StackParamList = {
   RecruitPage: {
@@ -26,7 +26,7 @@ type NavigationProps = StackNavigationProp<StackParamList>;
 export const Request = () => {
   const navigation = useNavigation<NavigationProps>();
   const myIndicator = useRecoilValue(myIndicatorAtom);
-  const userIdx = useRecoilValue(userIndexAtom);
+  const userIdx = useRecoilValue(userIdxAtom);
 
   const [listEmpty, setListEmpty] = useState(false);
   const [recruitData, setRecruitData]: any = useState([]);
