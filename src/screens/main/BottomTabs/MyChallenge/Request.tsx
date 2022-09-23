@@ -7,7 +7,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
-import { myIndicatorAtom, userIndexAtom } from "../../../../../atom";
+import { myIndicatorAtom, userIndexAtom } from "../../../../common/atom";
 
 type StackParamList = {
   RecruitPage: {

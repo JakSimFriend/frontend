@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilState } from "recoil";
-import { onDevelopModalAtom } from "../../../../atom";
+import { onDevelopModalAtom } from "../../../common/atom";
 
 export default function OnDevelopModal() {
   const [modalTwoVisible, setModalTwoVisible] = useRecoilState(onDevelopModalAtom);

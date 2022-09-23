@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { useRecoilState } from "recoil";
 import styled from "styled-components/native";
-import { categoryIndexAtom } from "../../../../atom";
+import { categoryIndexAtom } from "../../../common/atom";
 import { a, b, c, d, e, f, g, h } from "../../../assets/images/images";
 
 export const HomeCategory = () => {

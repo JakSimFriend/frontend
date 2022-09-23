@@ -11,7 +11,7 @@ import {
 } from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { onDevelopModalAtom, userIndexAtom } from "../../../../../../atom";
+import { onDevelopModalAtom, userIndexAtom } from "../../../../../common/atom";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {

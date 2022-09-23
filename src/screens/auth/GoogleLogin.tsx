@@ -2,14 +2,14 @@ import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "rea
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserAtom } from "../../../atom";
+import { isLoggedInAtom, isUserStatusAtom } from "../../common/atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
 
 export const GoogleSignIn = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-  const setIsUser = useSetRecoilState(isUserAtom);
+  const setIsUser = useSetRecoilState(isUserStatusAtom);
   const [fcmToken, setFcmToken]: any = useState();
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+// TODO
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -12,7 +13,7 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserAtom, userIndexAtom } from "../../../../atom";
+import { isLoggedInAtom, isUserStatusAtom, userIndexAtom } from "../../../common/atom";
 import { unlink } from "@react-native-seoul/kakao-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -29,7 +30,7 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const upValue = new Animated.Value(-500);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-  const setIsUser = useSetRecoilState(isUserAtom);
+  const setIsUser = useSetRecoilState(isUserStatusAtom);
   const userIdx = useRecoilValue(userIndexAtom);
 
   const sheetUp = () => {
@@ -102,36 +103,37 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
 
   return (
     <Modal visible={visible} transparent={true}>
-      <TouchableOpacity style={{ height: "100%" }} activeOpacity={1} onPress={hideBottomSheet}>
-        <View style={styles.back} accessible={false}>
-          <Animated.View style={[styles.containerView, { bottom: upValue }]}>
-            <TouchableOpacity style={styles.containerTouchableOpacity} activeOpacity={1}>
-              <Text style={styles.title}>작심친구를{"\n"}탈퇴하시겠어요?</Text>
-              <Text style={styles.title2}>
-                한번 탈퇴하면 3개월간 재가입할 수 없어요{"\n"}탈퇴를 원하시면 아래에 탈퇴라고
-                적어주세요
+      <TouchableOpacity
+        style={{ ...styles.back, height: "100%" }}
+        onPress={() => {
+          console.log(11);
+        }}
+      ></TouchableOpacity>
+      <Animated.View style={[styles.containerView, { bottom: upValue }]}>
+        <TouchableOpacity style={styles.containerTouchableOpacity} activeOpacity={1}>
+          <Text style={styles.title}>작심친구를{"\n"}탈퇴하시겠어요?</Text>
+          <Text style={styles.title2}>
+            한번 탈퇴하면 3개월간 재가입할 수 없어요{"\n"}탈퇴를 원하시면 아래에 탈퇴라고 적어주세요
+          </Text>
+          <TextInput
+            style={[styles.textInput, { borderColor: textInputBorderColor }]}
+            placeholder="탈퇴"
+            value={text}
+            onChangeText={setText}
+            onChange={onChange}
+          />
+          <TouchableOpacity onPress={KakaoSignOut} disabled={buttonDisabled}>
+            <LinearGradient
+              style={styles.linearGradient}
+              colors={buttonDisabled ? ["#F5F5FB", "#F5F5FB"] : ["#947BEA", "#1151E5"]}
+            >
+              <Text style={[styles.buttonText, { color: buttonDisabled ? "#6F81A9" : "#fff" }]}>
+                탈퇴하기
               </Text>
-              <TextInput
-                style={[styles.textInput, { borderColor: textInputBorderColor }]}
-                placeholder="탈퇴"
-                value={text}
-                onChangeText={setText}
-                onChange={onChange}
-              />
-              <TouchableOpacity onPress={KakaoSignOut} disabled={buttonDisabled}>
-                <LinearGradient
-                  style={styles.linearGradient}
-                  colors={buttonDisabled ? ["#F5F5FB", "#F5F5FB"] : ["#947BEA", "#1151E5"]}
-                >
-                  <Text style={[styles.buttonText, { color: buttonDisabled ? "#6F81A9" : "#fff" }]}>
-                    탈퇴하기
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-      </TouchableOpacity>
+            </LinearGradient>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Animated.View>
     </Modal>
   );
 }
@@ -139,7 +141,7 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
 const styles = StyleSheet.create({
   back: {
     backgroundColor: "#1016474D",
-    flex: 1,
+    // flex: 1,
   },
   containerView: {
     position: "absolute",

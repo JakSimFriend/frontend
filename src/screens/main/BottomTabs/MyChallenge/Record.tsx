@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
-import { progressIndexAtom, progressTitleAtom, userIndexAtom } from "../../../../../atom";
+import { progressIndexAtom, progressTitleAtom, userIndexAtom } from "../../../../common/atom";
 import RecieveModal from "../../../../components/organisms/Modal/RecieveModal";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";

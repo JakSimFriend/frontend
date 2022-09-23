@@ -9,7 +9,7 @@ import { SettingNavParamList } from "../../../../../navigation/SettingNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../../atom";
+import { userIndexAtom } from "../../../../../common/atom";
 import { Color } from "@src/assets/color";
 import SelectModal from "@src/components/organisms/Modal/SelectModal";
 import { LogOutWithKakao } from "@src/components/molecules/authentication/LogoutButton";
@@ -161,7 +161,6 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
           style={{ height: 1, width: "100%", backgroundColor: Color.white[100], marginTop: 10 }}
         />
       </ScrollView>
-      {/* <LogoutModal visible={logoutModalVisible} setVisible={setLogoutModalVisible} /> */}
       <SelectModal
         visible={logoutModalVisible}
         title="로그아웃 하시겠어요?"

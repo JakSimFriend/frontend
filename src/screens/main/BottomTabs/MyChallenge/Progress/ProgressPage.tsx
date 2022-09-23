@@ -14,7 +14,7 @@ import { GradientButtons } from "../../../../../components/atoms/GradientButtons
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { progressIndexAtom, userIndexAtom } from "../../../../../../atom";
+import { progressIndexAtom, userIndexAtom } from "../../../../../common/atom";
 
 export const ProgressPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);

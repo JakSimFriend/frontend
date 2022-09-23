@@ -1,63 +1,16 @@
 import React, { useEffect } from "react";
-import { Platform, SafeAreaView, StatusBar, Text, View } from "react-native";
-import { useSetRecoilState } from "recoil";
+import { Platform, SafeAreaView, StatusBar, View } from "react-native";
+
 import styled from "styled-components/native";
-import { isLoggedInAtom, isUserAtom } from "../../../atom";
-import { GradientButtons } from "../../components/atoms/GradientButtons";
 import { KakaoSignIn } from "./KakaoLogin";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import LinearGradient from "react-native-linear-gradient";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
 import { GoogleSignIn } from "./GoogleLogin";
-import messaging from "@react-native-firebase/messaging";
+import { useAutoLogin } from "@src/hook/useAutoLogin";
 
 const Welcome = () => {
-  const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-  const setIsUser = useSetRecoilState(isUserAtom);
-  const googleSigninConfigure = () => {
-    GoogleSignin.configure({
-      webClientId: "1089968001443-hhtv80b2qgauhm32e9bor0s22g8oq5nd.apps.googleusercontent.com",
-      offlineAccess: true,
-      forceCodeForRefreshToken: true,
-    });
-  };
-  const getFCMToken = async () => {
-    try {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-        await AsyncStorage.setItem("fcmtoken", fcmToken);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    // 자동로그인
-    AsyncStorage.getItem("jwt").then((value) => {
-      if (value != null) {
-        // jwt 불러오기
-        const getJwt = async () => {
-          try {
-            const savedJwt: any = await AsyncStorage.getItem("jwt");
-            axios.defaults.headers.common["X-ACCESS-TOKEN"] = savedJwt;
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        getJwt();
-
-        setIsLoggedIn(true);
-        setIsUser(true);
-      } else {
-        console.log("jwt없음");
-      }
-    });
-    // 구글로그인-파이어베이스 연동
-    googleSigninConfigure();
-    getFCMToken();
-  }, []);
-
+  // 자동 로그인
+  useAutoLogin();
   return (
     <>
       <StatusBar barStyle={"default"} backgroundColor={"#947BEA"}></StatusBar>

@@ -22,7 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { userIndexAtom } from "../../../../../../atom";
+import { userIndexAtom } from "../../../../../common/atom";
 import { useRecoilValue } from "recoil";
 
 type RouteParams = {

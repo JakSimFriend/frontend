@@ -5,7 +5,7 @@ import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { progressIndexAtom, recieveModalAtom, userIndexAtom } from "../../../../../../atom";
+import { progressIndexAtom, recieveModalAtom, userIndexAtom } from "../../../../../common/atom";
 import RecieveModal from "../../../../../components/organisms/Modal/RecieveModal";
 import axios from "axios";
 

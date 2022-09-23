@@ -20,7 +20,7 @@ import {
 import { GradientButtons } from "../../../components/atoms/GradientButtons";
 import ChallengeApplyModal from "../../../components/organisms/Modal/ChallengeApplyModal";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { applyModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../atom";
+import { applyModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../common/atom";
 import axios from "axios";
 import LinearGradient from "react-native-linear-gradient";
 import OnDevelopModal from "../../../components/organisms/Modal/OnDevelopModal";

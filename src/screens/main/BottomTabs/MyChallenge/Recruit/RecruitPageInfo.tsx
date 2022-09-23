@@ -11,7 +11,7 @@ import {
 } from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { onDevelopModalAtom, userIndexAtom } from "../../../../../../atom";
+import { onDevelopModalAtom, userIndexAtom } from "../../../../../common/atom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 

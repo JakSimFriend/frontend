@@ -21,7 +21,7 @@ import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { cancelModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../../../atom";
+import { cancelModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../../common/atom";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {

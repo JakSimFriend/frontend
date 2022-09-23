@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components/native";
-import { SignInAtom, userIndexAtom } from "../../../atom";
+import { SignInAtom, userIndexAtom } from "../../common/atom";
 import { GradientButtons } from "../../components/atoms/GradientButtons";
 import moment from "moment";
 import DateTimePicker from "react-native-modal-datetime-picker";

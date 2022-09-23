@@ -19,7 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { Color } from "@src/assets/color";
 import { ProfileNavParamList } from "@src/navigation/BottomTabs/ProfileNav";
 
-import { profileIndicatorAtom, userIndexAtom } from "@src/../atom";
+import { profileIndicatorAtom, userIndexAtom } from "@src/common/atom";
 import ModalComponent from "@src/components/organisms/Modal/Modal";
 import { UserInfo } from "./interface/user.interface";
 import SelectModal from "@src/components/organisms/Modal/SelectModal";

@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { userIndexAtom } from "../../../../atom";
+import { userIndexAtom } from "../../../common/atom";
 import { useRecoilValue } from "recoil";
 
 export const Notifications = () => {

@@ -10,7 +10,7 @@ import {
   progressIndexAtom,
   reportModalOne,
   userIndexAtom,
-} from "../../../../../../atom";
+} from "../../../../../common/atom";
 import axios from "axios";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 

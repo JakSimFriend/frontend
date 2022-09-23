@@ -18,8 +18,8 @@ import NickNameModal2 from "../../components/organisms/Modal/NickNameModal2";
 import NickNameModal3 from "../../components/organisms/Modal/NickNameModal3";
 import NickNameModal4 from "../../components/organisms/Modal/NickNameModal4";
 import axios from "axios";
-import { isLoggedInAtom, isUserAtom, userIndexAtom } from "../../../atom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isLoggedInAtom, isUserStatusAtom, jwtAtom, userIndexAtom } from "../../common/atom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { unlink } from "@react-native-seoul/kakao-login";
 
@@ -27,7 +27,7 @@ export const NickName = () => {
   const navigation = useNavigation();
   const userIdx = useRecoilValue(userIndexAtom);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-  const setIsUser = useSetRecoilState(isUserAtom);
+  const setIsUser = useSetRecoilState(isUserStatusAtom);
 
   useEffect(() => {
     // 닉네임에서 앱 닫을 시 = 백버튼 누른것과 동일하게 signOut
@@ -35,7 +35,6 @@ export const NickName = () => {
       if (nextState === "background") {
         const kakaoSignOut = async (): Promise<void> => {
           const message = await unlink();
-          console.log(message);
           AsyncStorage.removeItem("jwt");
           AsyncStorage.removeItem("userIdx");
           AsyncStorage.removeItem("fcmtoken");
@@ -82,19 +81,17 @@ export const NickName = () => {
         nickName: nickName,
       })
       .then(function (response) {
-        console.warn(response.data)
+        console.warn(response.data);
         if (response.data.code === 3015) {
           setModalVisible2(true);
           setGuideColor3(BLACK);
           setNickNameColor(RED);
           setButtonColor1(GREY_BUTTON);
-          console.warn("ㅇㅇ")
         } else if (response.data.code === 1000) {
           setModalVisible1(true);
           setButtonColor1(BLACK);
           setGuideColor3(BLUE);
           setNickNameColor(BLUE);
-          console.warn("ㅇㅇㅇ")
         }
       })
       .catch(function (error) {

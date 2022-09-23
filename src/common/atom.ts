@@ -5,14 +5,19 @@ export const isLoggedInAtom = atom<boolean>({
   key: `loggedIn${uuid()}`,
   default: false,
 });
-export const isUserAtom = atom<boolean>({
+export const isUserStatusAtom = atom<"none" | "pending" | "success">({
   key: `isUser${uuid()}`,
-  default: false,
+  default: "none",
 });
 export const jwtAtom = atom<string>({
   key: `jwt${uuid()}`,
   default: "",
 });
+export const userInfoAtom = atom<{}>({
+  key: `userInfo${uuid()}`,
+  default: {},
+});
+
 export const userIndexAtom = atom<number>({
   key: `userIdx${uuid()}`,
   default: 0,

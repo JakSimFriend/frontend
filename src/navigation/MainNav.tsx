@@ -7,7 +7,7 @@ import {
   dateAtom,
   infoAtom,
   isLoggedInAtom,
-  isUserAtom,
+  isUserStatusAtom,
   nextButtonAtom,
   numberAtom,
   progressTitleAtom,
@@ -18,7 +18,7 @@ import {
   timeAtom,
   titleAtom,
   userIndexAtom,
-} from "../../atom";
+} from "../common/atom";
 import {
   Category,
   ChallengeOpenOne,
@@ -52,11 +52,13 @@ import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/HomeChallenge
 import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/ProgressPageInfo";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { ProgressTopbarNav } from "./BottomTabs/MyChallenge/ProgressTopbarNav";
+import { useGetToken } from "@src/hook/useAutoLogin";
 
 const Stack = createStackNavigator();
 
 const MainNav = () => {
-  const [isUser, setIsUser] = useRecoilState(isUserAtom);
+  // useGetToken();
+  const [isUser, setIsUser] = useRecoilState(isUserStatusAtom);
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const nextButtonDisable = useRecoilValue(nextButtonAtom);
@@ -71,7 +73,7 @@ const MainNav = () => {
   const goToMyChallenge = () => navigation.navigate("내챌린지");
   const goBack = () => navigation.goBack();
 
-  const [userIndex, setUserIdx] = useRecoilState(userIndexAtom);
+  const [userIdx, setUserIdx] = useRecoilState(userIndexAtom);
   useEffect(() => {
     AsyncStorage.getItem("userIdx").then((value: any) => {
       setUserIdx(parseInt(value));
@@ -81,7 +83,7 @@ const MainNav = () => {
   // signOut
   const signOutPatch = () => {
     axios
-      .patch(`https://jaksimfriend.site/users/${userIndex}/delete`)
+      .patch(`https://jaksimfriend.site/users/${userIdx}/delete`)
       .then(function (response) {
         console.log(response.data.result);
       })
@@ -123,7 +125,7 @@ const MainNav = () => {
         count: number,
         deadline: time,
         categoryIdx: categoryIdx,
-        userIdx: userIndex,
+        userIdx: userIdx,
         tags: tags.filter(Boolean),
       })
       .then(function (response) {
@@ -139,7 +141,7 @@ const MainNav = () => {
         console.warn(error);
       });
   };
-
+  console.log(isUser);
   return (
     <>
       {isLoggedIn ? (

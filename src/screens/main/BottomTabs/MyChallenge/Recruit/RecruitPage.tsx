@@ -22,7 +22,7 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../../atom";
+import { userIndexAtom } from "../../../../../common/atom";
 
 type RouteParams = {
   route: {

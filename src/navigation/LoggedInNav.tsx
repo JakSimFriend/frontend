@@ -4,7 +4,7 @@ import { ClockIcon, DiamondIcon, HomeIcon, UserIcon } from "../components/atoms/
 import { ProfileNav, StateNav, MyChallengeNav, HomeNav } from ".";
 import { Platform } from "react-native";
 import { useRecoilState } from "recoil";
-import { myIndicatorAtom, stateIndicatorAtom, profileIndicatorAtom } from "../../atom";
+import { myIndicatorAtom, stateIndicatorAtom, profileIndicatorAtom } from "../common/atom";
 
 const Tabs = createBottomTabNavigator();
 

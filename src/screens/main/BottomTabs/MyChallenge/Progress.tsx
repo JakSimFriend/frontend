@@ -26,7 +26,7 @@ import {
   progressTitleAtom,
   reactionModalAtom,
   userIndexAtom,
-} from "../../../../../atom";
+} from "../../../../common/atom";
 import { Emo } from "../../../../assets/images/images";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";

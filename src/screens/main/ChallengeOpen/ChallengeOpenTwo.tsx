@@ -24,7 +24,7 @@ import {
   startDateAtom,
   submitButtonAtom,
   timeAtom,
-} from "../../../../atom";
+} from "../../../common/atom";
 import CreatedModal1 from "../../../components/organisms/Modal/CreatedModal";
 import CreatedModal2 from "../../../components/organisms/Modal/CreatedFailModal";
 import axios from "axios";

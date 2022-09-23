@@ -6,7 +6,7 @@ import { Wrapper } from "../../../../styles/styles";
 import axios from "axios";
 import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { useRecoilValue } from "recoil";
-import { stateIndicatorAtom, userIndexAtom } from "../../../../../atom";
+import { stateIndicatorAtom, userIndexAtom } from "../../../../common/atom";
 
 export const MyState = React.memo(() => {
   const icons = [a, b, c, d, e, f, g, h];

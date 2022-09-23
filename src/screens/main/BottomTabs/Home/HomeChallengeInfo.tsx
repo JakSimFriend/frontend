@@ -26,7 +26,7 @@ import axios from "axios";
 import ChallengeApplyModal from "../../../../components/organisms/Modal/ChallengeApplyModal";
 import OnDevelopModal from "../../../../components/organisms/Modal/OnDevelopModal";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { applyModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../../atom";
+import { applyModalAtom, onDevelopModalAtom, userIndexAtom } from "../../../../common/atom";
 import LinearGradient from "react-native-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";

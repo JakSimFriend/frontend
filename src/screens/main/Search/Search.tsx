@@ -15,7 +15,7 @@ import { SearchIcon } from "../../../components/atoms/TabIcon";
 import { GradientButtons } from "../../../components/atoms/GradientButtons";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../components/atoms/TabIcon";
 import axios from "axios";
-import { userIndexAtom } from "../../../../atom";
+import { userIndexAtom } from "../../../common/atom";
 import { useRecoilValue } from "recoil";
 import { SearchCategory } from "../../../components/molecules/categories/SearchCategory";
 

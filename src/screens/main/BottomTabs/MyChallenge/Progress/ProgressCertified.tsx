@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { launchImageLibrary } from "react-native-image-picker";
 import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { CertifiedAtom, CertifiedFailAtom, userIndexAtom } from "../../../../../../atom";
+import { CertifiedAtom, CertifiedFailAtom, userIndexAtom } from "../../../../../common/atom";
 import CertifiedModal from "../../../../../components/organisms/Modal/CertifiedModal";
 import CertifiedFailModal from "../../../../../components/organisms/Modal/CertifiedFailModal";
 

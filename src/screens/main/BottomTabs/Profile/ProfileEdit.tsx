@@ -21,7 +21,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { profileIndicatorAtom, userIndexAtom } from "../../../../../atom";
+import { profileIndicatorAtom, userIndexAtom } from "../../../../common/atom";
 
 type ImageType = {
   name?: string | undefined;

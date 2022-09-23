@@ -3,7 +3,7 @@ import React from "react";
 import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSetRecoilState } from "recoil";
-import { CertifiedAtom } from "../../../../atom";
+import { CertifiedAtom } from "../../../common/atom";
 import * as ProgressBar from "react-native-progress";
 
 export interface Certified1Props {

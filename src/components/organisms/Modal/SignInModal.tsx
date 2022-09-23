@@ -3,7 +3,7 @@ import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSetRecoilState } from "recoil";
-import { isUserAtom, SignInAtom } from "../../../../atom";
+import { isUserStatusAtom, SignInAtom } from "../../../common/atom";
 
 export interface SignInModal1Props {
   visible: boolean;
@@ -13,7 +13,7 @@ export default function SignInModal({ visible }: SignInModal1Props) {
   const navigation = useNavigation();
   const goHome = () => navigation.navigate("Home");
   const setModalVisible = useSetRecoilState(SignInAtom);
-  const setIsUser = useSetRecoilState(isUserAtom);
+  const setIsUser = useSetRecoilState(isUserStatusAtom);
   return (
     <Modal visible={visible} transparent={true}>
       <View style={styles.background}>

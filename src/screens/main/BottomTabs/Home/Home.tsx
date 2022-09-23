@@ -9,7 +9,7 @@ import { appleAuth, appleAuthAndroid } from "@invertase/react-native-apple-authe
 import { v4 as uuid } from "uuid";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../atom";
+import { userIndexAtom } from "../../../../common/atom";
 import { HomeCategory } from "../../../../components/molecules/categories/HomeCategory";
 import { HomeLists } from "../../../../components/molecules/challengeLists/HomeLists";
 

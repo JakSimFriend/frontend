@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import { KakaoOAuthToken, login, logout } from "@react-native-seoul/kakao-login";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserAtom, userIndexAtom } from "../../../atom";
+import { isLoggedInAtom, isUserStatusAtom, userIndexAtom } from "../../common/atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export const KakaoSignIn = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-  const setIsUser = useSetRecoilState(isUserAtom);
+  const setIsUser = useSetRecoilState(isUserStatusAtom);
   const [fcmToken, setFcmToken]: any = useState();
 
   // useEffect(() => {

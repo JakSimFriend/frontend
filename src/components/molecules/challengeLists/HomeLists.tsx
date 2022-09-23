@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HomeCalendar, HomeClock, HomeUser } from "../../../components/atoms/TabIcon";
 import styled from "styled-components/native";
 import { ScrollView, TouchableOpacity } from "react-native";
-import { categoryIndexAtom } from "../../../../atom";
+import { categoryIndexAtom } from "../../../common/atom";
 import { useRecoilValue } from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -31,7 +31,7 @@ export const HomeLists = () => {
     AsyncStorage.getItem("userIdx").then((value) => {
       const userIdx = value;
       axios
-        .get(`https://jaksimfriend.site/challenges/${categoryIndex + 1}/${userIdx}/home`)
+        .get(`challenges/${categoryIndex + 1}/${userIdx}/home`)
         .then(function (response) {
           if (response.data.result === undefined) {
             setListEmpty(true);

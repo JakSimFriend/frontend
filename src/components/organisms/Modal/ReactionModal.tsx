@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { reactionModalAtom } from "../../../../atom";
+import { reactionModalAtom } from "../../../common/atom";
 
 export default function ReactionModal() {
   const modalVisible = useRecoilValue(reactionModalAtom);

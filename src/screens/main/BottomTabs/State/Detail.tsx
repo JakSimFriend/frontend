@@ -6,7 +6,7 @@ import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../atom";
+import { userIndexAtom } from "../../../../common/atom";
 
 export const Detail = () => {
   const icons = [a, b, c, d, e, f, g, h];

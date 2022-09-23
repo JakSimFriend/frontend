@@ -10,7 +10,7 @@ import {
 } from "../../../../../components/atoms/TabIcon";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { userIndexAtom } from "../../../../../../atom";
+import { userIndexAtom } from "../../../../../common/atom";
 
 type RouteParams = {
   route: {
