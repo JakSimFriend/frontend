@@ -16,6 +16,7 @@ import * as R from "ramda";
 import { UserInfo } from "@src/screens/main/BottomTabs/Profile/interface/user.interface";
 
 const getUserInfo = (userId: number) => axios.get(`/profiles/${userId}`);
+const getUserIdx = () => axios.get("/users/idx");
 
 const googleSigninConfigure = () => {
   GoogleSignin.configure({
@@ -54,17 +55,30 @@ export const useAutoLogin = () => {
   };
   const getIdx = async () => {
     try {
-      const idx: string | null = await AsyncStorage.getItem("userIdx");
-      if (RA.isNilOrEmpty(idx)) console.log("TODO");
-      setUserIdx(Number(idx));
-      getUserInfo(Number(idx)).then(({ data }) => {
-        const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
-        if (RA.isNilOrEmpty(userInfo.nickName)) {
-          setIsUserStatus("pending");
-        }
-        setIsUserStatus("success");
-        setUserInfo(userInfo);
-      });
+      let idx: string | null = await AsyncStorage.getItem("userIdx");
+      if (RA.isNilOrEmpty(idx)) {
+        getUserIdx().then(({data}) => {
+          setUserIdx(Number(data.result))
+          getUserInfo(Number(data.result)).then(({ data }) => {
+            const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
+            if (RA.isNilOrEmpty(userInfo.nickName)) {
+              setIsUserStatus("pending");
+            }
+            setIsUserStatus("success");
+            setUserInfo(userInfo);
+          });
+        });
+      } else {
+        setUserIdx(Number(idx));
+        getUserInfo(Number(idx)).then(({ data }) => {
+          const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
+          if (RA.isNilOrEmpty(userInfo.nickName)) {
+            setIsUserStatus("pending");
+          }
+          setIsUserStatus("success");
+          setUserInfo(userInfo);
+        });
+      }
     } catch (error) {
       console.log(error);
     }

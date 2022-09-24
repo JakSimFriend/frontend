@@ -1,22 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Animated, ScrollView, StatusBar } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
-import { SearchIcon } from "../../../../components/atoms/TabIcon";
-import { GradientButtons } from "../../../../components/atoms/GradientButtons";
+import { SearchIcon } from "@src/components/atoms/TabIcon";
+import { GradientButtons } from "@src/components/atoms/GradientButtons";
 import auth from "@react-native-firebase/auth";
 import { appleAuth, appleAuthAndroid } from "@invertase/react-native-apple-authentication";
 import { v4 as uuid } from "uuid";
-import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { userIdxAtom } from "../../../../common/atom";
-import { HomeCategory } from "../../../../components/molecules/categories/HomeCategory";
-import { HomeLists } from "../../../../components/molecules/challengeLists/HomeLists";
+import { userInfoAtom } from "@src/common/atom";
+import { HomeCategory } from "@src/components/molecules/categories/HomeCategory";
+import { HomeLists } from "@src/components/molecules/challengeLists/HomeLists";
+import { useUserInfo } from "@src/hook/useUserInfo";
 
 export const Home = React.memo(() => {
+  useUserInfo();
   const navigation = useNavigation();
-  const [userName, setUserName] = useState("유저");
-  const userIdx = useRecoilValue(userIdxAtom);
+  const userInfo = useRecoilValue(userInfoAtom);
   const goToSearch = () => navigation.navigate("Search");
   const goToOpenChallenge = () => navigation.navigate("Category");
 
@@ -111,17 +111,6 @@ export const Home = React.memo(() => {
     // Send the authorization code to your backend for verification
   }
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`https://jaksimfriend.site/profiles/${userIdx}`)
-  //     .then(function (response) {
-  //       setUserName(response.data.result[0].nickName);
-  //       // 닉네임 즉시 반영안됨
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }, []);
   return (
     <HomeWrapper>
       <StatusBar barStyle={"dark-content"}></StatusBar>
@@ -131,7 +120,7 @@ export const Home = React.memo(() => {
         nestedScrollEnabled={true}
       >
         <Title>
-          어서 오세요, {userName}님!{"\n"}천 리 길의 한 걸음도 작심친구와 함께!
+          어서 오세요, {userInfo?.nickName || "유저"}님!{"\n"}천 리 길의 한 걸음도 작심친구와 함께!
         </Title>
         <Animated.View
           style={{

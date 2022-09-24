@@ -14,9 +14,9 @@ export const jwtAtom = atom<string>({
   key: `jwt${uuid()}`,
   default: "",
 });
-export const userInfoAtom = atom<UserInfo | {}>({
+export const userInfoAtom = atom<UserInfo | null>({
   key: `userInfo${uuid()}`,
-  default: {},
+  default: null,
 });
 
 export const userIdxAtom = atom<number | null>({
