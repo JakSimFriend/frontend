@@ -1,13 +1,14 @@
+import axios from "axios";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components/native";
+
 import { SignInAtom, userIdxAtom } from "../../common/atom";
-import { GradientButtons } from "../../components/atoms/GradientButtons";
-import moment from "moment";
-import DateTimePicker from "react-native-modal-datetime-picker";
-import axios from "axios";
-import SignInModal from "../../components/organisms/Modal/SignInModal";
+import { GradientButtons } from "../atoms/GradientButtons";
+import SignInModal from "../organisms/Modal/SignInModal";
 
 export const BirthDay = () => {
   const [visible, setModalVisible] = useRecoilState(SignInAtom);

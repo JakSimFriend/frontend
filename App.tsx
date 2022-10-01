@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import SplashScreen from "react-native-splash-screen";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { RecoilRoot } from "recoil";
-import MainNav from "./src/navigation/MainNav";
-import { QueryClient, QueryClientProvider } from "react-query";
 import "react-native-gesture-handler";
+
 import messaging from "@react-native-firebase/messaging";
+import { NavigationContainer } from "@react-navigation/native";
+import MainNav from "@src/navigation/MainNav";
+import React, { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import SplashScreen from "react-native-splash-screen";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { RecoilRoot } from "recoil";
 
 const queryClient = new QueryClient();
 const App = () => {

@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 export const HomeEmptyLists = () => {
   return (
     <EmptyList>
-      <EmptyListTitle>추천 챌린지</EmptyListTitle>
+      <EmptyListTitle>추천 도전작심</EmptyListTitle>
       <EmptyListBox>
         <EmptyListDetail>아직 도전작심이 없어요</EmptyListDetail>
       </EmptyListBox>

@@ -1,26 +1,36 @@
-import { TouchableOpacity, Text, StyleSheet, Dimensions, Image, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
-import { KakaoOAuthToken, login, logout } from "@react-native-seoul/kakao-login";
-import axios from "axios";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserStatusAtom, userIdxAtom } from "../../common/atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { KakaoOAuthToken, login } from "@react-native-seoul/kakao-login";
+import kakaologo from "@src/assets/images/KakaoLogo.png";
+import { isLoggedInAtom, isUserStatusAtom, userIdxAtom } from "@src/common/atom";
+import { useGetFcmTokenByGoogle } from "@src/hook/useFcm";
+import axios from "axios";
+import * as RA from "ramda-adjunct";
+import React, { useEffect, useState } from "react";
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useSetRecoilState } from "recoil";
 
-export const KakaoSignIn = () => {
+export const KakaoSignInButton = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserStatusAtom);
-  const [fcmToken, setFcmToken]: any = useState();
+  const setUserIdx = useSetRecoilState(userIdxAtom);
+  const [fcmToken, setFcmToken] = useState<string>();
 
-  // useEffect(() => {
-  //   AsyncStorage.getItem("fcmtoken").then((value) => {
-  //     setFcmToken(value);
-  //   });
-  // }, []);
+  useEffect(() => {
+    AsyncStorage.getItem("fcmtoken").then((value) => {
+      if (RA.isNilOrEmpty(value)) useGetFcmTokenByGoogle();
+      else setFcmToken(value as string);
+    });
+  }, []);
 
   const signInWithKakao = async (): Promise<void> => {
-    const token: KakaoOAuthToken = await login();
-    
+    let token: KakaoOAuthToken | null;
+    try {
+      token = await login();
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
     axios
       .post(
         "https://jaksimfriend.site/users/kakao-login",
@@ -28,42 +38,40 @@ export const KakaoSignIn = () => {
         {
           headers: {
             "KAKAO-ACCESS-TOKEN": JSON.stringify(token.accessToken),
-            // "DEVICE-TOKEN": fcmToken,
+            "DEVICE-TOKEN": fcmToken as string,
           },
         },
       )
-      .then(async function (response) {
+      .then((response) => {
         AsyncStorage.multiSet([
           ["jwt", response.data.result.jwt],
           ["userIdx", JSON.stringify(response.data.result.userIdx)],
         ]);
-
         axios.defaults.headers.common["X-ACCESS-TOKEN"] = response.data.result.jwt;
-        await axios
+
+        setUserIdx(response.data.result.userIdx);
+        return axios
           .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
-          .then(function (response) {
+          .then((response) => {
+            // nick name에 따라 유저의 가입 완료 여부 체크
             if (response.data.result[0].nickName === null) {
-              setIsUser('none');
+              setIsUser("none");
             } else {
-              setIsUser('success');
+              setIsUser("success");
             }
             setIsLoggedIn(true);
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
           });
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   };
   return (
     <TouchableOpacity onPress={signInWithKakao} style={styles.kakaoButton}>
-      <Image
-        resizeMode="contain"
-        source={require("../../assets/images/KakaoLogo.png")}
-        style={styles.logo}
-      />
+      <Image resizeMode="contain" source={kakaologo} style={styles.logo} />
       <Text style={{ fontSize: 16, marginLeft: "23%" }}>카카오 로그인</Text>
     </TouchableOpacity>
   );

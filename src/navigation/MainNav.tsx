@@ -1,6 +1,14 @@
-import React, { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { unlink } from "@react-native-seoul/kakao-login";
+import { useNavigation } from "@react-navigation/native";
 import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
+import axios from "axios";
+import React from "react";
+import { Text, TouchableOpacity } from "react-native";
+import ArrowLeft from "react-native-vector-icons/AntDesign";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+
 import {
   createdFailModalAtom,
   createdModalAtom,
@@ -20,38 +28,31 @@ import {
   userIdxAtom,
 } from "../common/atom";
 import {
+  BeforeStartPage,
+  BeforeStartPageInfo,
+  BirthDay,
   Category,
   ChallengeOpenOne,
   ChallengeOpenTwo,
-  Notifications,
+  Detail,
+  NickName,
+  Alert,
+  ProgressCertified,
+  ProgressNotification,
+  Record,
+  RecruitPage,
+  RecruitPageInfo,
+  RequestPage,
   Search,
   SearchChallenge,
-  NickName,
-  Record,
-  RequestPage,
-  Detail,
-  RecruitPage,
-  BeforeStartPage,
-  ProgressNotification,
-  ProgressCertified,
-  BirthDay,
-  BeforeStartPageInfo,
-  RecruitPageInfo,
 } from "../screens/main";
-import SettingNav from "./SettingNav";
-import LoggedInNav from "./LoggedInNav";
-import LoggedOutNav from "./LoggedOutNav";
-import { Text, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import ArrowLeft from "react-native-vector-icons/AntDesign";
-import { unlink } from "@react-native-seoul/kakao-login";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ProfileEdit from "../screens/main/BottomTabs/Profile/ProfileEdit";
-import axios from "axios";
 import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/HomeChallengeInfo";
 import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/ProgressPageInfo";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import ProfileEdit from "../screens/main/BottomTabs/Profile/ProfileEdit";
 import { ProgressTopbarNav } from "./BottomTabs/MyChallenge/ProgressTopbarNav";
+import LoggedInNav from "./LoggedInNav";
+import LoggedOutNav from "./LoggedOutNav";
+import SettingNav from "./SettingNav";
 
 const Stack = createStackNavigator();
 
@@ -147,7 +148,7 @@ const MainNav = () => {
             headerBackTitleVisible: false,
           }}
         >
-          {isUser === "success" ? (
+          {isUser === "success" || isUser === "none" ? (
             <Stack.Screen name="Home" component={LoggedInNav} />
           ) : (
             <>
@@ -210,7 +211,7 @@ const MainNav = () => {
           {/* 우측 상단 페이지들 */}
           <Stack.Screen
             name="Notifications"
-            component={Notifications}
+            component={Alert}
             options={{
               presentation: "transparentModal",
               headerLeft: () => <></>,

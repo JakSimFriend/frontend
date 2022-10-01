@@ -1,28 +1,28 @@
 import Clipboard from "@react-native-clipboard/clipboard";
 import { StackScreenProps } from "@react-navigation/stack";
-import React, { useEffect, useState } from "react";
+import { Color } from "@src/assets/color";
+import { profileIndicatorAtom, userIdxAtom } from "@src/common/atom";
+import ModalComponent from "@src/components/organisms/Modal/Modal";
+import SelectModal from "@src/components/organisms/Modal/SelectModal";
+import { ProfileNavParamList } from "@src/navigation/BottomTabs/ProfileNav";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
+import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  ActivityIndicator,
+  View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { Color } from "@src/assets/color";
-import { ProfileNavParamList } from "@src/navigation/BottomTabs/ProfileNav";
+import { useRecoilValue } from "recoil";
 
-import { profileIndicatorAtom, userIdxAtom } from "@src/common/atom";
-import ModalComponent from "@src/components/organisms/Modal/Modal";
 import { UserInfo } from "./interface/user.interface";
-import SelectModal from "@src/components/organisms/Modal/SelectModal";
 
 const pointIconName = [
   "gift-outline",

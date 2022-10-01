@@ -1,18 +1,17 @@
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { Color } from "@src/assets/color";
+import { userInfoAtom } from "@src/common/atom";
+import { HomeLists } from "@src/components//home/HomeLists";
+import { GradientButtons } from "@src/components/atoms/GradientButtons";
+import { SearchIcon } from "@src/components/atoms/TabIcon";
+import { HomeCategory } from "@src/components/molecules/categories/HomeCategory";
+import { useUserInfo } from "@src/hook/useUserInfo";
 import React, { useRef, useState } from "react";
 import { Animated, ScrollView, StatusBar } from "react-native";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import styled from "styled-components/native";
-import { SearchIcon } from "@src/components/atoms/TabIcon";
-import { GradientButtons } from "@src/components/atoms/GradientButtons";
-import auth from "@react-native-firebase/auth";
-import { appleAuth, appleAuthAndroid } from "@invertase/react-native-apple-authentication";
-import { v4 as uuid } from "uuid";
 import { useRecoilValue } from "recoil";
-import { userInfoAtom } from "@src/common/atom";
-import { HomeCategory } from "@src/components/molecules/categories/HomeCategory";
-import { HomeLists } from "@src/components/molecules/challengeLists/HomeLists";
-import { useUserInfo } from "@src/hook/useUserInfo";
+import styled from "styled-components/native";
 
+// eslint-disable-next-line react/display-name
 export const Home = React.memo(() => {
   useUserInfo();
   const navigation = useNavigation();
@@ -59,57 +58,6 @@ export const Home = React.memo(() => {
       }).start();
     }, 300);
   };
-  async function onAppleButtonPress() {
-    // Start the sign-in request
-    const appleAuthRequestResponse = await appleAuth.performRequest({
-      requestedOperation: appleAuth.Operation.LOGIN,
-      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-    });
-
-    // Ensure Apple returned a user identityToken
-    if (!appleAuthRequestResponse.identityToken) {
-      throw "Apple Sign-In failed - no identify token returned";
-    }
-
-    // Create a Firebase credential from the response
-    const { identityToken, nonce } = appleAuthRequestResponse;
-    const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
-
-    // Sign the user in with the credential
-    return auth().signInWithCredential(appleCredential);
-  }
-  async function onAppleAndroidButtonPress() {
-    // Generate secure, random values for state and nonce
-    const rawNonce = uuid();
-    const state = uuid();
-
-    // Configure the request
-    appleAuthAndroid.configure({
-      // The Service ID you registered with Apple
-      clientId: "org.reactjs.native.jaksimfriend",
-
-      // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
-      // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
-      redirectUri: "https://jaksimfriend.site/users/apple-login",
-
-      // The type of response requested - code, id_token, or both.
-      responseType: appleAuthAndroid.ResponseType.ALL,
-
-      // The amount of user information requested from Apple.
-      scope: appleAuthAndroid.Scope.ALL,
-
-      // Random nonce value that will be SHA256 hashed before sending to Apple.
-      nonce: rawNonce,
-
-      // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
-      state,
-    });
-
-    // Open the browser window for user sign in
-    const response = await appleAuthAndroid.signIn();
-
-    // Send the authorization code to your backend for verification
-  }
 
   return (
     <HomeWrapper>
@@ -120,7 +68,7 @@ export const Home = React.memo(() => {
         nestedScrollEnabled={true}
       >
         <Title>
-          어서 오세요, {userInfo?.nickName || "유저"}님!{"\n"}천 리 길의 한 걸음도 작심친구와 함께!
+          어서오세요, {userInfo?.nickName || "유저"}님!{"\n"}천리길의 한걸음도 작심친구와 함께!
         </Title>
         <Animated.View
           style={{
@@ -144,25 +92,6 @@ export const Home = React.memo(() => {
         >
           <HomeCategory />
         </Animated.View>
-        {/* 애플로그인 (안드,ios) */}
-        {/* {appleAuthAndroid.isSupported && (
-          <AppleButton
-            buttonStyle={AppleButton.Style.WHITE}
-            buttonType={AppleButton.Type.SIGN_IN}
-            onPress={() => onAppleAndroidButtonPress()}
-          />
-        )}
-        <AppleButton
-          buttonStyle={AppleButton.Style.WHITE}
-          buttonType={AppleButton.Type.SIGN_IN}
-          style={{
-            width: 160,
-            height: 45,
-            borderWidth: 1,
-            borderColor: "#000000",
-          }}
-          onPress={() => onAppleButtonPress().then(() => console.log("Apple sign-in complete!"))}
-        /> */}
         <HomeLists />
       </ScrollView>
       <OpenChallenge>
@@ -180,28 +109,29 @@ export const Home = React.memo(() => {
 
 const HomeWrapper = styled.View`
   flex: 1;
-  background-color: #ffffff;
+  background-color: ${Color.white[0]};
   height: 100%;
+  padding: 20px 20px 0;
 `;
 const Title = styled.Text`
   color: #000000;
   font-size: 20px;
   font-weight: 400;
-  margin: 20px 0 0 6%;
 `;
 const InputBox = styled.TouchableOpacity`
-  background-color: #f6f5fb;
-  border-radius: 15px;
+  background-color: ${Color.white[200]};
+  border-radius: 13px;
   flex-direction: row;
   padding: 10px;
-  width: 88%;
+  width: 100%;
+  height: 45px;
   margin-top: 30px;
-  margin-left: 6%;
 `;
 const InputText = styled.Text`
-  color: #6b7ba2;
+  color: ${Color.blue[800]};
   align-self: center;
-  margin-left: 15px;
+  font-size: 15px;
+  margin-left: 10px;
 `;
 const OpenChallenge = styled.View`
   align-self: center;

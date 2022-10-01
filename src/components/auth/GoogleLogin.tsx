@@ -1,29 +1,30 @@
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isUserStatusAtom } from "../../common/atom";
+//TODO: google login logic
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { isLoggedInAtom, isUserStatusAtom } from "@src/common/atom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useSetRecoilState } from "recoil";
 
 export const GoogleSignIn = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserStatusAtom);
-  const [fcmToken, setFcmToken]: any = useState();
+  const [fcmToken, setFcmToken] = useState<string>();
 
   useEffect(() => {
     AsyncStorage.getItem("fcmtoken").then((value) => {
-      setFcmToken(value);
+      setFcmToken(value as string);
     });
   }, []);
 
   const googleLogin = async () => {
     // firebas auth 연결 & 저장
-    // await GoogleSignin.hasPlayServices();
-    // const { idToken } = await GoogleSignin.signIn();
-    // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    // auth().signInWithCredential(googleCredential);
+    await GoogleSignin.hasPlayServices();
+    const { idToken } = await GoogleSignin.signIn();
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    auth().signInWithCredential(googleCredential);
 
     await GoogleSignin.signIn()
       .then(() => {
@@ -35,20 +36,20 @@ export const GoogleSignIn = () => {
               {
                 headers: {
                   "GOOGLE-ACCESS-TOKEN": res.accessToken,
-                  // "DEVICE-TOKEN": fcmToken,
+                  "DEVICE-TOKEN": fcmToken as string,
                 },
               },
             )
-            .then(async function (response) {
+            .then((response) => {
               AsyncStorage.multiSet([
                 ["jwt", response.data.result.jwt],
                 ["userIdx", JSON.stringify(response.data.result.userIdx)],
               ]);
               axios.defaults.headers.common["X-ACCESS-TOKEN"] = response.data.result.jwt;
 
-              await axios
+              return axios
                 .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
-                .then(function (response) {
+                .then((response) => {
                   if (response.data.result[0].nickName === null) {
                     setIsUser("none");
                   } else {
@@ -56,11 +57,11 @@ export const GoogleSignIn = () => {
                   }
                   setIsLoggedIn(true);
                 })
-                .catch(function (error) {
+                .catch((error) => {
                   console.log(error);
                 });
             })
-            .catch(function (error) {
+            .catch((error) => {
               console.log(error);
             });
         });
@@ -78,7 +79,7 @@ export const GoogleSignIn = () => {
           source={require("../../assets/images/GoogleButton.png")}
           style={styles.logo}
         />
-        <Text style={styles.buttonText}>signd in with Google</Text>
+        <Text style={styles.buttonText}>Google로 로그인</Text>
       </TouchableOpacity>
     </>
   );

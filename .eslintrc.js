@@ -10,8 +10,6 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "prettier/react",
-    "prettier/@typescript-eslint",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -23,28 +21,9 @@ module.exports = {
   },
 
   rules: {
-    "prettier/prettier": ["error"],
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
-    "import/order": [
-      "error",
-      {
-        groups: ["builtin", "external", ["parent", "sibling"], "index"],
-        pathGroups: [
-          {
-            pattern: "angular",
-            group: "external",
-            position: "before",
-          },
-        ],
-        alphabetize: {
-          order: "asc",
-          caseInsensitive: true,
-        },
-        "newlines-between": "always",
-      },
-    ],
   },
 };

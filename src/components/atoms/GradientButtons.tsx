@@ -4,7 +4,7 @@ import LinearGradient from "react-native-linear-gradient";
 import styled from "styled-components/native";
 
 type ButtonProps = {
-  Title: String;
+  Title: string;
   onPress: (event: GestureResponderEvent) => void;
 };
 

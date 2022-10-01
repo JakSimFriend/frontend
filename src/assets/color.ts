@@ -8,7 +8,7 @@ export const Color = {
     600: "#9a9797",
   },
   blue: {
-    0: "#f6f5fb",
+    
     100: "#044DE4",
     200: "#054DE4",
     300: "#0C53E2",
@@ -24,6 +24,7 @@ export const Color = {
   white: {
     0: "#FFFFFF",
     100: "#F5F5FB",
+    200: "#f6f5fb",
   },
   black: {
     0: "#000000",

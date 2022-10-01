@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Platform, SafeAreaView, StatusBar, View } from "react-native";
-
-import styled from "styled-components/native";
-import { KakaoSignIn } from "./KakaoLogin";
-import LinearGradient from "react-native-linear-gradient";
-
-import { GoogleSignIn } from "./GoogleLogin";
 import { useAutoLogin } from "@src/hook/useAutoLogin";
+import React from "react";
+import { Platform, SafeAreaView, StatusBar, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import styled from "styled-components/native";
 
-const Welcome = () => {
+import { GoogleSignIn } from "../../components/auth/GoogleLogin";
+import { KakaoSignInButton } from "../../components/auth/kakao-button";
+
+const LoginPage = () => {
   // 자동 로그인
   useAutoLogin();
   return (
@@ -24,7 +23,7 @@ const Welcome = () => {
           <SubTitle>작심친구입니다!</SubTitle>
           <Detail>함께 챌린지할 친구들을 찾아보세요!</Detail>
           <ButtonWrapper>
-            <KakaoSignIn />
+            <KakaoSignInButton />
             <View style={{ marginTop: 10 }}>
               <GoogleSignIn />
             </View>
@@ -37,7 +36,7 @@ const Welcome = () => {
     </>
   );
 };
-export default Welcome;
+export default LoginPage;
 
 const Title = styled.Text`
   color: #ffffff;

@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
+//TODO: 모달 체크, 로직 체크
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
-  Text,
-  StyleSheet,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StatusBar,
   AppState,
   SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import styled from "styled-components/native";
 import Feather from "react-native-vector-icons/AntDesign";
-import NickNameModal1 from "../../components/organisms/Modal/NickNameModal1";
-import NickNameModal2 from "../../components/organisms/Modal/NickNameModal2";
-import NickNameModal3 from "../../components/organisms/Modal/NickNameModal3";
-import NickNameModal4 from "../../components/organisms/Modal/NickNameModal4";
-import axios from "axios";
-import { isLoggedInAtom, isUserStatusAtom, jwtAtom, userIdxAtom } from "../../common/atom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { unlink } from "@react-native-seoul/kakao-login";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components/native";
+
+import { isLoggedInAtom, isUserStatusAtom, userIdxAtom } from "../../common/atom";
+import NickNameModal1 from "../organisms/Modal/NickNameModal1";
+import NickNameModal2 from "../organisms/Modal/NickNameModal2";
+import NickNameModal3 from "../organisms/Modal/NickNameModal3";
+import NickNameModal4 from "../organisms/Modal/NickNameModal4";
 
 export const NickName = () => {
   const navigation = useNavigation();
@@ -224,7 +225,7 @@ export const NickName = () => {
           <Text style={styles.title3}>
             추천인의 닉네임을 입력해주세요 <Text style={{ color: BLUE }}>{"(선택 사항)"}</Text>
           </Text>
-          <Text style={styles.title4}>추천인을 입력하시면 두 분 모두에게 1,000p를 드려요!</Text>
+          <Text style={styles.title4}>추천인을 입력하시면 두 분 모두에게 1,000C를 드려요!</Text>
           <View style={styles.nickNameView}>
             <TextInput
               placeholder="추천인 닉네임"

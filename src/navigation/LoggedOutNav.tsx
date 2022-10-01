@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Welcome from "../screens/auth/Welcome";
+import LoginPage from "../screens/auth/login-page";
 
 const Stack = createStackNavigator();
 
@@ -13,7 +13,7 @@ const LoggedOutNav = () => {
         headerTransparent: true,
       }}
     >
-      <Stack.Screen name="Welcome" component={Welcome} />
+      <Stack.Screen name="Welcome" component={LoginPage} />
     </Stack.Navigator>
   );
 };

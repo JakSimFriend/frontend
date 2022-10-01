@@ -1,19 +1,15 @@
-import {
-  isLoggedInAtom,
-  isUserStatusAtom,
-  jwtAtom,
-  userIdxAtom,
-  userInfoAtom,
-} from "@src/common/atom";
-import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import axios from "axios";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import messaging from "@react-native-firebase/messaging";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as RA from "ramda-adjunct";
-import * as R from "ramda";
+import messaging from "@react-native-firebase/messaging";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { isLoggedInAtom, isUserStatusAtom, userIdxAtom, userInfoAtom } from "@src/common/atom";
 import { UserInfo } from "@src/screens/main/BottomTabs/Profile/interface/user.interface";
+import axios from "axios";
+import * as R from "ramda";
+import * as RA from "ramda-adjunct";
+import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
+
+import { useFcmTokenSaveLocalStorage } from "./useFcm";
 
 const getUserInfo = (userId: number) => axios.get(`/profiles/${userId}`);
 const getUserIdx = () => axios.get("/users/idx");
@@ -29,7 +25,7 @@ const getFCMToken = async () => {
   try {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
-      await AsyncStorage.setItem("fcmtoken", fcmToken);
+      await useFcmTokenSaveLocalStorage(fcmToken);
     }
   } catch (error) {
     console.log(error);
@@ -55,10 +51,11 @@ export const useAutoLogin = () => {
   };
   const getIdx = async () => {
     try {
-      let idx: string | null = await AsyncStorage.getItem("userIdx");
+      const idx: string | null = await AsyncStorage.getItem("userIdx");
       if (RA.isNilOrEmpty(idx)) {
-        getUserIdx().then(({data}) => {
-          setUserIdx(Number(data.result))
+        //userIdx가 없을 경우
+        getUserIdx().then(({ data }) => {
+          setUserIdx(Number(data.result));
           getUserInfo(Number(data.result)).then(({ data }) => {
             const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
             if (RA.isNilOrEmpty(userInfo.nickName)) {

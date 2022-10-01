@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from "react";
-import {
-  Dimensions,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import styled from "styled-components/native";
-import messaging from "@react-native-firebase/messaging";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import messaging from "@react-native-firebase/messaging";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { userIdxAtom } from "../../../common/atom";
+import React, { useEffect, useState } from "react";
+import { Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue } from "recoil";
+import styled from "styled-components/native";
 
-export const Notifications = () => {
+import { userIdxAtom } from "../../../common/atom";
+import AlertItem, { Alert as AlertInterface } from "./alert-item";
+
+export const Alert = () => {
   const userIdx = useRecoilValue(userIdxAtom);
   const navigation = useNavigation();
 
@@ -109,38 +103,8 @@ export const Notifications = () => {
           <EmptyText>확인하실 알림이 없어요</EmptyText>
         ) : (
           <>
-            {notificationData.map((item: any, index: number) => {
-              return (
-                <View key={index}>
-                  <Text>{item.date}</Text>
-                  {item.notifications?.map((items: any, index: number) => {
-                    return (
-                      <View key={index}>
-                        <NoticeBox>
-                          <NoticeIcon>
-                            <>
-                              <Image
-                                resizeMode="contain"
-                                source={{ uri: items.image }}
-                                style={{ width: 25, height: 25 }}
-                              />
-                              <NoticeText>{items.alert}</NoticeText>
-                            </>
-                          </NoticeIcon>
-                          <TouchableOpacity
-                            onPress={() => {
-                              cancelChallenge(items.alertIdx);
-                            }}
-                          >
-                            <DeleteText>X</DeleteText>
-                          </TouchableOpacity>
-                        </NoticeBox>
-                        <Time>{items.time}</Time>
-                      </View>
-                    );
-                  })}
-                </View>
-              );
+            {notificationData.map((item: AlertInterface, index: number) => {
+              return <AlertItem alert={item} cancel={() => console.log("TOdo")} key={index} />;
             })}
           </>
         )}
@@ -149,7 +113,7 @@ export const Notifications = () => {
   );
 };
 
-const Wrapper = styled.View`
+const Wrapper = styled.ScrollView`
   flex: 1;
   background-color: #ffffff;
   padding: 20px 5% 0 5%;

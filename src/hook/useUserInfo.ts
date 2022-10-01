@@ -1,4 +1,4 @@
-import { userIdxAtom } from "@src/common/atom";
+import { userIdxAtom, userInfoAtom } from "@src/common/atom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -10,10 +10,11 @@ const getUserInfo = (userId: number) => axios.get(`/profiles/${userId}`);
 
 export const useUserInfo = () => {
   const userIdx = useRecoilValue(userIdxAtom);
+  const setUserInfo = useSetRecoilState<UserInfo | null>(userInfoAtom);
   useEffect(() => {
     if (RA.isNotNilOrEmpty(userIdx)) {
       getUserInfo(userIdx as number).then(({ data }) => {
-        console.log(R.head(data.result));
+        setUserInfo(R.head(data.result) as unknown as UserInfo);
       });
     }
   }, []);
