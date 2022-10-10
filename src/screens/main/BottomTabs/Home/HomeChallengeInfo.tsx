@@ -1,3 +1,17 @@
+import { useNavigation } from "@react-navigation/native";
+import { Color } from "@src/assets/color";
+import { applyModalAtom, onDevelopModalAtom, userIdxAtom } from "@src/common/atom";
+import { GradientButtons } from "@src/components/atoms/GradientButtons";
+import {
+  CalendarIcon,
+  ClockIconTwo,
+  DiamondIconTwo,
+  FlagIcon,
+  UserIconTwo,
+} from "@src/components/atoms/TabIcon";
+import ChallengeApplyModal from "@src/components/organisms/Modal/ChallengeApplyModal";
+import OnDevelopModal from "@src/components/organisms/Modal/OnDevelopModal";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -13,23 +27,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import styled from "styled-components/native";
-import { GradientButtons } from "../../../../components/atoms/GradientButtons";
-import {
-  CalendarIcon,
-  ClockIconTwo,
-  DiamondIconTwo,
-  FlagIcon,
-  UserIconTwo,
-} from "../../../../components/atoms/TabIcon";
-import axios from "axios";
-import ChallengeApplyModal from "../../../../components/organisms/Modal/ChallengeApplyModal";
-import OnDevelopModal from "../../../../components/organisms/Modal/OnDevelopModal";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { applyModalAtom, onDevelopModalAtom, userIdxAtom } from "../../../../common/atom";
+import { ScrollView } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components/native";
 
 type RouteParams = {
   route: {
@@ -134,128 +136,137 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.white[0] }}>
       <View style={styles.topView}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#101647" />
         </TouchableOpacity>
       </View>
       <Wrapper>
-        <StatusBar barStyle="dark-content" backgroundColor="#f6f5fb" />
+        <StatusBar barStyle="dark-content" backgroundColor="${Color.white[200]}" />
         <Title>{title}</Title>
         <Content>{infoData.content}</Content>
-        <Infos>
-          <InfoWrapper>
-            <IconWrapper>
-              <FlagIcon />
-            </IconWrapper>
-            <TextWrapper>
-              <TopText>완주시 최대</TopText>
-              <Text>2,000 캐시와 1,000 경험치</Text>
-            </TextWrapper>
-          </InfoWrapper>
-          <InfoWrapper>
-            <IconWrapper>
-              <CalendarIcon />
-            </IconWrapper>
-            <TextWrapper>
-              <Text style={{ marginTop: 11 }}>{infoData.date}</Text>
-            </TextWrapper>
-          </InfoWrapper>
-          <InfoWrapper>
-            <IconWrapper>
-              <ClockIconTwo />
-            </IconWrapper>
-            <TextWrapper>
-              <Text style={{ marginTop: 9 }}>{schedule}씩 인증</Text>
-            </TextWrapper>
-          </InfoWrapper>
-          <InfoWrapper>
-            <IconWrapper>
-              <UserIconTwo />
-            </IconWrapper>
-            <TextWrapper>
-              <Text style={{ marginTop: 9 }}>
-                신청 인원 {infoData.waiting}명, 대기자 수 {members}명
-              </Text>
-            </TextWrapper>
-          </InfoWrapper>
-          <InfoWrapper>
-            <IconWrapper>
-              <DiamondIconTwo />
-            </IconWrapper>
-            <TextWrapper>
-              <TopText>팀원 평균</TopText>
-              <Text>{infoData.tier}</Text>
-            </TextWrapper>
-          </InfoWrapper>
-        </Infos>
-        <View style={styles.cashWrapper}>
-          <ChallengeCash>
-            <ChallengeCashText>도전 캐시</ChallengeCashText>
-            <ChallengeCashText>{infoData.pee}C</ChallengeCashText>
-          </ChallengeCash>
-          <MyCash>
-            <Text>내 캐시</Text>
-            <Text>{infoData.myPoint}C</Text>
-          </MyCash>
-        </View>
-        <Buttons>
-          <TouchableOpacity
-            style={styles.shareButton}
-            onPress={() => {
-              setModalTwoVisible(true);
-              // onShare();
-            }}
-          >
-            <Text>공유할래요</Text>
-          </TouchableOpacity>
-          {infoData.existStatus === 1 ? (
-            <TouchableOpacity style={styles.CompletedButton} disabled>
-              <Text style={{ color: "#ffffff" }}>이미 신청했어요</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={ShowBottomSheet}>
-              <LinearGradient style={styles.applyButton} colors={["#947BEA", "#1151E5"]}>
-                <Text style={{ color: "#ffffff", paddingVertical: 20, paddingHorizontal: "15%" }}>
-                  신청할게요
+        <ScrollView>
+          <Infos>
+            <InfoWrapper>
+              <IconWrapper>
+                <FlagIcon />
+              </IconWrapper>
+              <TextWrapper>
+                <TopText>완주시 최대</TopText>
+                <Text>2,000 포인트와 1,000 경험치</Text>
+              </TextWrapper>
+            </InfoWrapper>
+            <InfoWrapper>
+              <IconWrapper>
+                <CalendarIcon />
+              </IconWrapper>
+              <TextWrapper>
+                <Text style={{ marginTop: 11 }}>{infoData.date}</Text>
+              </TextWrapper>
+            </InfoWrapper>
+            <InfoWrapper>
+              <IconWrapper>
+                <ClockIconTwo />
+              </IconWrapper>
+              <TextWrapper>
+                <Text style={{ marginTop: 9 }}>{schedule}씩 인증</Text>
+              </TextWrapper>
+            </InfoWrapper>
+            <InfoWrapper>
+              <IconWrapper>
+                <UserIconTwo />
+              </IconWrapper>
+              <TextWrapper>
+                <Text style={{ marginTop: 9 }}>
+                  신청 인원 {infoData.waiting}명, 대기자 수 {members}명
                 </Text>
-              </LinearGradient>
+              </TextWrapper>
+            </InfoWrapper>
+            <InfoWrapper>
+              <IconWrapper>
+                <DiamondIconTwo />
+              </IconWrapper>
+              <TextWrapper>
+                <TopText>팀원 평균</TopText>
+                <Text>{infoData.tier}</Text>
+              </TextWrapper>
+            </InfoWrapper>
+          </Infos>
+          <View style={styles.cashWrapper}>
+            <ChallengeCash>
+              <ChallengeCashText>도전 캐시</ChallengeCashText>
+              <ChallengeCashText>{infoData.pee}C</ChallengeCashText>
+            </ChallengeCash>
+            <MyCash>
+              <Text>내 캐시</Text>
+              <Text>{infoData.myPoint}C</Text>
+            </MyCash>
+          </View>
+          <Buttons>
+            <TouchableOpacity
+              style={styles.shareButton}
+              onPress={() => {
+                setModalTwoVisible(true);
+                // onShare();
+              }}
+            >
+              <Text>공유할래요</Text>
             </TouchableOpacity>
-          )}
-        </Buttons>
-
-        {/* 바텀 시트(신청할게요) */}
-        <Modal visible={bottomSheetVisible} transparent={true}>
-          <TouchableWithoutFeedback onPress={HideBottomSheet}>
-            <View style={styles.background}>
-              <Animated.View
-                style={{
-                  marginBottom: upValue,
-                }}
-              >
-                <View style={styles.container}>
-                  <Text style={styles.infoOne}>제목 도전캐시{"\n"}1,000C를 사용하시겠어요?</Text>
-                  <Text style={styles.infoTwo}>
-                    캐시는 개설자가 가입 승인할 때 빠져 나가요!{"\n"}한번 신청하면 취소할 수 없어요!
+            {infoData.existStatus === 1 ? (
+              <TouchableOpacity style={styles.CompletedButton} disabled>
+                <Text style={{ color: Color.white[0] }}>이미 신청했어요</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={ShowBottomSheet}>
+                <LinearGradient style={styles.applyButton} colors={["#947BEA", "#1151E5"]}>
+                  <Text
+                    style={{ color: Color.white[0], paddingVertical: 20, paddingHorizontal: "15%" }}
+                  >
+                    신청할게요
                   </Text>
-                  <GradientButtons
-                    onPress={() => {
-                      joinChallenge();
-                      ModalVisible();
-                    }}
-                    Title="결제할래요"
-                  />
-                  <TouchableOpacity style={styles.nextButton} onPress={HideBottomSheet}>
-                    <Text style={styles.nextButtonText}>다음에 할게요</Text>
-                  </TouchableOpacity>
-                </View>
-              </Animated.View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-        <ChallengeApplyModal money={cashAvailable} />
-        <OnDevelopModal />
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
+          </Buttons>
+
+          {/* 바텀 시트(신청할게요) */}
+          <Modal visible={bottomSheetVisible} transparent={true}>
+            <TouchableWithoutFeedback onPress={HideBottomSheet}>
+              <View style={styles.background}>
+                <Animated.View
+                  style={{
+                    marginBottom: upValue,
+                  }}
+                >
+                  <View style={styles.container}>
+                    <Text style={styles.infoOne}>
+                      {title} 도전캐시{"\n"}1,000C를 사용하시겠어요?
+                    </Text>
+                    <View style={styles.infoWrapper}>
+                      <Text style={styles.infoTwo}>
+                        {"\u2022"} 캐시는 개설자가 가입 승인할 때 빠져 나가요!
+                      </Text>
+                      <Text style={styles.infoTwo}>{"\u2022"} 한번 신청하면 취소할 수 없어요!</Text>
+                    </View>
+                    <GradientButtons
+                      onPress={() => {
+                        joinChallenge();
+                        ModalVisible();
+                      }}
+                      Title="결제할래요"
+                    />
+                    <TouchableOpacity style={styles.nextButton} onPress={HideBottomSheet}>
+                      <Text style={styles.nextButtonText}>다음에 할게요</Text>
+                    </TouchableOpacity>
+                  </View>
+                </Animated.View>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+          <ChallengeApplyModal money={cashAvailable} />
+          <OnDevelopModal />
+        </ScrollView>
       </Wrapper>
     </SafeAreaView>
   );
@@ -263,7 +274,6 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
 
 const Wrapper = styled.View`
   flex: 1;
-  background-color: #f6f5fb;
   padding: 20px 4% 0 4%;
 `;
 const Title = styled.Text`
@@ -272,7 +282,7 @@ const Title = styled.Text`
   margin-bottom: 30px;
 `;
 const Content = styled.Text`
-  color: #6f81a9;
+  color: ${Color.blue[900]};
   margin-bottom: 30px;
 `;
 const Infos = styled.View`
@@ -284,7 +294,7 @@ const InfoWrapper = styled.View`
 `;
 const IconWrapper = styled.View`
   padding: 8px;
-  background-color: #ffffff;
+  background-color: ${Color.white[0]};
   border-radius: 10px;
 `;
 const TextWrapper = styled.View`
@@ -292,11 +302,11 @@ const TextWrapper = styled.View`
 `;
 const TopText = styled.Text`
   font-size: 12px;
-  color: #6f81a9;
+  color: ${Color.blue[900]};
   margin-bottom: 3px;
 `;
 const ChallengeCash = styled.View`
-  background-color: #101647;
+  background-color: ${Color.blue[1100]};
   padding: 22px;
   border-radius: 15px;
   flex-direction: row;
@@ -304,12 +314,12 @@ const ChallengeCash = styled.View`
   box-shadow: 0px 2px 16px rgba(15, 45, 107, 0.2);
 `;
 const ChallengeCashText = styled.Text`
-  color: #ffffff;
+  color: ${Color.white[0]};
   font-size: 18px;
   font-weight: 600;
 `;
 const MyCash = styled.View`
-  background-color: #ffffff;
+  background-color: ${Color.white[200]};
   padding: 22px;
   border-radius: 15px;
   flex-direction: row;
@@ -329,7 +339,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   topText: {
-    color: "#101647",
+    color: Color.blue[1100],
     fontSize: 17,
     position: "absolute",
     width: width,
@@ -340,21 +350,20 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   shareButton: {
-    backgroundColor: "#ffffff",
+    backgroundColor: Color.white[0],
     paddingVertical: 20,
     paddingHorizontal: "15%",
     marginRight: 5,
     borderRadius: 15,
   },
   CompletedButton: {
-    backgroundColor: "#bfc7d7",
+    backgroundColor: Color.gray[100],
     paddingVertical: 20,
     paddingHorizontal: "11%",
     marginLeft: 5,
     borderRadius: 15,
   },
   applyButton: {
-    backgroundColor: "#5A69E8",
     borderRadius: 15,
     alignSelf: "center",
   },
@@ -365,7 +374,7 @@ const styles = StyleSheet.create({
     marginBottom: -280,
   },
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: Color.white[0],
     paddingVertical: 40,
     paddingHorizontal: 20,
     borderRadius: 30,
@@ -376,23 +385,26 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 30,
   },
+  infoWrapper: {
+    marginBottom: 30,
+  },
   infoTwo: {
     textAlign: "center",
-    marginBottom: 30,
-    color: "#6F81A9",
+    // marginBottom: 30,
+    color: Color.blue[900],
   },
   nextButton: {
     alignItems: "center",
     padding: 15,
     borderRadius: 15,
-    backgroundColor: "#f6f5fb",
+    backgroundColor: "${Color.white[200]}",
   },
   nextButtonText: {
     fontSize: 18,
-    color: "#6F81A9",
+    color: Color.blue[900],
   },
   cashWrapper: {
-    backgroundColor: "#ffffff",
+    backgroundColor: Color.white[0],
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     borderTopRightRadius: 15,

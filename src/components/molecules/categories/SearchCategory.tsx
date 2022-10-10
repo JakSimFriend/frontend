@@ -1,3 +1,4 @@
+import { Color } from "@src/assets/color";
 import React from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
@@ -47,29 +48,28 @@ const CategoryBox = styled.View`
   justify-content: space-evenly;
   align-items: center;
   border-bottom-width: 2px;
-  border-bottom-color: #f6f5fb;
-  margin-bottom: 20px;
+  border-bottom-color: ${Color.white[200]};
 `;
 const Category = styled.Text`
-  color: #000000;
+  color: ${Color.black[0]};
   font-size: 15px;
   font-weight: 900;
 `;
 
 const styles = StyleSheet.create({
   category: {
-    color: "#000000",
+    color: Color.black[0],
     fontWeight: "300",
   },
   categorySelected: {
-    color: "#000000",
+    color: Color.black[0],
     fontWeight: "600",
   },
   categoryBorder: {
     paddingBottom: 10,
   },
   categoryBorderSelected: {
-    borderBottomColor: "#054DE4",
+    borderBottomColor: Color.blue[200],
     borderBottomWidth: 2,
     paddingBottom: 10,
   },

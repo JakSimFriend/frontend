@@ -1,12 +1,13 @@
-import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+
 import { Profile } from "../../screens/main";
 
 export type ProfileNavParamList = {
-  Profile: undefined,
-  ProfileEdit: undefined,
-  SettingNav: undefined
-}
+  Profile: undefined;
+  ProfileEdit: undefined;
+  SettingNav: undefined;
+};
 
 const Stack = createStackNavigator<ProfileNavParamList>();
 

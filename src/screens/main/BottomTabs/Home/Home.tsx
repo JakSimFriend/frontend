@@ -2,7 +2,6 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Color } from "@src/assets/color";
 import { userInfoAtom } from "@src/common/atom";
 import { HomeLists } from "@src/components//home/HomeLists";
-import { GradientButtons } from "@src/components/atoms/GradientButtons";
 import { SearchIcon } from "@src/components/atoms/TabIcon";
 import { HomeCategory } from "@src/components/molecules/categories/HomeCategory";
 import { useUserInfo } from "@src/hook/useUserInfo";
@@ -94,15 +93,6 @@ export const Home = React.memo(() => {
         </Animated.View>
         <HomeLists />
       </ScrollView>
-      <OpenChallenge>
-        <GradientButtons
-          onPress={() => {
-            MoveIconUp();
-            goToOpenChallenge();
-          }}
-          Title="도전작심 개설하기"
-        />
-      </OpenChallenge>
     </HomeWrapper>
   );
 });

@@ -1,7 +1,8 @@
 import { StackScreenProps } from "@react-navigation/stack";
+import { Color } from "@src/assets/color";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Dimensions,
   Image,
   Platform,
   SafeAreaView,
@@ -11,17 +12,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { ProfileNavParamList } from "../../../../navigation";
-import Feather from "react-native-vector-icons/AntDesign";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { launchImageLibrary } from "react-native-image-picker";
-import ProfileEditModal from "../../../../components/organisms/Modal/ProfileEditModal";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import { launchImageLibrary } from "react-native-image-picker";
+import Feather from "react-native-vector-icons/AntDesign";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRecoilState, useRecoilValue } from "recoil";
+
 import { profileIndicatorAtom, userIdxAtom } from "../../../../common/atom";
+import { ProfileNavParamList } from "../../../../navigation";
 
 type ImageType = {
   name?: string | undefined;
@@ -35,7 +34,6 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
   const [promise, setPromise] = useState("");
   const [disable, setDisable] = useState(true);
   const [textInputBorderColor, setTextInputBorderColor] = useState("#6F81A9");
-  const [modalVisible, setModalVisible] = useState(false);
   const textInputRef = useRef<TextInput>(null);
   const [image, setImage] = useState<ImageType>({
     uri: "",
@@ -47,22 +45,24 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
   });
 
   const onChangeText = (text: string) => {
-    text.slice();
-    if (text.length > 10) setTextInputBorderColor("#D75858");
-    else {
+    text.trim();
+    if (text.length > 10) {
+      setTextInputBorderColor("#D75858");
+      setDisable(true);
+    } else {
       setTextInputBorderColor("#044DE4");
       setDisable(false);
     }
   };
 
-  const [datas, setDatas]: any = useState([]);
+  const [data, setDatas]: any = useState([]);
   useEffect(() => {
     axios
       .get(`https://jaksimfriend.site/profiles/${userIdx}/edit`)
-      .then(function (response) {
+      .then((response) => {
         setDatas(response.data.result);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }, []);
@@ -72,9 +72,6 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
       .post(`https://jaksimfriend.site/profiles/promise`, {
         userIdx: userIdx,
         promise: promise,
-      })
-      .then(function (response) {
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -100,20 +97,16 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
       setDisable(false);
     });
   };
-  
+
   const postPhoto = () => {
+    if (!image.uri) return;
     const formdata = new FormData();
     formdata.append("images", image);
     const headers = {
       "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
     };
-    axios
+    return axios
       .post(`https://jaksimfriend.site/profiles/${userIdx}/image`, formdata, { headers: headers })
-      .then((response) => {
-        if (response) {
-          console.log(response.data);
-        }
-      })
       .catch((error) => {
         if (error.response) {
           console.log(error.response);
@@ -125,35 +118,42 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
       });
   };
   const onPressComplete = () => {
-    postPhoto();
-    postPromise();
-    textInputRef.current?.blur();
-    setModalVisible(true);
-    setTextInputBorderColor("#6F81A9");
-    setProfileIndicator(!profileIndicator);
+    Promise.all([postPhoto(), postPromise(), setProfileIndicator(!profileIndicator)]).then(() =>
+      navigation.navigate("Profile"),
+    );
   };
   return (
     <GestureDetector gesture={singleTap}>
       <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.topView}>
-          <Text style={styles.topText}>프로필 수정</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="#101647" />
-          </TouchableOpacity>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={24} color="#101647" />
+            </TouchableOpacity>
+            <Text style={styles.title}>프로필 수정</Text>
+          </View>
           <TouchableOpacity onPress={onPressComplete} disabled={disable}>
-            <Text style={styles.finishText}>완료</Text>
+            <Ionicons
+              name="checkmark"
+              size={24}
+              color={!disable ? Color.blue[300] : Color.gray[600]}
+            />
           </TouchableOpacity>
         </View>
-        <View style={styles.bottomView}>
+        <View style={styles.body}>
           <View style={styles.imageView}>
-            <Image source={{ uri: image.uri ? image.uri : datas.profile }} style={styles.image} />
+            {data.profile ? (
+              <Image source={{ uri: data.profile }} style={styles.image} />
+            ) : (
+              <View style={{ ...styles.image, ...styles.emptyImage }} />
+            )}
             <TouchableOpacity style={styles.cameraIconView} onPress={UploadImage}>
               <Icon name="camera-outline" color="#044DE4" size={24} />
             </TouchableOpacity>
           </View>
           <Text style={styles.textInputTitle}>작심 다짐하기</Text>
           <TextInput
-            placeholder={datas.promise}
+            placeholder={data.promise}
             style={[styles.textInput, { borderColor: textInputBorderColor }]}
             onChange={(e) => onChangeText(e.nativeEvent.text)}
             value={promise}
@@ -172,39 +172,35 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
             <Feather name="check" size={16} color={textInputBorderColor} />
           </View>
         </View>
-        <ProfileEditModal visible={modalVisible} setVisible={setModalVisible} />
       </SafeAreaView>
     </GestureDetector>
   );
 }
 
-const { width } = Dimensions.get("window");
-
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
   },
-  topView: {
+  header: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
-  topText: {
-    color: "#101647",
+  headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  title: {
     fontSize: 17,
-    position: "absolute",
-    width: width,
-    height: "100%",
-    textAlign: "center",
-    textAlignVertical: "center",
-    marginTop: 10,
+    marginLeft: 20,
+    fontWeight: "bold",
   },
   finishText: {
     color: "#6F81A9",
     fontSize: 17,
   },
-  bottomView: {
+  body: {
     backgroundColor: "#fff",
     elevation: 5,
     shadowColor: "#0F2D6B33",
@@ -218,13 +214,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageView: {
-    marginTop: -60,
+    position: "absolute",
+    top: -60,
     alignSelf: "center",
   },
   image: {
     width: 120,
     height: 120,
     borderRadius: 13,
+  },
+  emptyImage: {
+    backgroundColor: "black",
   },
   cameraIconView: {
     width: 40,
@@ -239,13 +239,14 @@ const styles = StyleSheet.create({
   },
   textInputTitle: {
     color: "#6F81A9",
-    marginTop: 50,
+    marginTop: 100,
     marginBottom: 6,
     fontSize: 15,
   },
   textInput: {
     paddingVertical: 10,
     paddingHorizontal: 16,
+    marginTop: 6,
     fontSize: 17,
     borderRadius: 10,
     backgroundColor: "#F5F5FB",

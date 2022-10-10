@@ -1,9 +1,10 @@
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import { Home } from "../../screens/main";
-import Bell from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
 import { TouchableOpacity } from "react-native";
+import Bell from "react-native-vector-icons/AntDesign";
+
+import { Home } from "../../screens/main";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,7 @@ export const HomeNav = () => {
       initialRouteName="Home"
       screenOptions={{
         headerTitle: "홈",
-        headerTitleAlign: "center",
+        headerTitleAlign: "left",
         headerTitleStyle: { fontSize: 18, fontWeight: "600" },
         headerShadowVisible: false,
       }}

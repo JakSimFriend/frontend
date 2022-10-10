@@ -1,13 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import styled from "styled-components/native";
-import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/atoms/TabIcon";
 import { StackNavigationProp } from "@react-navigation/stack";
 import axios from "axios";
-import { useQuery } from "react-query";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRecoilValue } from "recoil";
+import styled from "styled-components/native";
+
 import { myIndicatorAtom, userIdxAtom } from "../../../../common/atom";
+import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/atoms/TabIcon";
 
 type StackParamList = {
   RecruitPage: {

@@ -1,23 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import {
-  ImageBackground,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import styled from "styled-components/native";
-import { SearchIcon } from "../../../components/atoms/TabIcon";
-import { GradientButtons } from "../../../components/atoms/GradientButtons";
-import { HomeCalendar, HomeClock, HomeUser } from "../../../components/atoms/TabIcon";
+import { Color } from "@src/assets/color";
+import { Challenge } from "@src/components/home/interface/recommend-challenge";
 import axios from "axios";
-import { userIdxAtom } from "../../../common/atom";
+import * as R from "ramda";
+import React, { useEffect, useState } from "react";
+import { Platform, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { useRecoilValue } from "recoil";
+import styled from "styled-components/native";
+
+import { userIdxAtom } from "../../../common/atom";
+import { GradientButtons } from "../../../components/atoms/GradientButtons";
+import { SearchIcon } from "../../../components/atoms/TabIcon";
 import { SearchCategory } from "../../../components/molecules/categories/SearchCategory";
+import { SearchByCategoryRequest } from "./interface/search-by-category.interface";
+import { SearchChallengeCard } from "./search-challenge-card";
 
 export const Search = () => {
   const navigation: any = useNavigation();
@@ -25,19 +21,43 @@ export const Search = () => {
   const [categoryIndex, setCategoryIndex] = useState(0);
   const [categoryEmpty, setCategoryEmpty] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+  const [isInputFocus, setIsInputFocus] = useState<boolean>(false);
   const goToOpenChallenge = () => navigation.navigate("Category");
 
-  const [searchDatas, setSearchDatas]: any = useState([]);
+  const navMove = ({
+    title,
+    certification,
+    accept,
+    challengeIdx,
+  }: {
+    title: string;
+    certification: string;
+    accept: number;
+    challengeIdx: number;
+  }) => {
+    navigation.navigate("SearchChallenge", {
+      title: title,
+      schedule: certification,
+      members: accept,
+      challengeIdx: challengeIdx,
+    });
+  };
+
+  const [searchDates, setSearchDates] = useState<{
+    ends: Challenge[];
+    recruitments: Challenge[];
+  }>();
   const userIdx = useRecoilValue(userIdxAtom);
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/searches/${categoryIndex}/${userIdx}`)
-      .then(function (response) {
-        if (response.data.result === undefined) {
+      .get<SearchByCategoryRequest>(
+        `https://jaksimfriend.site/searches/${categoryIndex}/${userIdx}`,
+      )
+      .then(({ data }) => {
+        if (data.result === undefined) {
           setCategoryEmpty(true);
-          console.log(response)
-        } else if (response.data.code === 1000) {
-          setSearchDatas(response.data.result[0]);
+        } else if (data.code === 1000) {
+          setSearchDates(R.head(data.result) as { ends: Challenge[]; recruitments: Challenge[] });
           setCategoryEmpty(false);
         }
       })
@@ -46,9 +66,14 @@ export const Search = () => {
         console.log(error);
       });
   }, [categoryIndex]);
+
   return (
     <Wrapper>
-      <View style={styles.searchBar}>
+      <View
+        style={
+          isInputFocus ? { ...styles.searchBar, ...styles.focusBorder } : { ...styles.searchBar }
+        }
+      >
         <View style={styles.iconWrapper}>
           <SearchIcon />
         </View>
@@ -57,6 +82,8 @@ export const Search = () => {
           placeholder="다양한 챌린지를 검색해보세요!"
           placeholderTextColor="#6b7ba2"
           onChangeText={(text) => setSearchInput(text)}
+          onFocus={() => setIsInputFocus(true)}
+          onBlur={() => setIsInputFocus(false)}
         />
       </View>
       <SearchCategory
@@ -65,127 +92,67 @@ export const Search = () => {
         setCategoryIndex={setCategoryIndex}
       />
 
-      <ScrollView>
+      <ScrollView
+        style={{ backgroundColor: Color.white[200], paddingVertical: 20, paddingHorizontal: 20 }}
+      >
         {categoryEmpty ? (
           <EmptyBox>
-            <EmptyBoxText>아직 도전작심이 없어요{"\n"}직접 도전작심을 개설해보세요!</EmptyBoxText>
+            <EmptyBoxText>아직 도전작심이 없어요</EmptyBoxText>
           </EmptyBox>
         ) : (
           <>
-            {searchDatas.recruitments
-              ?.filter((item: any) => {
-                if (searchInput === "") return item;
-                else if (item.title.toLowerCase().includes(searchInput)) {
-                  return item;
-                }
-              })
-              .map((item: any, index: number) => {
-                return (
-                  <View key={index}>
-                    {categoryName === "전체" || categoryName === item.categoryName ? (
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate("SearchChallenge", {
-                            title: item.title,
-                            schedule: item.certification,
-                            members: item.accept,
-                            challengeIdx: item.challengeIdx,
-                          });
-                        }}
-                      >
-                        <View style={styles.searchBox}>
-                          <View style={{ paddingVertical: 20, paddingHorizontal: 30 }}>
-                            <View style={styles.searchHeader}>
-                              <Text style={styles.searchTitle}>{item.title}</Text>
-                              <View style={styles.categoryWrapper}>
-                                <Text style={styles.categoryText}>{item.categoryName}</Text>
-                              </View>
-                            </View>
-                            <View style={styles.tagWrapper}>
-                              <Text style={styles.tags}>
-                                {item.tags[2] ? `#${item.tags[2]}` : ""}{" "}
-                                {item.tags[1] ? `#${item.tags[1]}` : ""}{" "}
-                                {item.tags[0] ? `#${item.tags[0]}` : ""}
-                              </Text>
-                            </View>
-                            <View style={styles.infoWrapper}>
-                              <Text style={styles.infoText}>
-                                <HomeCalendar />
-                                <Text> {item.startDate}</Text>
-                              </Text>
-                              <Text style={styles.infoText}>
-                                <HomeClock />
-                                <Text> {item.certification}</Text>
-                              </Text>
-                              <Text style={styles.infoText}>
-                                <HomeUser />
-                                <Text> {item.accept}명</Text>
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    ) : (
-                      <></>
-                    )}
-                  </View>
-                );
-              })}
+            {searchDates &&
+              searchDates.recruitments
+                ?.filter((item: any) => {
+                  if (searchInput === "") return item;
+                  else if (item.title.toLowerCase().includes(searchInput)) {
+                    return item;
+                  }
+                })
+                .map((item: Challenge, index: number) => (
+                  <SearchChallengeCard
+                    key={index}
+                    item={item}
+                    nav={({
+                      title,
+                      certification,
+                      accept,
+                      challengeIdx,
+                    }: {
+                      title: string;
+                      certification: string;
+                      accept: number;
+                      challengeIdx: number;
+                    }) => navMove({ title, certification, accept, challengeIdx })}
+                  />
+                ))}
 
-            {searchDatas.ends
-              ?.filter((item: any) => {
-                if (searchInput === "") return item;
-                else if (item.title.toLowerCase().includes(searchInput)) {
-                  return item;
-                }
-              })
-              .map((item: any, index: number) => {
-                return (
-                  <View key={index}>
-                    {categoryName === "전체" || categoryName === item.categoryName ? (
-                      <>
-                        <View style={styles.searchBox}>
-                          <ImageBackground
-                            source={require("../../../assets/images/Book.png")}
-                            blurRadius={25}
-                            style={styles.blurBackground}
-                            borderRadius={15}
-                          >
-                            <Text style={styles.blurText}>마감</Text>
-                          </ImageBackground>
-                          <View style={{ paddingVertical: 20, paddingHorizontal: 30 }}>
-                            <View style={styles.searchHeader}>
-                              <Text style={styles.searchTitle}>{item.title}</Text>
-                              <View style={styles.categoryWrapper}>
-                                <Text style={styles.categoryText}>{item.categoryName}</Text>
-                              </View>
-                            </View>
-                            <View style={styles.tagWrapper}>
-                              <Text style={styles.tags}>#{item.tags}</Text>
-                            </View>
-                            <View style={styles.infoWrapper}>
-                              <Text style={styles.infoText}>
-                                <HomeCalendar />
-                                <Text> {item.startDate}</Text>
-                              </Text>
-                              <Text style={styles.infoText}>
-                                <HomeClock />
-                                <Text> {item.certification}</Text>
-                              </Text>
-                              <Text style={styles.infoText}>
-                                <HomeUser />
-                                <Text> {item.accept}명</Text>
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </View>
-                );
-              })}
+            {searchDates &&
+              searchDates.ends
+                ?.filter((item: any) => {
+                  if (searchInput === "") return item;
+                  else if (item.title.toLowerCase().includes(searchInput)) {
+                    return item;
+                  }
+                })
+                .map((item: Challenge, index: number) => (
+                  <SearchChallengeCard
+                    key={index}
+                    item={item}
+                    isDisabled
+                    nav={({
+                      title,
+                      certification,
+                      accept,
+                      challengeIdx,
+                    }: {
+                      title: string;
+                      certification: string;
+                      accept: number;
+                      challengeIdx: number;
+                    }) => navMove({ title, certification, accept, challengeIdx })}
+                  />
+                ))}
           </>
         )}
       </ScrollView>
@@ -201,71 +168,25 @@ export const Search = () => {
 };
 
 const styles = StyleSheet.create({
-  searchBox: {
-    backgroundColor: "#f6f5fb",
-    borderRadius: 15,
-    marginHorizontal: 20,
-    marginVertical: 5,
-  },
   searchBar: {
-    backgroundColor: "#f6f5fb",
+    backgroundColor: Color.white[200],
     borderRadius: 15,
     padding: Platform.OS === "android" ? 0 : 10,
     width: "90%",
     marginTop: 10,
     flexDirection: "row",
     marginLeft: "5%",
+    borderWidth: 1,
+    borderColor: Color.white[200],
   },
-  blurBackground: {
-    position: "absolute",
-    zIndex: 1,
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-  },
-  blurText: {
-    color: "#ffffff",
-    textAlign: "center",
-    fontSize: 25,
-    fontWeight: "600",
+  focusBorder: {
+    borderColor: Color.blue[100],
+    borderWidth: 1,
   },
   iconWrapper: {
     marginLeft: Platform.OS === "android" ? 10 : 0,
     marginTop: Platform.OS === "android" ? 12 : 0,
   },
-  searchHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  searchTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  categoryWrapper: {
-    paddingHorizontal: 12,
-    backgroundColor: "#054DE4",
-    borderRadius: 15,
-    marginLeft: 10,
-  },
-  categoryText: {
-    color: "#ffffff",
-    paddingVertical: 6,
-  },
-  tagWrapper: {
-    marginTop: 15,
-  },
-  tags: {
-    color: "#6F81A9",
-  },
-  infoWrapper: {
-    marginTop: 20,
-    flexDirection: "row",
-  },
-  infoText: {
-    marginRight: 20,
-    fontSize: 15,
-  },
-  inputText: {},
 });
 
 const Wrapper = styled.View`

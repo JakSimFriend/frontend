@@ -1,18 +1,18 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackScreenProps } from "@react-navigation/stack";
+import { Color } from "@src/assets/color";
+import { LogOutWithKakao } from "@src/components/molecules/authentication/LogoutButton";
+import SelectModal from "@src/components/organisms/Modal/SelectModal";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import LogoutModal from "../../../../../components/organisms/Modal/LogoutModal";
+import { useRecoilValue } from "recoil";
+
+import { userIdxAtom } from "../../../../../common/atom";
 import WithdrawalModal from "../../../../../components/organisms/Modal/WithdrawalModal";
 import { SettingNavParamList } from "../../../../../navigation/SettingNav";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { userIdxAtom } from "../../../../../common/atom";
-import { Color } from "@src/assets/color";
-import SelectModal from "@src/components/organisms/Modal/SelectModal";
-import { LogOutWithKakao } from "@src/components/molecules/authentication/LogoutButton";
 
 export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) => {
   const [switchEnable, setSwitchEnable] = useState(false);
@@ -49,7 +49,6 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
             <Ionicons name="arrow-back" size={24} color={Color.blue[1100]} />
           </TouchableOpacity>
           <Text style={styles.topText}>설정</Text>
-          <Ionicons name="arrow-back" size={24} color={Color.black[0]} />
         </View>
         <Text style={styles.title}>알림 설정</Text>
         <View style={styles.row}>
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
   },
   topView: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
   },
@@ -191,6 +190,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "600",
     alignSelf: "center",
+    marginLeft: 20,
   },
   title: {
     color: Color.blue[1100],

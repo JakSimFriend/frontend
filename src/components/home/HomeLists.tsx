@@ -10,13 +10,14 @@ import * as RA from "ramda-adjunct";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components/native";
 
 import { HomeEmptyLists } from "./home-empty-lists";
 import { Challenge, HomeViewRecommendChangeRequest } from "./interface/recommend-challenge";
 
-type StackParamList = {
+export type StackParamList = {
   HomeChallengeInfo: {
     title: string;
     schedule: string;
@@ -67,11 +68,7 @@ export const HomeLists = () => {
                   return common.indexOf(v) == common.lastIndexOf(v);
                 });
                 return (
-                  // "15px 10px 0px 10px"
-                  <ChallengeBox
-                    key={index}
-                    // style={index === 1 && { marginTop: 15, marginRight: 10, marginLeft: 10 }}
-                  >
+                  <ChallengeBox key={index}>
                     <TouchableOpacity
                       onPress={() => {
                         navigation.navigate("HomeChallengeInfo", {
@@ -102,11 +99,17 @@ export const HomeLists = () => {
                       </ScheduleWrapper>
                       <MembersWrapper>
                         <HomeUser />
-                        {/* 선택된맴버수 예시:4명 */}
+                        {/* 참여한 맴버 수 */}
                         {Members.slice(0, item.accept).map((item, index) => {
-                          return <SelectedWrapper key={index} />;
+                          return (
+                            <LinearGradient
+                              style={{ marginLeft: 3, width: 16, height: 16, borderRadius: 4 }}
+                              key={index}
+                              colors={["#947BEA", "#1151E5"]}
+                            ></LinearGradient>
+                          );
                         })}
-                        {/* 전체 맴버수 예시:6명 */}
+                        {/* 전체 맴버 수 */}
                         {Others.map((item, index) => {
                           return <NonSelectedWrapper key={index} />;
                         })}
@@ -122,7 +125,9 @@ export const HomeLists = () => {
   );
 };
 
-const ChallengeWrapper = styled.View``;
+const ChallengeWrapper = styled.View`
+  margin-bottom: 50px;
+`;
 
 const ChallengeHeader = styled.Text`
   font-size: 20px;
@@ -165,14 +170,6 @@ const ScheduleWrapper = styled.View`
 const MembersWrapper = styled.View`
   flex-direction: row;
   margin-top: 8px;
-`;
-
-const SelectedWrapper = styled.View`
-  background-color: ${Color.blue[200]}; // 그라데이션
-  border-radius: 4px;
-  margin-left: 3px;
-  width: 16px;
-  height: 16px;
 `;
 const NonSelectedWrapper = styled.View`
   background-color: ${Color.gray[100]};

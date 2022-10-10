@@ -23,4 +23,3 @@ export * from "./ChallengeOpen/Category";
 export * from "./ChallengeOpen/ChallengeOpenOne";
 export * from "./ChallengeOpen/ChallengeOpenTwo";
 export * from "./Search/Search";
-export * from "./Search/SearchChallenge";

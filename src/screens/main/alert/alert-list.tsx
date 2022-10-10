@@ -38,29 +38,18 @@ export const Alert = () => {
   };
 
   const [notificationData, setNotificationData] = useState([]);
-  const [listEmpty, setListEmpty] = useState(false);
   const getNotificationData = () => {
     axios
       .get(`https://jaksimfriend.site/alerts/${userIdx}`)
       .then((response) => {
-        if (response.data.result === undefined) {
-          setListEmpty(true);
-        } else {
-          setListEmpty(false);
-          setNotificationData(response.data.result);
-          // console.warn(response.data.result)
-        }
+        setNotificationData(response.data.result || []);
       })
       .catch((error) => {
         console.log(error.message);
-        setListEmpty(true);
       });
   };
   useEffect(() => {
     getNotificationData();
-
-    // requestUserPermission();
-    // getFCMToken();
   }, []);
 
   const cancelChallenge = (item: any) => {
@@ -95,11 +84,11 @@ export const Alert = () => {
           <Ionicons name="arrow-back" size={24} color="#101647" />
         </TouchableOpacity>
         <TouchableOpacity onPress={deleteAllAlerts}>
-          <Text style={{ color: "#054de4", fontSize: 16 }}>전체 삭제</Text>
+          <Text style={{ color: "#054de4", fontSize: 16 }}>삭제</Text>
         </TouchableOpacity>
       </View>
       <Wrapper>
-        {listEmpty || notificationData.length === 0 ? (
+        {notificationData.length === 0 ? (
           <EmptyText>확인하실 알림이 없어요</EmptyText>
         ) : (
           <>

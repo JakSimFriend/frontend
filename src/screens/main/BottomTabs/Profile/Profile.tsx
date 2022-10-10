@@ -11,12 +11,12 @@ import {
   ActivityIndicator,
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -67,9 +67,27 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
           scrollViewContentHeight == 0 && setScrollViewContentHeight(e.nativeEvent.layout.height);
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate("SettingNav")}>
-          <Text style={styles.setting}>설정</Text>
-        </TouchableOpacity>
+        <View style={styles.headerWrapper}>
+          <View>
+            <Text style={styles.headerTitle}>프로필</Text>
+          </View>
+          <View style={styles.headerIconWrapper}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => navigation.navigate("ProfileEdit")}
+            >
+              <AntDesign name="edit" size={24} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("SettingNav")}
+              style={{ marginLeft: 12 }}
+            >
+              <AntDesign name="setting" size={24} />
+              {/* Todo */}
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.profileView}>
           {profileData?.profile ? (
             <Image
@@ -84,12 +102,6 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
           <View style={styles.profileRightView}>
             <View style={styles.nameView}>
               <Text style={styles.nickName}>{profileData?.nickName}</Text>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => navigation.navigate("ProfileEdit")}
-              >
-                <AntDesign name="edit" size={20} color={Color.blue[1100]} />
-              </TouchableOpacity>
             </View>
             <Text style={styles.introduce}>{profileData?.promise}</Text>
           </View>
@@ -120,69 +132,75 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
             </TouchableOpacity>
           </View>
         </LinearGradient>
-        <ScrollView
-          bounces={false}
-          onLayout={(e) => {
-            setScrollViewHeight(e.nativeEvent.layout.height);
-          }}
+
+        <View
+          style={[
+            styles.bottomView,
+            {
+              paddingBottom:
+                profileData?.points && profileData?.points?.length < 4
+                  ? scrollViewHeight - scrollViewContentHeight
+                  : 30,
+            },
+          ]}
         >
-          <View
-            style={[
-              styles.bottomView,
-              {
-                paddingBottom:
-                  profileData?.points && profileData?.points?.length < 4
-                    ? scrollViewHeight - scrollViewContentHeight
-                    : 30,
-              },
-            ]}
-          >
-            <Text style={styles.bottomTitle}>내역 보기</Text>
-            {profileData?.points?.length === 0 ? (
-              <Text style={styles.emptyAlertText}>결제 내역이 없어요</Text>
-            ) : (
-              profileData?.points?.map((item: any, index: number) => (
-                <View key={index} style={styles.pointListRow}>
-                  <View style={styles.pointIconView}>
-                    <Ionicons
-                      name={
-                        pointIconName[
-                          item.categoryName === "광고 보상"
-                            ? 0
-                            : item.categoryName === "친구 초대 보상"
-                            ? 1
-                            : item.categoryName === "챌린지 결제"
-                            ? 2
-                            : item.categoryName === "인출"
-                            ? 3
-                            : 4
-                        ]
-                      }
-                      color={Color.blue[1100]}
-                      size={24}
-                    />
+          <Text style={styles.bottomTitle}>내역 보기</Text>
+          <View>
+            <ScrollView
+              // bounces={false}
+              onLayout={(e) => {
+                setScrollViewHeight(e.nativeEvent.layout.height);
+              }}
+            >
+              {profileData?.points?.length === 0 ? (
+                <Text style={styles.emptyAlertText}>결제 내역이 없어요</Text>
+              ) : (
+                profileData?.points?.map((item: any, index: number) => (
+                  <View key={index} style={styles.pointListRow}>
+                    <View style={styles.pointIconView}>
+                      <Ionicons
+                        name={
+                          pointIconName[
+                            item.categoryName === "광고 보상"
+                              ? 0
+                              : item.categoryName === "친구 초대 보상"
+                              ? 1
+                              : item.categoryName === "챌린지 결제"
+                              ? 2
+                              : item.categoryName === "인출"
+                              ? 3
+                              : 4
+                          ]
+                        }
+                        color={Color.blue[1100]}
+                        size={24}
+                      />
+                    </View>
+                    <View style={[styles.pointColumnView, { flex: 1 }]}>
+                      <Text style={styles.pointTypeText}>{item.categoryName}</Text>
+                      <Text style={styles.pointDateText}>{item.createAt}</Text>
+                    </View>
+                    <View style={styles.pointColumnView}>
+                      <Text
+                        style={[
+                          styles.pointTypeText,
+                          { color: Color.blue[100], textAlign: "right" },
+                        ]}
+                      >
+                        {(item.point > 0 ? "+" : "") +
+                          item.point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        C
+                      </Text>
+                      <Text style={[styles.pointDateText, { textAlign: "right" }]}>
+                        {item.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}C
+                      </Text>
+                    </View>
                   </View>
-                  <View style={[styles.pointColumnView, { flex: 1 }]}>
-                    <Text style={styles.pointTypeText}>{item.categoryName}</Text>
-                    <Text style={styles.pointDateText}>{item.createAt}</Text>
-                  </View>
-                  <View style={styles.pointColumnView}>
-                    <Text
-                      style={[styles.pointTypeText, { color: Color.blue[100], textAlign: "right" }]}
-                    >
-                      {(item.point > 0 ? "+" : "") +
-                        item.point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      C
-                    </Text>
-                    <Text style={[styles.pointDateText, { textAlign: "right" }]}>
-                      {item.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}C
-                    </Text>
-                  </View>
-                </View>
-              ))
-            )}
+                ))
+              )}
+            </ScrollView>
           </View>
-        </ScrollView>
+        </View>
       </View>
       {/* <ProfileModal visible={isModalVisible} setVisible={setIsModalVisible} /> */}
       <SelectModal
@@ -245,15 +263,22 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
 
 const styles = StyleSheet.create({
   safeAreaView: {
-    flex: 1,
-    backgroundColor: Color.white[0],
+    marginTop: 11,
+    backgroundColor: Color.white[200],
   },
-  setting: {
-    fontSize: 14,
-    color: Color.blue[1100],
-    marginVertical: 10,
-    alignSelf: "flex-end",
-    marginRight: 20,
+  headerWrapper: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  headerIconWrapper: {
+    flexDirection: "row",
   },
   profileView: {
     marginVertical: 35,
@@ -330,10 +355,10 @@ const styles = StyleSheet.create({
     marginTop: 30,
     elevation: 5,
     shadowColor: "#0F2D6B33",
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: { width: 0, height: -10 },
     shadowOpacity: 1,
-    shadowRadius: 16,
-    flex: 1,
+    // shadowRadius: 16,
+    // flex: 1,
   },
   bottomTitle: {
     color: Color.blue[1100],

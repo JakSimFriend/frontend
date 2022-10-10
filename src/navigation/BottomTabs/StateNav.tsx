@@ -1,8 +1,9 @@
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import { MyState } from "../../screens/main";
 import { useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
 import { Text, TouchableOpacity } from "react-native";
+
+import { MyState } from "../../screens/main";
 
 const Stack = createStackNavigator();
 
@@ -22,7 +23,7 @@ export const StateNav = () => {
         component={MyState}
         options={{
           headerTitle: "현황",
-          headerTitleAlign: "center",
+          headerTitleAlign: "left",
           headerTitleStyle: { fontSize: 18, fontWeight: "900" },
           headerRight: () => (
             <TouchableOpacity onPress={goToDetail}>

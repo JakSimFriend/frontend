@@ -28,7 +28,6 @@ export const Color = {
   },
   black: {
     0: "#000000",
-    blue: "#101647",
   },
   violet: {
     100: "#947BEA",

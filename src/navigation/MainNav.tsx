@@ -2,11 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { unlink } from "@react-native-seoul/kakao-login";
 import { useNavigation } from "@react-navigation/native";
-import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Color } from "@src/assets/color";
 import axios from "axios";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
-import ArrowLeft from "react-native-vector-icons/AntDesign";
+import AntIcons from "react-native-vector-icons/AntDesign";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import {
@@ -28,6 +29,7 @@ import {
   userIdxAtom,
 } from "../common/atom";
 import {
+  Alert,
   BeforeStartPage,
   BeforeStartPageInfo,
   BirthDay,
@@ -36,7 +38,6 @@ import {
   ChallengeOpenTwo,
   Detail,
   NickName,
-  Alert,
   ProgressCertified,
   ProgressNotification,
   Record,
@@ -44,7 +45,6 @@ import {
   RecruitPageInfo,
   RequestPage,
   Search,
-  SearchChallenge,
 } from "../screens/main";
 import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/HomeChallengeInfo";
 import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/ProgressPageInfo";
@@ -160,7 +160,7 @@ const MainNav = () => {
                   headerTitleAlign: "center",
                   headerTitleStyle: { fontSize: 15, fontWeight: "900" },
                   headerLeft: () => (
-                    <ArrowLeft
+                    <AntIcons
                       onPress={kakaoSignOut}
                       name="arrowleft"
                       size={25}
@@ -178,7 +178,7 @@ const MainNav = () => {
                   headerTitleStyle: { fontSize: 15, fontWeight: "900" },
                   headerLeft: () => (
                     <TouchableOpacity>
-                      <ArrowLeft
+                      <AntIcons
                         onPress={goBack}
                         name="arrowleft"
                         size={25}
@@ -203,7 +203,6 @@ const MainNav = () => {
             component={ProfileEdit}
             options={{
               headerShown: false,
-              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
             }}
           />
           <Stack.Screen name="SettingNav" component={SettingNav} options={{ headerShown: false }} />
@@ -234,22 +233,26 @@ const MainNav = () => {
               headerShadowVisible: false,
               headerTransparent: false,
               headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 18 }} />
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                >
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 18 }} />
+                  <Text style={{ marginLeft: 20, fontSize: 17, fontWeight: "bold" }}>검색</Text>
                 </TouchableOpacity>
               ),
             }}
           />
           <Stack.Screen
             name="SearchChallenge"
-            component={SearchChallenge}
+            component={HomeChallengeInfo}
             options={{
               presentation: "transparentModal",
               headerShadowVisible: false,
-              headerBackgroundContainerStyle: { backgroundColor: "#F6F5FB" },
+              headerBackgroundContainerStyle: { backgroundColor: Color.white[0] },
               headerLeft: () => (
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -282,7 +285,7 @@ const MainNav = () => {
               },
               headerLeft: () => (
                 <TouchableOpacity onPress={goToMyChallenge}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
               headerRight: () => (
@@ -299,7 +302,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -311,7 +314,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -323,7 +326,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -343,7 +346,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -363,7 +366,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -396,7 +399,7 @@ const MainNav = () => {
               ),
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -422,7 +425,7 @@ const MainNav = () => {
               ),
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}
@@ -450,7 +453,7 @@ const MainNav = () => {
               ),
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <ArrowLeft name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                 </TouchableOpacity>
               ),
             }}

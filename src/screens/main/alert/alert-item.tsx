@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   mainContentWrapper: {
+    flex: 0.8,
     marginLeft: 10,
   },
   alert: {

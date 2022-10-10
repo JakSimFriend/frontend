@@ -13,7 +13,7 @@ export const HomeEmptyLists = () => {
 };
 
 const EmptyList = styled.View`
- margin: 20px 4% 0 4%;
+  margin: 20px 4% 50px 4%;
 `;
 const EmptyListTitle = styled.Text`
   font-size: 20px;
