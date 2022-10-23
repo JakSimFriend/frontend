@@ -1,3 +1,15 @@
+import {
+  createdFailModalAtom,
+  createdModalAtom,
+  dateAtom,
+  numberAtom,
+  startDateAtom,
+  submitButtonAtom,
+  timeAtom,
+} from "@src/common/atom";
+import CreatedModal2 from "@src/components/organisms/Modal/CreatedFailModal";
+import CreatedModal1 from "@src/components/organisms/Modal/CreatedModal";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -9,31 +21,17 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import styled from "styled-components/native";
 import DropDownPicker from "react-native-dropdown-picker";
-import moment from "moment";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Progress from "react-native-progress";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  createdFailModalAtom,
-  createdModalAtom,
-  dateAtom,
-  numberAtom,
-  startDateAtom,
-  submitButtonAtom,
-  timeAtom,
-} from "../../../common/atom";
-import CreatedModal1 from "../../../components/organisms/Modal/CreatedModal";
-import CreatedModal2 from "../../../components/organisms/Modal/CreatedFailModal";
-import axios from "axios";
+import styled from "styled-components/native";
 
 export const ChallengeOpenTwo = () => {
   const submitButtonDisable = useSetRecoilState(submitButtonAtom);
   const GREY = "#6F81A9";
   const [endDate, setEndDate] = useState(""); // 종료 날짜
-  const [endProgress, setEndProgress] = useState(0.666); // progressbar
 
   const [startDate, setStartDate] = useState(""); // 시작 날짜
   const [date, setDate] = useState(""); // 인증 날짜
@@ -101,7 +99,6 @@ export const ChallengeOpenTwo = () => {
 
   useEffect(() => {
     if (startDate && date && number && time) {
-      setEndProgress(1);
       submitButtonDisable(false);
     }
     if (date && number) setSummedNumber((parseInt(date) * parseInt(number)).toString());
@@ -115,7 +112,7 @@ export const ChallengeOpenTwo = () => {
   return (
     <TouchableWithoutFeedback onPress={hideDropDown}>
       <Wrapper>
-        <Progress.Bar style={styles.progressBar} progress={endProgress} width={Width} height={2} />
+        <Progress.Bar style={styles.progressBar} progress={0.99} width={Width} height={2} />
         <Text style={styles.title}>도전작심 시간을 정해주세요</Text>
         <Text style={styles.subTitle}>모집 기간을 고려해서 정해주세요</Text>
         <View style={styles.textInputOneView}>

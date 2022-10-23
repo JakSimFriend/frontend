@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { SettingNavParamList } from "../../../../../navigation/SettingNav";
+import { SettingNavParamList } from "../../../../../navigation/setting-nav";
 
 type NotificationData = {
   title: string;

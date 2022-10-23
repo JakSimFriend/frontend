@@ -1,3 +1,16 @@
+import { useNavigation } from "@react-navigation/native";
+import { Emo } from "@src/assets/images/images";
+import {
+  myIndicatorAtom,
+  progressIndexAtom,
+  progressTitleAtom,
+  reactionModalAtom,
+  userIdxAtom,
+} from "@src/common/atom";
+import { GradientButtons } from "@src/components/atoms/GradientButtons";
+import { HomeCalendar, HomeClock, HomeUser } from "@src/components/atoms/TabIcon";
+import ReactionModal from "@src/components/organisms/Modal/ReactionModal";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -12,27 +25,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import styled from "styled-components/native";
-import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/atoms/TabIcon";
 import Collapsible from "react-native-collapsible";
+import LinearGradient from "react-native-linear-gradient";
 import * as ProgressBar from "react-native-progress";
 import Arrow from "react-native-vector-icons/FontAwesome";
-import { GradientButtons } from "../../../../components/atoms/GradientButtons";
-import ReactionModal from "../../../../components/organisms/Modal/ReactionModal";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  myIndicatorAtom,
-  progressIndexAtom,
-  progressTitleAtom,
-  reactionModalAtom,
-  userIdxAtom,
-} from "../../../../common/atom";
-import { Emo } from "../../../../assets/images/images";
-import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import LinearGradient from "react-native-linear-gradient";
+import styled from "styled-components/native";
 
-export const Progress = React.memo(() => {
+export const Progress = () => {
   const setProgressIndex = useSetRecoilState(progressIndexAtom);
   const setProgressTitle = useSetRecoilState(progressTitleAtom);
   const myIndicator = useRecoilValue(myIndicatorAtom);
@@ -133,11 +133,11 @@ export const Progress = React.memo(() => {
       });
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingHorizontal: 20 }}>
       {/* <StatusBar backgroundColor={"#1016474D"}></StatusBar> */}
       <ProgressWrapper>
         <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
-          <View style={[styles.textWrapper, { marginTop: 30 }]}>
+          <View style={[styles.textWrapper]}>
             <Text style={styles.title}>진행 중</Text>
             <Text style={styles.number}>
               {progressDatas.proceedingCount ? progressDatas.proceedingCount : 0}
@@ -459,12 +459,13 @@ export const Progress = React.memo(() => {
       </ProgressWrapper>
     </SafeAreaView>
   );
-});
+};
 
 const ProgressWrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  margin-left: 5%;
+  /* padding-left: 20px;
+  padding-right: 20px; */
 `;
 const ChallengeBox = styled.View`
   padding: 20px 10px;
@@ -534,6 +535,7 @@ const TextOne = styled.Text`
 const styles = StyleSheet.create({
   textWrapper: {
     flexDirection: "row",
+    marginTop: 30,
   },
   title: {
     color: "#000000",
@@ -551,9 +553,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F5FB",
     padding: 45,
     borderRadius: 15,
-    marginTop: 20,
+    marginTop: 10,
     alignItems: "center",
-    marginRight: "5%",
   },
   emptyText: {
     color: "#6F81A9",
@@ -562,7 +563,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 20,
     marginTop: 10,
-    marginRight: "5%",
     borderRadius: 10,
     backgroundColor: "#F6F5FB",
   },

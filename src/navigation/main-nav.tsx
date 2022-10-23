@@ -4,9 +4,10 @@ import { unlink } from "@react-native-seoul/kakao-login";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Color } from "@src/assets/color";
+import Modal from "@src/components/organisms/Modal/modal";
 import axios from "axios";
-import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import AntIcons from "react-native-vector-icons/AntDesign";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -46,13 +47,13 @@ import {
   RequestPage,
   Search,
 } from "../screens/main";
-import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/HomeChallengeInfo";
-import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/ProgressPageInfo";
-import ProfileEdit from "../screens/main/BottomTabs/Profile/ProfileEdit";
-import { ProgressTopbarNav } from "./BottomTabs/MyChallenge/ProgressTopbarNav";
-import LoggedInNav from "./LoggedInNav";
-import LoggedOutNav from "./LoggedOutNav";
-import SettingNav from "./SettingNav";
+import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/home-challenge-info";
+import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/progress-page-info";
+import ProfileEdit from "../screens/main/BottomTabs/Profile/profileEdit";
+import { ProgressTopbarNav } from "./BottomTabs/MyChallenge/progress-topbar-nav";
+import LoggedOutNav from "./logged-out-nav";
+import LoggedInNav from "./loggedIn-nav";
+import SettingNav from "./setting-nav";
 
 const Stack = createStackNavigator();
 
@@ -74,6 +75,7 @@ const MainNav = () => {
   const goBack = () => navigation.goBack();
 
   const [userIdx, setUserIdx] = useRecoilState(userIdxAtom);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   // signOut
   const signOutPatch = () => {
@@ -366,8 +368,58 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerLeft: () => (
                 <TouchableOpacity onPress={goBack}>
-                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 20 }} />
                 </TouchableOpacity>
+              ),
+              headerRight: () => (
+                <>
+                  <TouchableOpacity
+                    onPress={() => setIsModalVisible(true)}
+                    style={{ marginRight: 20 }}
+                  >
+                    <AntIcons name="deleteuser" size={24} />
+                  </TouchableOpacity>
+                  <Modal
+                    isVisible={isModalVisible}
+                    title="취소 불가"
+                    body={
+                      <View
+                        style={{
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <View>
+                          <Text
+                            style={{
+                              width: "100%",
+                              fontSize: 28,
+                              textAlign: "center",
+                              color: Color.blue[1100],
+                              fontWeight: "600",
+                            }}
+                          >
+                            이미 참가가{"\n"}확정되었어요
+                          </Text>
+                        </View>
+                        <View style={{ marginTop: 46 }}>
+                          <Text
+                            style={{
+                              width: "100%",
+                              fontSize: 17,
+                              textAlign: "center",
+                              color: Color.blue[1100],
+                            }}
+                          >
+                            개설자가 승인한 상태라면{"\n"} 도전작심을 취소할 수 없어요
+                          </Text>
+                        </View>
+                      </View>
+                    }
+                    closeFn={() => setIsModalVisible(false)}
+                  />
+                </>
               ),
             }}
           />

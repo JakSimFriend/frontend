@@ -1,3 +1,4 @@
+import { Color } from "@src/assets/color";
 import React from "react";
 import styled from "styled-components/native";
 
@@ -12,23 +13,22 @@ export const HomeEmptyLists = () => {
   );
 };
 
-const EmptyList = styled.View`
-  margin: 20px 4% 50px 4%;
-`;
+const EmptyList = styled.View``;
 const EmptyListTitle = styled.Text`
   font-size: 20px;
   font-weight: 600;
+  color: ${Color.blue[1100]};
 `;
 const EmptyListBox = styled.View`
-  margin-top: 30px;
-  padding: 10px;
-  background-color: #f6f5fb;
+  margin-top: 10px;
+  padding-top: 47px;
+  padding-bottom: 47px;
+  background-color: ${Color.white[100]};
   border-radius: 12px;
-  height: 100px;
   justify-content: center;
   align-items: center;
 `;
 const EmptyListDetail = styled.Text`
   font-size: 18px;
-  color: grey;
+  color: ${Color.blue[900]};
 `;

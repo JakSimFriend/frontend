@@ -2,9 +2,9 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Color } from "@src/assets/color";
 import { profileIndicatorAtom, userIdxAtom } from "@src/common/atom";
-import ModalComponent from "@src/components/organisms/Modal/Modal";
-import SelectModal from "@src/components/organisms/Modal/SelectModal";
-import { ProfileNavParamList } from "@src/navigation/BottomTabs/ProfileNav";
+import ModalComponent from "@src/components/organisms/Modal/modal";
+import SelectModal from "@src/components/organisms/Modal/selectModal";
+import { ProfileNavParamList } from "@src/navigation/BottomTabs/profile-nav";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -61,102 +61,155 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   }, [profileIndicator]);
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View
-        onLayout={(e) => {
-          scrollViewContentHeight == 0 && setScrollViewContentHeight(e.nativeEvent.layout.height);
-        }}
-      >
-        <View style={styles.headerWrapper}>
-          <View>
-            <Text style={styles.headerTitle}>프로필</Text>
-          </View>
-          <View style={styles.headerIconWrapper}>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => navigation.navigate("ProfileEdit")}
-            >
-              <AntDesign name="edit" size={24} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("SettingNav")}
-              style={{ marginLeft: 12 }}
-            >
-              <AntDesign name="setting" size={24} />
-              {/* Todo */}
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.profileView}>
-          {profileData?.profile ? (
-            <Image
-              source={{
-                uri: profileData?.profile,
-              }}
-              style={styles.image}
-            />
-          ) : (
-            <View style={{ ...styles.image, backgroundColor: "black" }} />
-          )}
-          <View style={styles.profileRightView}>
-            <View style={styles.nameView}>
-              <Text style={styles.nickName}>{profileData?.nickName}</Text>
-            </View>
-            <Text style={styles.introduce}>{profileData?.promise}</Text>
-          </View>
-        </View>
-        <LinearGradient style={styles.linearGradient} colors={[Color.violet[100], Color.blue[400]]}>
-          <Text style={styles.pointTitleText}>내 캐시</Text>
-          <Text style={styles.pointText}>{profileData?.point.toLocaleString()}C</Text>
-          <View style={styles.pointButtonView}>
-            <TouchableOpacity style={styles.pointButton} onPress={() => setIsModalVisible(true)}>
-              <Text style={styles.pointButtonText}>초대하기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.pointButton, { marginHorizontal: 10 }]}
-              onPress={() => {
-                setIsDeveloperModalVisible(true);
-                // getAds();
-              }}
-            >
-              <Text style={styles.pointButtonText}>충전하기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.pointButton}
-              onPress={() => {
-                setIsDeveloperModalVisible(true);
-              }}
-            >
-              <Text style={styles.pointButtonText}>인출하기</Text>
-            </TouchableOpacity>
-          </View>
-        </LinearGradient>
-
+    <>
+      <SafeAreaView style={styles.safeAreaView}>
         <View
-          style={[
-            styles.bottomView,
-            {
-              paddingBottom:
-                profileData?.points && profileData?.points?.length < 4
-                  ? scrollViewHeight - scrollViewContentHeight
-                  : 30,
-            },
-          ]}
+          style={{ paddingHorizontal: 20 }}
+          onLayout={(e) => {
+            scrollViewContentHeight == 0 && setScrollViewContentHeight(e.nativeEvent.layout.height);
+          }}
         >
-          <Text style={styles.bottomTitle}>내역 보기</Text>
+          <View style={styles.headerWrapper}>
+            <View>
+              <Text style={styles.headerTitle}>프로필</Text>
+            </View>
+            <View style={styles.headerIconWrapper}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => navigation.navigate("ProfileEdit")}
+              >
+                <AntDesign name="edit" size={24} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("SettingNav")}
+                style={{ marginLeft: 12 }}
+              >
+                <AntDesign name="setting" size={24} />
+                {/* Todo */}
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.profileView}>
+            {profileData?.profile ? (
+              <Image
+                source={{
+                  uri: profileData?.profile,
+                }}
+                style={styles.image}
+              />
+            ) : (
+              <View style={{ ...styles.image, backgroundColor: "black" }} />
+            )}
+            <View style={styles.profileRightView}>
+              <View style={styles.nameView}>
+                <Text style={styles.nickName}>{profileData?.nickName}</Text>
+              </View>
+              <Text style={styles.introduce}>{profileData?.promise}</Text>
+            </View>
+          </View>
+          <LinearGradient
+            style={styles.linearGradient}
+            colors={[Color.violet[100], Color.blue[400]]}
+          >
+            <Text style={styles.pointTitleText}>내 캐시</Text>
+            <Text style={styles.pointText}>{profileData?.point.toLocaleString()}C</Text>
+            <View style={styles.pointButtonView}>
+              <TouchableOpacity style={styles.pointButton} onPress={() => setIsModalVisible(true)}>
+                <Text style={styles.pointButtonText}>초대하기</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.pointButton, { marginHorizontal: 10 }]}
+                onPress={() => {
+                  setIsDeveloperModalVisible(true);
+                  // getAds();
+                }}
+              >
+                <Text style={styles.pointButtonText}>충전하기</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.pointButton}
+                onPress={() => {
+                  setIsDeveloperModalVisible(true);
+                }}
+              >
+                <Text style={styles.pointButtonText}>인출하기</Text>
+              </TouchableOpacity>
+            </View>
+          </LinearGradient>
+        </View>
+        <SelectModal
+          visible={isModalVisible}
+          title={`추천인 되고\n1,000C 받아가세요!`}
+          body={
+            <>
+              <Text
+                style={{
+                  fontWeight: "400",
+                  fontSize: 17,
+                  color: "#101647",
+                  marginTop: 30,
+                  lineHeight: 25,
+                }}
+              >
+                초대받은 사람이 추천인으로{"\n"}
+                <Text style={{ color: "#044DE4" }}>내 닉네임</Text>을 입력하면{"\n"}1,000C를 받을 수
+                있어요!
+              </Text>
+              <Text style={{ fontWeight: "400", fontSize: 17, color: "#6F81A9", marginTop: 50 }}>
+                앱 링크를 복사하시겠어요?
+              </Text>
+            </>
+          }
+          leftContent="취소"
+          rightContent="링크 복사"
+          leftFn={() => setIsModalVisible(false)}
+          rightFn={() => {
+            Clipboard.setString("https://www.apple.com/kr/app-store/");
+            setIsModalVisible(false);
+          }}
+          isRightIsJsx={false}
+        />
+        <ModalComponent
+          isVisible={isDeveloperModalVisible}
+          title="프로그램 개발중 입니다"
+          body={
+            <>
+              <ActivityIndicator size={30} color={Color.blue[100]} />
+              <Text
+                style={{
+                  fontWeight: "400",
+                  fontSize: 17,
+                  color: Color.blue[1100],
+                  marginTop: 70,
+                  textAlign: "center",
+                }}
+              >
+                현재 페이지는 준비중입니다.{`\n`}빠른 시일 내에 더욱 나은 모습으로 찾아뵙겠습니다.
+              </Text>
+            </>
+          }
+          closeFn={() => {
+            setIsDeveloperModalVisible(false);
+          }}
+        />
+      </SafeAreaView>
+      <View style={[styles.bottomView, { flexGrow: 1, flex: 1 }]}>
+        <Text style={styles.bottomTitle}>내역 보기</Text>
+        <ScrollView
+          style={{ flexDirection: "column" }}
+          contentContainerStyle={{ flexGrow: 1, marginBottom: 30 }}
+          onLayout={(e) => {
+            setScrollViewHeight(e.nativeEvent.layout.height);
+          }}
+        >
           <View>
-            <ScrollView
-              // bounces={false}
-              onLayout={(e) => {
-                setScrollViewHeight(e.nativeEvent.layout.height);
-              }}
-            >
-              {profileData?.points?.length === 0 ? (
-                <Text style={styles.emptyAlertText}>결제 내역이 없어요</Text>
-              ) : (
-                profileData?.points?.map((item: any, index: number) => (
-                  <View key={index} style={styles.pointListRow}>
+            {profileData?.points?.length === 0 ? (
+              <Text style={styles.emptyAlertText}>결제 내역이 없어요</Text>
+            ) : (
+              profileData?.points?.map((item: any, index: number) => (
+                <View key={index} style={styles.pointListRow}>
+                  <View style={{ flexDirection: "row" }}>
                     <View style={styles.pointIconView}>
                       <Ionicons
                         name={
@@ -176,88 +229,30 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
                         size={24}
                       />
                     </View>
-                    <View style={[styles.pointColumnView, { flex: 1 }]}>
+                    <View style={[styles.pointColumnView]}>
                       <Text style={styles.pointTypeText}>{item.categoryName}</Text>
                       <Text style={styles.pointDateText}>{item.createAt}</Text>
                     </View>
-                    <View style={styles.pointColumnView}>
-                      <Text
-                        style={[
-                          styles.pointTypeText,
-                          { color: Color.blue[100], textAlign: "right" },
-                        ]}
-                      >
-                        {(item.point > 0 ? "+" : "") +
-                          item.point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        C
-                      </Text>
-                      <Text style={[styles.pointDateText, { textAlign: "right" }]}>
-                        {item.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}C
-                      </Text>
-                    </View>
                   </View>
-                ))
-              )}
-            </ScrollView>
+                  <View style={styles.pointColumnView}>
+                    <Text
+                      style={[styles.pointTypeText, { color: Color.blue[100], textAlign: "right" }]}
+                    >
+                      {(item.point > 0 ? "+" : "") +
+                        item.point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      C
+                    </Text>
+                    <Text style={[styles.pointDateText, { textAlign: "right" }]}>
+                      {item.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}C
+                    </Text>
+                  </View>
+                </View>
+              ))
+            )}
           </View>
-        </View>
+        </ScrollView>
       </View>
-      {/* <ProfileModal visible={isModalVisible} setVisible={setIsModalVisible} /> */}
-      <SelectModal
-        visible={isModalVisible}
-        title={`추천인 되고\n1,000C 받아가세요!`}
-        body={
-          <>
-            <Text
-              style={{
-                fontWeight: "400",
-                fontSize: 17,
-                color: "#101647",
-                marginTop: 30,
-                lineHeight: 25,
-              }}
-            >
-              초대받은 사람이 추천인으로{"\n"}
-              <Text style={{ color: "#044DE4" }}>내 닉네임</Text>을 입력하면{"\n"}1,000C를 받을 수
-              있어요!
-            </Text>
-            <Text style={{ fontWeight: "400", fontSize: 17, color: "#6F81A9", marginTop: 50 }}>
-              앱 링크를 복사하시겠어요?
-            </Text>
-          </>
-        }
-        leftContent="취소"
-        rightContent="링크 복사"
-        leftFn={() => setIsModalVisible(false)}
-        rightFn={() => {
-          Clipboard.setString("https://www.apple.com/kr/app-store/");
-          setIsModalVisible(false);
-        }}
-      />
-      <ModalComponent
-        isVisible={isDeveloperModalVisible}
-        title="프로그램 개발중 입니다"
-        body={
-          <>
-            <ActivityIndicator size={30} color={Color.blue[100]} />
-            <Text
-              style={{
-                fontWeight: "400",
-                fontSize: 17,
-                color: Color.blue[1100],
-                marginTop: 70,
-                textAlign: "center",
-              }}
-            >
-              현재 페이지는 준비중입니다.{`\n`}빠른 시일 내에 더욱 나은 모습으로 찾아뵙겠습니다.
-            </Text>
-          </>
-        }
-        closeFn={() => {
-          setIsDeveloperModalVisible(false);
-        }}
-      />
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -265,10 +260,11 @@ const styles = StyleSheet.create({
   safeAreaView: {
     marginTop: 11,
     backgroundColor: Color.white[200],
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    position: "relative",
   },
   headerWrapper: {
-    marginTop: 10,
-    paddingHorizontal: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -282,7 +278,6 @@ const styles = StyleSheet.create({
   },
   profileView: {
     marginVertical: 35,
-    marginHorizontal: 20,
     flexDirection: "row",
   },
   image: {
@@ -313,9 +308,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   linearGradient: {
-    width: "90%",
+    width: "100%",
     paddingVertical: 16,
-    paddingHorizontal: "3%",
+    paddingHorizontal: 20,
     borderRadius: 13,
     alignSelf: "center",
   },
@@ -332,13 +327,13 @@ const styles = StyleSheet.create({
   },
   pointButtonView: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   pointButton: {
     backgroundColor: "#FFFFFF4D",
     paddingVertical: 13,
-    paddingHorizontal: "6.5%",
     borderRadius: 13,
+    width: "30%",
   },
   pointButtonText: {
     color: Color.white[0],
@@ -357,8 +352,6 @@ const styles = StyleSheet.create({
     shadowColor: "#0F2D6B33",
     shadowOffset: { width: 0, height: -10 },
     shadowOpacity: 1,
-    // shadowRadius: 16,
-    // flex: 1,
   },
   bottomTitle: {
     color: Color.blue[1100],

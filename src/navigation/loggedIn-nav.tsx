@@ -1,10 +1,11 @@
-import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ClockIcon, DiamondIcon, HomeIcon, UserIcon } from "../components/atoms/TabIcon";
-import { ProfileNav, StateNav, MyChallengeNav, HomeNav } from ".";
+import React from "react";
 import { Platform } from "react-native";
 import { useRecoilState } from "recoil";
-import { myIndicatorAtom, stateIndicatorAtom, profileIndicatorAtom } from "../common/atom";
+
+import { myIndicatorAtom, profileIndicatorAtom, stateIndicatorAtom } from "../common/atom";
+import { ClockIcon, DiamondIcon, HomeIcon, UserIcon } from "../components/atoms/TabIcon";
+import { HomeNav, MyChallengeNav, ProfileNav, StateNav } from ".";
 
 const Tabs = createBottomTabNavigator();
 
@@ -24,6 +25,7 @@ const LoggedInNav = () => {
           tabBarStyle: { backgroundColor: "#ffffff" },
           headerShadowVisible: false,
           headerShown: platformHeader,
+          headerTitleStyle: { fontWeight: "bold" },
         }}
       >
         <Tabs.Screen
@@ -34,7 +36,7 @@ const LoggedInNav = () => {
           }}
         />
         <Tabs.Screen
-          name="내챌린지"
+          name="내 도전"
           component={MyChallengeNav}
           options={{
             tabBarIcon: ({ focused }) => <DiamondIcon focused={focused} />,

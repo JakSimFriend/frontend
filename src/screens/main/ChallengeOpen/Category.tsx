@@ -1,13 +1,13 @@
+import { OpenChallengeCategory } from "@src/components/molecules/categories/OpenCategory";
 import React from "react";
-import styled from "styled-components/native";
-import * as Progress from "react-native-progress";
 import { StyleSheet } from "react-native";
-import { OpenChallengeCategory } from "../../../components/molecules/categories/OpenCategory";
+import * as Progress from "react-native-progress";
+import styled from "styled-components/native";
 
 export const Category = () => {
   return (
     <Wrapper>
-      <Progress.Bar style={styles.progressBar} progress={0} width={390} height={2} />
+      <Progress.Bar style={styles.progressBar} progress={0.3} width={390} height={2} />
       <Title>도전작심 카테고리를 골라주세요</Title>
       <SubTitle>한 카테고리만 선택해 주세요!</SubTitle>
       <OpenChallengeCategory />

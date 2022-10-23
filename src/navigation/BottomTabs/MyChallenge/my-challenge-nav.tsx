@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Entypo from "react-native-vector-icons/Entypo";
 import styled from "styled-components/native";
 
-import { MyChallengeTopbarNav } from "./MyChallengeTopbarNav";
+import { MyChallengeTopbarNav } from "./my-challenge-topbar-nav";
 
 const Stack = createStackNavigator();
 
@@ -26,11 +26,11 @@ export const MyChallengeNav = () => {
           component={MyChallengeTopbarNav}
           options={{
             headerTitle: "내 도전",
-            headerTitleAlign: "center",
-            headerTitleStyle: { fontSize: 18, fontWeight: "900" },
+            headerTitleAlign: "left",
+            headerTitleStyle: { fontSize: 20, fontWeight: "900", paddingHorizontal: 10 },
             headerRight: () => (
-              <TouchableOpacity onPress={goToRecord}>
-                <Text style={{ color: "#054de4", fontSize: 15, marginRight: 18 }}>기록</Text>
+              <TouchableOpacity onPress={goToRecord} style={{ marginRight: 20 }}>
+                <Entypo name="box" size={24} />
               </TouchableOpacity>
             ),
           }}

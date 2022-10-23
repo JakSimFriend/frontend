@@ -10,8 +10,8 @@ import {
   View,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { SettingNavParamList } from "../../../../../navigation/SettingNav";
-import axios from "axios";
+
+import { SettingNavParamList } from "../../../../../navigation/setting-nav";
 
 export default function Complaint({ navigation }: StackScreenProps<SettingNavParamList>) {
   const [title, setTitle] = useState("");

@@ -1,16 +1,16 @@
 import React from "react";
-import Home from "react-native-vector-icons/Ionicons";
-import Diamond from "react-native-vector-icons/MaterialCommunityIcons";
 import Clock from "react-native-vector-icons/AntDesign";
-import User from "react-native-vector-icons/FontAwesome";
 import ClockTwo from "react-native-vector-icons/AntDesign"; //
 import CalendarTwo from "react-native-vector-icons/AntDesign"; //
 import UserTwo from "react-native-vector-icons/AntDesign"; //
 import Search from "react-native-vector-icons/AntDesign";
 import Camera from "react-native-vector-icons/AntDesign"; //
-import Back from "react-native-vector-icons/Ionicons";
+import User from "react-native-vector-icons/FontAwesome";
 import Flag from "react-native-vector-icons/FontAwesome";
+import Home from "react-native-vector-icons/Ionicons";
+import Back from "react-native-vector-icons/Ionicons";
 import Calendar from "react-native-vector-icons/Ionicons";
+import Diamond from "react-native-vector-icons/MaterialCommunityIcons";
 type TabBarIconProps = {
   focused: boolean;
 };

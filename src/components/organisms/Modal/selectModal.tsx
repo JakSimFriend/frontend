@@ -1,7 +1,6 @@
-import Clipboard from "@react-native-clipboard/clipboard";
 import { Color } from "@src/assets/color";
 import React from "react";
-import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export interface SelectModalProps {
   visible: boolean;

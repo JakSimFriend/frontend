@@ -3,7 +3,8 @@ import { Color } from "@src/assets/color";
 import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { SettingNavParamList } from "../../../../../navigation/SettingNav";
+
+import { SettingNavParamList } from "../../../../../navigation/setting-nav";
 
 export default function PrivacyPolicy({ navigation }: StackScreenProps<SettingNavParamList>) {
   const text = `## 작심친구 개인정보처리방침

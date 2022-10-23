@@ -51,152 +51,6 @@ export const Request = () => {
     GetData();
   }, [myIndicator]);
 
-  // const [userIndex, setUserIndex] = useState(0);
-  // AsyncStorage.getItem("userIdx", (err, result: any) => {
-  //   setUserIndex(parseInt(result));
-  // });
-  // const getUserWithAxios = async () => {
-  //   const { data } = await axios.get(
-  //     `https://jaksimfriend.site/my-challenges/${userIndex}/application`,
-  //   );
-  //   console.warn(data.result[0]);
-  // };
-  // const Users = () => {
-  //   const query = useQuery(["repoData"], getUserWithAxios);
-  //   // query 안에 data, isLoading, isSuccess, isError 등 다양한게 있다.
-  //   console.warn(query);
-  //   return (
-  //     <>
-  //       {!query.isLoading ? (
-  //         <>
-  //           <View style={styles.textWrapper}>
-  //             <Text style={styles.title}>모집 중</Text>
-  //             <Text style={styles.number}>
-  //               {query.data?.recruitmentCount ? query.data?.recruitmentCount : 0}
-  //             </Text>
-  //           </View>
-  //           <>
-  //             {query.data?.recruitmentCount === 0 ? (
-  //               <View style={styles.emptyBox}>
-  //                 <Text style={styles.emptyText}>모집하고 있는 도전작심이 없어요</Text>
-  //               </View>
-  //             ) : (
-  //               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-  //                 {query.data?.recruitments?.map((item: any, index: number) => {
-  //                   return (
-  //                     <TouchableOpacity
-  //                       style={styles.recruitBox}
-  //                       key={index}
-  //                       onPress={() => {
-  //                         navigation.navigate("RecruitPage", {
-  //                           title: item.title,
-  //                           challengeIdx: item.challengeIdx,
-  //                           members: item.memberCount,
-  //                           waiting: item.waiting,
-  //                         });
-  //                       }}
-  //                     >
-  //                       <RecruitWrapper>
-  //                         <Text style={styles.recruitTitle}>{item.title}</Text>
-  //                         <View style={styles.recruitInfo}>
-  //                           <HomeCalendar />
-  //                           <RecruitText>{item.remainingDay}</RecruitText>
-  //                           <HomeUser />
-  //                           <RecruitText>{item.memberCount}명</RecruitText>
-  //                         </View>
-  //                         <View style={styles.newInfo}>
-  //                           {item.waiting === 0 ? (
-  //                             <Text style={[styles.newInfoText, { color: "#000000" }]}>
-  //                               신규 신청이 {item.waiting}건 있어요!
-  //                             </Text>
-  //                           ) : (
-  //                             <Text style={styles.newInfoText}>
-  //                               신규 신청이 {item.waiting}건 있어요!
-  //                             </Text>
-  //                           )}
-  //                         </View>
-  //                       </RecruitWrapper>
-  //                     </TouchableOpacity>
-  //                   );
-  //                 })}
-  //               </ScrollView>
-  //             )}
-  //           </>
-  //           <View style={styles.textWrapper}>
-  //             <Text style={styles.title}>신청 중</Text>
-  //             <Text style={styles.number}>
-  //               {query.data?.applyingCount ? query.data?.applyingCount : 0}
-  //             </Text>
-  //           </View>
-  //           <>
-  //             {query.data?.applyingCount === 0 ? (
-  //               <View style={styles.emptyBox}>
-  //                 <Text style={styles.emptyText}>신청한 도전작심이 없어요</Text>
-  //               </View>
-  //             ) : (
-  //               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-  //                 {query.data?.applyings?.map((item: any, index: number) => {
-  //                   return (
-  //                     <ChallengeBox key={index}>
-  //                       <TouchableOpacity
-  //                         onPress={() => {
-  //                           navigation.navigate("RequestPage", {
-  //                             challengeIdx: item.challengeIdx,
-  //                             waitingIdx: item.waitingIdx,
-  //                           });
-  //                         }}
-  //                         style={{ padding: 20 }}
-  //                       >
-  //                         {item.acceptStatus === 1 ? (
-  //                           <ChallengeCategory>
-  //                             <ChallengeCategoryText>승인</ChallengeCategoryText>
-  //                           </ChallengeCategory>
-  //                         ) : (
-  //                           <ChallengeCategoryTwo>
-  //                             <ChallengeCategoryTextTwo>승인 대기</ChallengeCategoryTextTwo>
-  //                           </ChallengeCategoryTwo>
-  //                         )}
-  //                         <ChallengeTitle>{item.title}</ChallengeTitle>
-  //                         <ChallengeTags>
-  //                           {item.tags[2] ? `#${item.tags[2]}` : ""}{" "}
-  //                           {item.tags[1] ? `#${item.tags[1]}` : ""}{" "}
-  //                           {item.tags[0] ? `#${item.tags[0]}` : ""}
-  //                         </ChallengeTags>
-  //                         <DateWrapper>
-  //                           <HomeCalendar />
-  //                           <InfoText>{item.remainingDay}</InfoText>
-  //                         </DateWrapper>
-  //                         <ScheduleWrapper>
-  //                           <HomeClock />
-  //                           <InfoText>{item.certification}</InfoText>
-  //                         </ScheduleWrapper>
-  //                         <MembersWrapper>
-  //                           <HomeUser />
-  //                           <InfoText>{item.memberCount}명</InfoText>
-  //                         </MembersWrapper>
-  //                         {item.memberCount < 4 ? (
-  //                           <View style={styles.moreMembersButton}>
-  //                             <Text>{item.needCount}명 더 필요해요</Text>
-  //                           </View>
-  //                         ) : (
-  //                           <></>
-  //                         )}
-  //                       </TouchableOpacity>
-  //                     </ChallengeBox>
-  //                   );
-  //                 })}
-  //               </ScrollView>
-  //             )}
-  //           </>
-  //         </>
-  //       ) : (
-  //         <ActivityIndicator size={20} color={"#000"}></ActivityIndicator>
-  //       )}
-  //     </>
-  //     // fetching에서 데이터가 안들어옴; (react-query data undefined리턴함)
-  //   );
-  // };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
       <RequestWrapper>
@@ -324,7 +178,8 @@ export const Request = () => {
 const RequestWrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding-left: 5%;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 const RecruitWrapper = styled.View`
   background-color: #f6f5fb;
@@ -399,7 +254,6 @@ const styles = StyleSheet.create({
   },
   recruitBox: {
     width: 250,
-    marginBottom: 15,
   },
   number: {
     fontSize: 20,
@@ -412,9 +266,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F5FB",
     padding: 45,
     borderRadius: 15,
-    marginTop: 20,
+    marginTop: 10,
     alignItems: "center",
-    marginRight: "5%",
   },
   emptyText: {
     color: "#6F81A9",

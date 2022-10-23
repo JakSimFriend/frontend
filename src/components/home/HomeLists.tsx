@@ -144,17 +144,17 @@ const ChallengeBox = styled.View`
 const ChallengeTitle = styled.Text`
   font-size: 18px;
   font-weight: 700;
-  margin: 10px 0 15px 0;
+  margin: 36px 0 15px 0;
 `;
 const ChallengeCategory = styled.View`
-  background-color: ${Color.white[0]};
-  border-radius: 15px;
-  padding: 5px 15px;
-  margin: 6px 0;
-  width: 50%;
+  background-color: #ffffff;
+  border-radius: 20px;
+  position: absolute;
 `;
 const ChallengeCategoryText = styled.Text`
   text-align: center;
+  padding: 5px 15px;
+  border-radius: 20px;
 `;
 const ChallengeTags = styled.Text`
   margin: 0 0 40px 0;

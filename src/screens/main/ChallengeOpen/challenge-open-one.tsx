@@ -1,3 +1,4 @@
+import { Color } from "@src/assets/color";
 import React, { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -8,10 +9,11 @@ import {
   TextInput,
   View,
 } from "react-native";
-import styled from "styled-components/native";
-import Feather from "react-native-vector-icons/AntDesign";
 import * as Progress from "react-native-progress";
+import Feather from "react-native-vector-icons/AntDesign";
 import { useSetRecoilState } from "recoil";
+import styled from "styled-components/native";
+
 import { infoAtom, nextButtonAtom, tagsAtom, titleAtom } from "../../../common/atom";
 
 export const ChallengeOpenOne = () => {
@@ -26,148 +28,136 @@ export const ChallengeOpenOne = () => {
   const [tag2, setTag2] = useState("");
   const [tag3, setTag3] = useState("");
   const tags = [tag1, tag2, tag3];
-  
+
   useEffect(() => {
     setTitles(title);
     setInfos(info);
     setTags(tags);
   }, [title, info, tag1, tag2, tag3]);
 
-  const GREY = "#6F81A9",
-    BLACK = "#101647",
-    RED = "#D75858",
-    BLUE = "#044DE4";
-
   // 박스 border색상
-  const [borderColor, setBorderColor] = useState(GREY);
-  const [borderColor2, setBorderColor2] = useState(GREY);
-  const [borderColor3, setBorderColor3] = useState(GREY);
-  const [borderColor4, setBorderColor4] = useState(GREY);
-  const [borderColor5, setBorderColor5] = useState(GREY);
+  const [borderColor, setBorderColor] = useState(Color.blue[900]);
+  const [borderColor2, setBorderColor2] = useState(Color.blue[900]);
+  const [borderColor3, setBorderColor3] = useState(Color.blue[900]);
+  const [borderColor4, setBorderColor4] = useState(Color.blue[900]);
+  const [borderColor5, setBorderColor5] = useState(Color.blue[900]);
 
   // 박스 및 설명(가이드)색상
-  const [guideColor1, setGuideColor1] = useState(GREY);
-  const [guideColor2, setGuideColor2] = useState(GREY);
-  const [guideColor3, setGuideColor3] = useState(GREY);
-  const [guideColor4, setGuideColor4] = useState(GREY);
+  const [guideColor1, setGuideColor1] = useState(Color.blue[900]);
+  const [guideColor2, setGuideColor2] = useState(Color.blue[900]);
+  const [guideColor3, setGuideColor3] = useState(Color.blue[900]);
+  const [guideColor4, setGuideColor4] = useState(Color.blue[900]);
 
   //제목이벤트
   const onChangeTitle = (title: string) => {
     if (title.length === 0) {
-      setBorderColor(GREY);
-      setGuideColor1(GREY);
+      setBorderColor(Color.blue[900]);
+      setGuideColor1(Color.blue[900]);
       nextButtonDisable(true);
       return;
     }
     if (title.length > 10) {
-      setGuideColor1(BLACK);
-      setBorderColor(RED);
+      setGuideColor1(Color.blue[1100]);
       nextButtonDisable(true);
     } else {
-      setGuideColor1(BLUE);
-      setBorderColor(BLUE);
-      if (guideColor2 === BLUE) nextButtonDisable(false);
+      setGuideColor1(Color.blue[100]);
+      setBorderColor(Color.blue[100]);
+      if (guideColor2 === Color.blue[100]) nextButtonDisable(false);
     }
   };
   //설명이벤트
   const onChangeInfo = (info: string) => {
     if (info.length === 0) {
-      setGuideColor2(GREY);
-      setBorderColor2(GREY);
+      setGuideColor2(Color.blue[900]);
+      setBorderColor2(Color.blue[900]);
       nextButtonDisable(true);
       return;
     }
     if (info.length > 0) {
-      setGuideColor2(BLUE);
-      setBorderColor2(BLUE);
-      if (guideColor1 === BLUE) nextButtonDisable(false);
+      setGuideColor2(Color.blue[100]);
+      setBorderColor2(Color.blue[100]);
+      if (guideColor1 === Color.blue[100]) nextButtonDisable(false);
       return;
     }
   };
   //태그이벤트
   const onChangeTag1 = (tags: string) => {
     if (tags.length === 0) {
-      setGuideColor3(GREY);
-      setGuideColor4(GREY);
-      setBorderColor3(GREY);
+      setGuideColor3(Color.blue[900]);
+      setGuideColor4(Color.blue[900]);
+      setBorderColor3(Color.blue[900]);
       nextButtonDisable(false);
       return;
     }
     if (tags.length > 4) {
-      setGuideColor3(BLACK);
-      setBorderColor3(RED);
+      setGuideColor3(Color.blue[1100]);
       nextButtonDisable(true);
     } else {
-      setGuideColor3(BLUE);
-      setBorderColor3(BLUE);
-      if (guideColor1 && guideColor2 && borderColor4 && borderColor5 === BLUE)
+      setGuideColor3(Color.blue[100]);
+      setBorderColor3(Color.blue[100]);
+      if (guideColor1 && guideColor2 && borderColor4 && borderColor5 === Color.blue[100])
         nextButtonDisable(false);
       if (checkGuide(tags) === false) {
-        setGuideColor4(BLACK);
-        setBorderColor3(RED);
+        setGuideColor4(Color.blue[1100]);
         nextButtonDisable(true);
       } else {
-        setGuideColor4(BLUE);
-        setBorderColor3(BLUE);
-        if (guideColor1 && guideColor2 && borderColor4 && borderColor5 === BLUE)
+        setGuideColor4(Color.blue[100]);
+        setBorderColor3(Color.blue[100]);
+        if (guideColor1 && guideColor2 && borderColor4 && borderColor5 === Color.blue[100])
           nextButtonDisable(false);
       }
     }
   };
   const onChangeTag2 = (tags: string) => {
     if (tags.length === 0) {
-      setGuideColor3(GREY);
-      setGuideColor4(GREY);
-      setBorderColor4(GREY);
+      setGuideColor3(Color.blue[900]);
+      setGuideColor4(Color.blue[900]);
+      setBorderColor4(Color.blue[900]);
       nextButtonDisable(false);
       return;
     }
     if (tags.length > 4) {
-      setGuideColor3(BLACK);
-      setBorderColor4(RED);
+      setGuideColor3(Color.blue[1100]);
       nextButtonDisable(true);
     } else {
-      setGuideColor3(BLUE);
-      if (guideColor1 && guideColor2 && borderColor3 && borderColor5 === BLUE)
+      setGuideColor3(Color.blue[100]);
+      if (guideColor1 && guideColor2 && borderColor3 && borderColor5 === Color.blue[100])
         nextButtonDisable(false);
-      setBorderColor4(BLUE);
+      setBorderColor4(Color.blue[100]);
       if (checkGuide(tags) === false) {
-        setGuideColor4(BLACK);
-        setBorderColor4(RED);
+        setGuideColor4(Color.blue[1100]);
         nextButtonDisable(true);
       } else {
-        setGuideColor4(BLUE);
-        setBorderColor4(BLUE);
-        if (guideColor1 && guideColor2 && borderColor3 && borderColor5 === BLUE)
+        setGuideColor4(Color.blue[100]);
+        setBorderColor4(Color.blue[100]);
+        if (guideColor1 && guideColor2 && borderColor3 && borderColor5 === Color.blue[100])
           nextButtonDisable(false);
       }
     }
   };
   const onChangeTag3 = (tags: string) => {
     if (tags.length === 0) {
-      setGuideColor3(GREY);
-      setGuideColor4(GREY);
-      setBorderColor5(GREY);
+      setGuideColor3(Color.blue[900]);
+      setGuideColor4(Color.blue[900]);
+      setBorderColor5(Color.blue[900]);
       nextButtonDisable(false);
       return;
     }
     if (tags.length > 4) {
-      setGuideColor3(BLACK);
-      setBorderColor5(RED);
+      setGuideColor3(Color.blue[1100]);
       nextButtonDisable(true);
     } else {
-      setGuideColor3(BLUE);
-      setBorderColor5(BLUE);
-      if (guideColor1 && guideColor2 && borderColor3 && borderColor4 === BLUE)
+      setGuideColor3(Color.blue[100]);
+      setBorderColor5(Color.blue[100]);
+      if (guideColor1 && guideColor2 && borderColor3 && borderColor4 === Color.blue[100])
         nextButtonDisable(false);
       if (checkGuide(tags) === false) {
-        setGuideColor4(BLACK);
-        setBorderColor5(RED);
+        setGuideColor4(Color.blue[1100]);
         nextButtonDisable(true);
       } else {
-        setGuideColor4(BLUE);
-        setBorderColor4(BLUE);
-        if (guideColor1 && guideColor2 && borderColor3 && borderColor4 === BLUE)
+        setGuideColor4(Color.blue[100]);
+        setBorderColor4(Color.blue[100]);
+        if (guideColor1 && guideColor2 && borderColor3 && borderColor4 === Color.blue[100])
           nextButtonDisable(false);
       }
     }
@@ -182,7 +172,7 @@ export const ChallengeOpenOne = () => {
   }, []);
   return (
     <Wrapper>
-      <Progress.Bar style={styles.progressBar} progress={0.333} width={390} height={2} />
+      <Progress.Bar style={styles.progressBar} progress={0.6} width={390} height={2} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
@@ -199,7 +189,7 @@ export const ChallengeOpenOne = () => {
             <TextInput
               autoFocus
               autoCapitalize="sentences"
-              placeholderTextColor={GREY}
+              placeholderTextColor={Color.blue[900]}
               style={[styles.titleTextInput, { borderColor: borderColor }]}
               value={title}
               onChangeText={setTitle}
@@ -216,13 +206,13 @@ export const ChallengeOpenOne = () => {
             <Text style={[styles.guideText, { color: guideColor1 }]}>
               · 최대 10자 이하만 사용할 수 있어요
             </Text>
-            <Feather name="check" size={16} color={guideColor1 === BLACK ? RED : guideColor1} />
+            <Feather name="check" size={16} />
           </View>
           <SubTitle>설명</SubTitle>
           <View style={styles.textInputView}>
             <TextInput
               ref={infoRef}
-              placeholderTextColor={GREY}
+              placeholderTextColor={Color.blue[900]}
               style={[styles.infoTextInput, { borderColor: borderColor2 }]}
               value={info}
               onChangeText={setInfo}
@@ -248,7 +238,7 @@ export const ChallengeOpenOne = () => {
           <View style={styles.textInputView}>
             <TagsTextInput
               ref={tagOneRef}
-              placeholderTextColor={GREY}
+              placeholderTextColor={Color.blue[900]}
               style={{ borderColor: borderColor3 }}
               value={tag1}
               onChangeText={setTag1}
@@ -264,7 +254,7 @@ export const ChallengeOpenOne = () => {
             />
             <TagsTextInput
               ref={tagTwoRef}
-              placeholderTextColor={GREY}
+              placeholderTextColor={Color.blue[900]}
               style={{ borderColor: borderColor4 }}
               value={tag2}
               onChangeText={setTag2}
@@ -280,7 +270,7 @@ export const ChallengeOpenOne = () => {
             />
             <TagsTextInput
               ref={tagThreeRef}
-              placeholderTextColor={GREY}
+              placeholderTextColor={Color.blue[900]}
               style={{ borderColor: borderColor5 }}
               value={tag3}
               onChangeText={setTag3}
@@ -298,13 +288,13 @@ export const ChallengeOpenOne = () => {
             <Text style={[styles.guideText, { color: guideColor3 }]}>
               · 최대 4자 이하만 사용할 수 있어요
             </Text>
-            <Feather name="check" size={16} color={guideColor3 === BLACK ? RED : guideColor3} />
+            <Feather name="check" size={16} />
           </View>
           <View style={styles.guideView}>
             <Text style={[styles.guideText, { color: guideColor4, marginBottom: 80 }]}>
               · 영문, 특수문자, 띄어쓰기는 빼주세요
             </Text>
-            <Feather name="check" size={16} color={guideColor4 === BLACK ? RED : guideColor4} />
+            <Feather name="check" size={16} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -323,7 +313,7 @@ const Wrapper = styled.View`
   padding: 0 5%;
 `;
 const SubTitle = styled.Text`
-  color: grey;
+  color: Color.blue[900];
   font-size: 13px;
   margin-bottom: 10px;
 `;
@@ -340,7 +330,7 @@ const TagTitle2 = styled.Text`
   margin-top: 10px;
 `;
 const Tag = styled.Text`
-  color: grey;
+  color: Color.blue[900];
   font-size: 15px;
   margin-top: 30px;
 `;

@@ -1,9 +1,10 @@
-import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { StatInfoNav } from "./StatInfoNav";
-import { ProgressInfoNav } from "./ProgressInfoNav";
+import React from "react";
 import { Dimensions, Platform } from "react-native";
 import styled from "styled-components/native";
+
+import { ProgressInfoNav } from "./progress-info-nav";
+import { StatInfoNav } from "./stat-info-nav";
 
 const Tab = createMaterialTopTabNavigator();
 

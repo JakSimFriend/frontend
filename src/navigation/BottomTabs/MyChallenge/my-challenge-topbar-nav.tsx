@@ -1,7 +1,6 @@
-import React from "react";
-import { Progress, Request } from "../../../screens/main";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { Dimensions } from "react-native";
+import { Progress, Request } from "@src/screens/main";
+import React from "react";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -14,10 +13,9 @@ export const MyChallengeTopbarNav = () => {
         tabBarActiveTintColor: "#000000",
         tabBarInactiveTintColor: "#BFC7D7",
         tabBarItemStyle: {
-          alignItems: "baseline",
-          marginRight: -50,
-          marginLeft:5,
-          width: Dimensions.get("window").width * 0.3,
+          marginTop: 19,
+          justifyContent: "flex-start",
+          width: '100%'
         },
         tabBarIndicatorStyle: { backgroundColor: "#fff" },
         tabBarLabelStyle: { fontSize: 23, fontWeight: "bold" },

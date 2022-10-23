@@ -2,7 +2,8 @@ import { StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { SettingNavParamList } from "../../../../../navigation/SettingNav";
+
+import { SettingNavParamList } from "../../../../../navigation/setting-nav";
 
 type NotificationDetailData = {
     title: string;

@@ -1,9 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { Color } from "@src/assets/color";
+import { SettingNavParamList } from "@src/navigation/setting-nav";
 import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { SettingNavParamList } from "../../../../../navigation/SettingNav";
 
 export default function ChallengeTOS({ navigation }: StackScreenProps<SettingNavParamList>) {
   const text = `※ 본 약관은 ‘화수분’(이하 “화수분” 또는 회사”)가 운영하는 자기계발 그룹 챌린지 전자상거래 서비스 및 관련 서비스 (이하 “서비스”)와 관련하여 “화수분”과 이용자의 권리, 의무, 책임사항, 운영수칙, 이용절차 등 기타 필요한 기본적인 사항을 규정함을 목적으로한 이용약관 중 도전작심 개설과 관련된 내용을 별도로 고지합니다.

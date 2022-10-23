@@ -143,7 +143,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
         </TouchableOpacity>
       </View>
       <Wrapper>
-        <StatusBar barStyle="dark-content" backgroundColor="${Color.white[200]}" />
+        <StatusBar barStyle="dark-content" backgroundColor={Color.white[200]} />
         <Title>{title}</Title>
         <Content>{infoData.content}</Content>
         <ScrollView>

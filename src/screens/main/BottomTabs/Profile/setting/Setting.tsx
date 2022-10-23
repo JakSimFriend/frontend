@@ -1,18 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Color } from "@src/assets/color";
+import { userIdxAtom } from "@src/common/atom";
 import { LogOutWithKakao } from "@src/components/molecules/authentication/LogoutButton";
-import SelectModal from "@src/components/organisms/Modal/SelectModal";
+import SelectModal from "@src/components/organisms/Modal/selectModal";
+import WithdrawalModal from "@src/components/organisms/Modal/WithdrawalModal";
+import { SettingNavParamList } from "@src/navigation/setting-nav";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue } from "recoil";
-
-import { userIdxAtom } from "../../../../../common/atom";
-import WithdrawalModal from "../../../../../components/organisms/Modal/WithdrawalModal";
-import { SettingNavParamList } from "../../../../../navigation/SettingNav";
 
 export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) => {
   const [switchEnable, setSwitchEnable] = useState(false);

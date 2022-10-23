@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 
 import messaging from "@react-native-firebase/messaging";
 import { NavigationContainer } from "@react-navigation/native";
-import MainNav from "@src/navigation/MainNav";
+import MainNav from "@src/navigation/main-nav";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "react-native-splash-screen";

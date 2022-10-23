@@ -1,9 +1,9 @@
+import { a, b, c, d, e, f, g, h } from "@src/assets/images/images";
+import { selectedCategoryIndexAtom } from "@src/common/atom";
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
-import { selectedCategoryIndexAtom } from "../../../common/atom";
-import { a, b, c, d, e, f, g, h } from "../../../assets/images/images";
 
 export const OpenChallengeCategory = () => {
   const [categoryIndex, setCategoryIndex] = useState(0);

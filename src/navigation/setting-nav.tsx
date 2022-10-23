@@ -1,13 +1,13 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
-import ChallengeTOS from "../screens/main/BottomTabs/Profile/setting/ChallengeTOS";
-import Complaint from "../screens/main/BottomTabs/Profile/setting/Complaint";
+import ChallengeTOS from "../screens/main/BottomTabs/Profile/setting/challenge-tos";
+import Complaint from "../screens/main/BottomTabs/Profile/setting/complaint";
 import Notification from "../screens/main/BottomTabs/Profile/setting/Notification";
-import NotificationDetail from "../screens/main/BottomTabs/Profile/setting/NotificationDetail";
-import PrivacyPolicy from "../screens/main/BottomTabs/Profile/setting/PrivacyPolicy";
-import { Setting } from "../screens/main/BottomTabs/Profile/setting/Setting";
-import TOS from "../screens/main/BottomTabs/Profile/setting/TOS";
+import NotificationDetail from "../screens/main/BottomTabs/Profile/setting/notification-detail";
+import PrivacyPolicy from "../screens/main/BottomTabs/Profile/setting/privacy-policy";
+import { Setting } from "../screens/main/BottomTabs/Profile/setting/setting";
+import TOS from "../screens/main/BottomTabs/Profile/setting/tos";
 
 export type SettingNavParamList = {
   Setting: undefined;

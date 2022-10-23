@@ -1,16 +1,19 @@
+import { Color } from "@src/assets/color";
+import { a, b, c, d, e, f, g, h } from "@src/assets/images/images";
+import { stateIndicatorAtom, userIdxAtom } from "@src/common/atom";
+import { Wrapper } from "@src/styles/styles";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import styled from "styled-components/native";
-import { Wrapper } from "../../../../styles/styles";
-import axios from "axios";
-import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { useRecoilValue } from "recoil";
-import { stateIndicatorAtom, userIdxAtom } from "../../../../common/atom";
+import styled from "styled-components/native";
 
-export const MyState = React.memo(() => {
+import { Category, Status } from "./interface/stauts.interface";
+
+export const MyState = () => {
   const icons = [a, b, c, d, e, f, g, h];
-  const [statData, setStatData]: any = useState([]);
+  const [statData, setStatData] = useState<Status>();
   const [categoryEmpty, setCategoryEmpty] = useState(false);
   const stateIndicator = useRecoilValue(stateIndicatorAtom);
   const userIdx = useRecoilValue(userIdxAtom);
@@ -32,40 +35,38 @@ export const MyState = React.memo(() => {
   useEffect(() => {
     getData();
   }, [stateIndicator]);
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f6f5fb" }}>
-      <Wrapper>
-        <ScrollView showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={{ backgroundColor: "#f6f5fb", height: "100%" }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Wrapper>
           <LinearGradient style={styles.blueBox} colors={["#947BEA", "#1151E5"]}>
             <UpBox>
+              {/* TODO: 시즌 api 적용 */}
               <SeasonTitle>시즌 1</SeasonTitle>
-              <ChallengeText>2022/06/01 ~ 2022/08/30</ChallengeText>
-              <ChallengeText>기간동안 완료한 챌린지만 합산됩니다</ChallengeText>
+              <ChallengeText>
+                2022/06/01 ~ 2022/08/30{"\n"} 기간동안 완료한 챌린지만 합산됩니다
+              </ChallengeText>
             </UpBox>
             <InfoWrapper>
-              <View>
-                <Text style={styles.text}>평균 달성률</Text>
-                <Text style={styles.text}>
-                  <Text style={styles.number}>
-                    {statData.achievement ? statData.achievement : 0}
-                  </Text>
-                  %
+              <Text style={styles.avgText}>평균 달성률</Text>
+              <Text style={styles.text}>
+                <Text style={styles.number}>
+                  {statData?.achievement ? statData.achievement : 0}
                 </Text>
-              </View>
+                %
+              </Text>
             </InfoWrapper>
           </LinearGradient>
           <Text style={styles.expTitle}>누적 경험치</Text>
-          <Text style={styles.expNumber}>{statData.experience ? statData.experience : 0} EXP</Text>
-          <StatTitle>카테고리 통계</StatTitle>
-          {statData.categories?.length === 0 || categoryEmpty ? (
-            <>
-              <View style={styles.EmptyView}>
-                <Text style={styles.EmptyText}>완료한 도전작심이 없어요</Text>
-              </View>
-            </>
-          ) : (
-            <>
-              {statData.categories?.map((item: any, index: number) => {
+          <Text style={styles.expNumber}>
+            {statData?.experience ? statData.experience.toLocaleString() : 0} EXP
+          </Text>
+
+          <View style={styles.CategoriesWrapper}>
+            {statData?.categories &&
+              statData?.categories.length > 0 &&
+              statData?.categories?.map((item: Category, index: number) => {
                 return (
                   <Categories key={index}>
                     <Left>
@@ -75,99 +76,118 @@ export const MyState = React.memo(() => {
                       <Text style={styles.categoryText}>{item.categoryName}</Text>
                     </Left>
                     <TextWrapper>
-                      <Text style={styles.EXP}>{item.categoryEx}EXP</Text>
+                      <Text style={styles.EXP}>{item.categoryEx.toLocaleString()}EXP</Text>
                     </TextWrapper>
                   </Categories>
                 );
               })}
-            </>
-          )}
-        </ScrollView>
-      </Wrapper>
+            {!statData?.categories && (
+              <EmptyChallengeWrapper>
+                <Text style={{ color: Color.blue[900], fontSize: 17 }}>
+                  완료한 도전작심이 없어요
+                </Text>
+              </EmptyChallengeWrapper>
+            )}
+          </View>
+        </Wrapper>
+      </ScrollView>
     </SafeAreaView>
   );
-});
+};
 
 const SeasonTitle = styled.Text`
-  margin-top: 15px;
   font-size: 20px;
   font-weight: 600;
   color: #ffffff;
 `;
 const ChallengeText = styled.Text`
   color: #ffffff;
-  margin-top: 10px;
+  margin-top: 8px;
+  line-height: 20px;
+  text-align: center;
 `;
 const InfoWrapper = styled.View`
   justify-content: center;
-  flex-direction: row;
-  margin-top: 25px;
-`;
-const StatTitle = styled.Text`
-  font-size: 18px;
-  font-weight: 600;
-  margin: 60px 0 30px 0;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 30px;
 `;
 const UpBox = styled.View`
   align-self: center;
   align-items: center;
-  padding-bottom: 20px;
   border-bottom-width: 1px;
   border-bottom-color: #ffffff;
   width: 95%;
+  padding-bottom: 20px;
 `;
 const Categories = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
 `;
 const Left = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 const ImageWrapper = styled.View`
   padding: 10px;
   border-radius: 10px;
 `;
 const Logo = styled.Image`
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 28px;
 `;
-const TextWrapper = styled.View`
-  margin-top: 10px;
+const TextWrapper = styled.View``;
+
+const EmptyChallengeWrapper = styled.View`
+  margin-top: 30px;
+  align-items: center;
+  background-color: ${Color.white[100]};
+  padding-top: 37px;
+  padding-bottom: 37px;
+  border-radius: 13px;
 `;
+
 const styles = StyleSheet.create({
   blueBox: {
     borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
     marginTop: 20,
+    paddingBottom: 40,
+    paddingTop: 27,
+    paddingHorizontal: 20,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avgText: {
+    color: "#ffffff",
+    fontSize: 13,
   },
   text: {
     color: "#ffffff",
-    marginBottom: 5,
+    fontSize: 24,
   },
   number: {
-    fontSize: 45,
+    fontSize: 48,
     fontWeight: "bold",
-    textAlign: "center",
   },
   expTitle: {
-    marginTop: 30,
+    marginTop: 50,
     fontSize: 20,
     fontWeight: "400",
   },
   expNumber: {
     marginTop: 10,
-    fontSize: 25,
+    fontSize: 28,
     fontWeight: "600",
   },
   categoryBackground: {
     backgroundColor: "#f6f5fb",
   },
   categoryText: {
-    marginTop: 12,
     marginLeft: 15,
-    fontSize: 16,
+    fontSize: 17,
   },
   EXP: {
     fontSize: 18,
@@ -182,5 +202,8 @@ const styles = StyleSheet.create({
     color: "#6F81A9",
     alignSelf: "center",
     fontSize: 18,
+  },
+  CategoriesWrapper: {
+    marginTop: 30,
   },
 });
