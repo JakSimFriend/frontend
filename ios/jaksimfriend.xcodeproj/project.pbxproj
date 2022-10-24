@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* jaksimfriendTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* jaksimfriendTests.m */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		13B07FBC1A68108700A75B9A /*  .mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /*  .mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3F257BC228EE77C400DA6FC7 /* libAlamofire.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F257BC128EE77C400DA6FC7 /* libAlamofire.a */; };
@@ -55,7 +55,7 @@
 		01457B92C4B8A420C130EE54 /* Pods-jaksimfriend.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-jaksimfriend.debug.xcconfig"; path = "Target Support Files/Pods-jaksimfriend/Pods-jaksimfriend.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* jaksimfriend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jaksimfriend.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = jaksimfriend/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = jaksimfriend/AppDelegate.mm; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /*  .mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = " .mm"; path = "jaksimfriend/ .mm"; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = jaksimfriend/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = jaksimfriend/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = jaksimfriend/main.m; sourceTree = "<group>"; wrapsLines = 0; };
@@ -140,7 +140,7 @@
 				DAC2ACA32864A59B005BB957 /* jaksimfriend.entitlements */,
 				DAC695982851F7F5003C0C4F /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
+				13B07FB01A68108700A75B9A /*  .mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -505,7 +505,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA475054287FCA6600156F6F /* Swift Bridging.swift in Sources */,
-				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				13B07FBC1A68108700A75B9A /*  .mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -584,7 +584,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QDZ5VUDS9T;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = jaksimfriend/Info.plist;
@@ -597,7 +597,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.jaksimfriend;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.jaksimfrienDeepPockets;
 				PRODUCT_NAME = jaksimfriend;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "jaksimfriend-Bridging-Header.h";
@@ -617,7 +617,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QDZ5VUDS9T;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = jaksimfriend/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -629,7 +629,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.jaksimfriend;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.jaksimfrienDeepPockets;
 				PRODUCT_NAME = jaksimfriend;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "jaksimfriend-Bridging-Header.h";
