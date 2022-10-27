@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import styled from "styled-components/native";
+import "moment/locale/ko";
+
+import { useNavigation } from "@react-navigation/native";
+import { Color } from "@src/assets/color";
+import { progressIndexAtom, userIdxAtom } from "@src/common/atom";
+import { GradientButtons } from "@src/components/atoms/GradientButtons";
 import {
   HomeCalendarBlue,
+  HomeCamera,
   HomeClockBlue,
   HomeUserBlue,
-  HomeCamera,
-} from "../../../../../components/atoms/TabIcon";
-import "moment/locale/ko";
-import moment from "moment";
-import { Calendar, LocaleConfig } from "react-native-calendars";
-import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
-import { useNavigation } from "@react-navigation/native";
+} from "@src/components/atoms/TabIcon";
 import axios from "axios";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useRecoilValue } from "recoil";
-import { progressIndexAtom, userIdxAtom } from "../../../../../common/atom";
+import styled from "styled-components/native";
 
 export const ProgressPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);
@@ -43,7 +45,7 @@ export const ProgressPage = () => {
   const markedDates = data.dateLists?.map((item: any) => {
     return item.certificationDate;
   });
-  let dates: any = {};
+  const dates: any = {};
   markedDates?.forEach((val: string) => {
     dates[val] = {
       customStyles: {
@@ -99,43 +101,35 @@ export const ProgressPage = () => {
               </Text>
             </View>
           </View>
-          <Text style={styles.membersTitle}>작심친구 6</Text>
-          <View style={{ marginBottom: "15%" }}>
+          <Text style={styles.membersTitle}>작심친구 {data.memberCount}</Text>
+          <View style={{ marginTop: 20 }}>
             {data.members?.map((item: any, index: number) => {
               return (
-                <Friends key={index}>
-                  <Friend>
-                    <View style={styles.friendLeft}>
-                      <Logo
-                        style={{ borderRadius: 15 }}
-                        resizeMode="contain"
-                        source={{ uri: item.profile }}
-                      />
-                      {/* 내부 리액션 연결 */}
-                      <View>
-                        <View style={styles.reactionButton}>
-                          <Logo
-                            style={{ width: 25, height: 25 }}
-                            resizeMode="contain"
-                            source={require("../../../../../assets/images/Emo.png")}
-                          />
-                        </View>
-                      </View>
-                      <UserInfo>
-                        <Name>{item.nickName}</Name>
-                        <Promise>{item.promise}</Promise>
-                      </UserInfo>
+                <Friend key={index}>
+                  <MemberInfoWrapper>
+                    <View style={{ position: "relative" }}>
+                      <Logo source={{ uri: item.profile }} />
+                      <EmojiWrapper>
+                        <Emoji
+                          source={require("@src/assets/images/Emo.png")}
+                        />
+                      </EmojiWrapper>
                     </View>
-                    <PercentageInfo>
-                      {item.percent === 100 ? (
-                        <Percentage style={{ color: "#676de8" }}>{item.percent}%</Percentage>
-                      ) : (
-                        <Percentage style={{ color: "#000" }}>{item.percent}%</Percentage>
-                      )}
-                      <LastCertified>{item.certification}</LastCertified>
-                    </PercentageInfo>
-                  </Friend>
-                </Friends>
+
+                    <UserInfo>
+                      <Name>{item.nickName}</Name>
+                      <Promise>{item.promise}</Promise>
+                    </UserInfo>
+                  </MemberInfoWrapper>
+                  <PercentageInfo>
+                    {item.percent === 100 ? (
+                      <Percentage style={{ color: "#676de8" }}>{item.percent}%</Percentage>
+                    ) : (
+                      <Percentage style={{ color: "#000" }}>{item.percent}%</Percentage>
+                    )}
+                    <LastCertified>{item.certification}</LastCertified>
+                  </PercentageInfo>
+                </Friend>
               );
             })}
           </View>
@@ -174,29 +168,36 @@ export const ProgressPage = () => {
 const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding: 0 4%;
-`;
-const Friends = styled.View`
-  flex-direction: column;
-  margin-top: 15px;
+  padding: 0 20px 100px 20px;
 `;
 const Friend = styled.View`
   flex-direction: row;
-  align-items: center;
-  margin-bottom: 15px;
   border-bottom-color: #f6f5fb;
   border-bottom-width: 1px;
-  padding-bottom: 10px;
   justify-content: space-between;
+  padding: 9px 0;
 `;
 const Logo = styled.Image`
-  width: 45px;
-  height: 45px;
-  margin-right: 20px;
+  width: 54px;
+  height: 54px;
+  border-radius: 100px;
+`;
+const EmojiWrapper = styled.View`
+  padding: 6px;
+  position: absolute;
+  bottom: 0px;
+  right: -7px;
+  border-radius: 100px;
+  background-color: ${Color.white[200]};
+`;
+
+const Emoji = styled.Image`
+  width: 16px;
+  height: 16px;
 `;
 const UserInfo = styled.View`
   flex-direction: column;
-  margin-left: -20px;
+  margin-left: 14px;
 `;
 const PercentageInfo = styled.View`
   align-items: flex-end;
@@ -226,11 +227,13 @@ const OpenChallenge = styled.View`
   bottom: 0;
   margin-bottom: 30px;
 `;
+const MemberInfoWrapper = styled.View`
+  flex-direction: row;
+`;
 
 const styles = StyleSheet.create({
   spendingDateBox: {
     paddingVertical: 20,
-    marginHorizontal: 15,
     backgroundColor: "#F6F5FB",
     borderRadius: 15,
     marginBottom: 20,
@@ -272,22 +275,9 @@ const styles = StyleSheet.create({
   completedButtonText: {
     color: "#ffffff",
   },
-  friendLeft: {
-    flexDirection: "row",
-  },
   picture: {
     padding: 20,
     backgroundColor: "#F6F5FB",
     borderRadius: 50,
-  },
-  reactionButton: {
-    width: 25,
-    height: 25,
-    backgroundColor: "#fff",
-    borderRadius: 50,
-    top: 24,
-    justifyContent: "center",
-    alignSelf: "center",
-    right: 35,
   },
 });

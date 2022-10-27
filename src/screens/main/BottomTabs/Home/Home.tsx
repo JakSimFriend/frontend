@@ -1,8 +1,8 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Color } from "@src/assets/color";
 import { userInfoAtom } from "@src/common/atom";
-import { HomeLists } from "@src/components//home/HomeLists";
 import { SearchIcon } from "@src/components/atoms/TabIcon";
+import { HomeLists } from "@src/components/home/home-lists";
 import { HomeCategory } from "@src/components/molecules/categories/HomeCategory";
 import { useUserInfo } from "@src/hook/useUserInfo";
 import React, { useRef, useState } from "react";

@@ -52,16 +52,19 @@ export const useAutoLogin = () => {
   const getIdx = async () => {
     try {
       const idx: string | null = await AsyncStorage.getItem("userIdx");
+
       if (RA.isNilOrEmpty(idx)) {
         //userIdx가 없을 경우
         getUserIdx().then(({ data }) => {
           setUserIdx(Number(data.result));
           getUserInfo(Number(data.result)).then(({ data }) => {
             const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
+
             if (RA.isNilOrEmpty(userInfo.nickName)) {
               setIsUserStatus("pending");
+            } else {
+              setIsUserStatus("success");
             }
-            setIsUserStatus("success");
             setUserInfo(userInfo);
           });
         });
@@ -71,8 +74,10 @@ export const useAutoLogin = () => {
           const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
           if (RA.isNilOrEmpty(userInfo.nickName)) {
             setIsUserStatus("pending");
+          } else {
+            setIsUserStatus("success");
           }
-          setIsUserStatus("success");
+
           setUserInfo(userInfo);
         });
       }

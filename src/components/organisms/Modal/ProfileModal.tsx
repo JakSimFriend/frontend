@@ -1,6 +1,6 @@
 import Clipboard from "@react-native-clipboard/clipboard";
 import React from "react";
-import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export interface NickNameModal4Props {
   visible: boolean;

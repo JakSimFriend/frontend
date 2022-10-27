@@ -5,6 +5,7 @@ import { Color } from "@src/assets/color";
 import { userIdxAtom } from "@src/common/atom";
 import axios from "axios";
 import moment from "moment";
+import * as R from "ramda";
 import React, { useEffect, useState } from "react";
 import {
   Image,
@@ -33,37 +34,41 @@ type RouteParams = {
   };
 };
 
+const GetChallenge = (challengeId: number, userId: number) =>
+  axios.get<MyChallenges>(
+    `https://jaksimfriend.site/my-challenges/${challengeId}/${userId}/recruitment-info`,
+  );
+const PatchUserStatus = (waitingUserId: number, userId: number, type: "accept" | "refuse") =>
+  axios.patch(`https://jaksimfriend.site/challenges/${waitingUserId}/${userId}/${type}`);
+
 export const RecruitPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;
   const userIdx = useRecoilValue(userIdxAtom);
 
   const [recruitPageData, setRecruitPageData]: any = useState([]);
-  useEffect(() => {
-    axios
-      .get<MyChallenges>(
-        `https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/recruitment-info`,
-      )
+
+  const getChallengePipe = () => {
+    GetChallenge(challengeIdx, userIdx as number)
       .then((response) => {
-        setRecruitPageData(response.data.result[0]);
+        setRecruitPageData(R.head(response.data.result));
       })
       .catch((error) => console.log(error.message));
+  };
+
+  useEffect(() => {
+    if (challengeIdx && userIdx) getChallengePipe();
   }, []);
-  const acceptJoin = (item: any) => {
-    axios
-      .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/accept`)
-      .then((response) => {
-        console.warn(response.data);
-      })
+
+  const acceptJoin = (waitingUserId: number) => {
+    PatchUserStatus(waitingUserId, userIdx as number, "accept")
+      .then(() => getChallengePipe())
       .catch((error) => {
         console.log(error);
       });
   };
-  const refuseJoin = (item: any) => {
-    axios
-      .patch(`https://jaksimfriend.site/challenges/${item}/${userIdx}/refuse`)
-      .then((response) => {
-        console.log(response.data);
-      })
+  const refuseJoin = (waitingUserId: number) => {
+    PatchUserStatus(waitingUserId, userIdx as number, "refuse")
+      .then(() => getChallengePipe())
       .catch((error) => {
         console.log(error);
       });
@@ -171,12 +176,23 @@ export const RecruitPage = ({ route }: RouteParams) => {
                 {recruitPageData.waitings?.map((item: waitings, index: number) => {
                   return (
                     <WaitingWrapper key={index}>
-                      <WaitingImage
-                        resizeMode="contain"
-                        source={{
-                          uri: item.profile,
-                        }}
-                      />
+                      {item.profile ? (
+                        <WaitingImage
+                          resizeMode="contain"
+                          source={{
+                            uri: item.profile,
+                          }}
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            width: 76,
+                            height: 76,
+                            backgroundColor: "#FFFFFF",
+                            borderRadius: 100,
+                          }}
+                        />
+                      )}
                       <PercentageWrapper>
                         <PercentageText>{item.achievement}</PercentageText>
                       </PercentageWrapper>
@@ -253,12 +269,14 @@ const WaitingWrapper = styled.View`
   padding: 20px;
   margin: 20px 20px 0 0;
   align-items: center;
+  justify-content: center;
 `;
 const WaitingImage = styled.Image`
   width: 76px;
   height: 76px;
   border-radius: 100px;
 `;
+
 const PercentageWrapper = styled.View`
   background-color: #ffffff;
   border-radius: 15px;
@@ -275,11 +293,14 @@ const WaitingUserInfoWrapper = styled.View`
 const WaitingName = styled.Text`
   font-size: 18px;
   font-weight: 600;
+  text-align: center;
 `;
 const WaitingPromise = styled.Text`
   color: #6f81a9;
   align-self: center;
+  text-align: center;
   margin-top: 4px;
+  font-size: 13px;
 `;
 const WaitingButtonWrapper = styled.View`
   flex-direction: row;

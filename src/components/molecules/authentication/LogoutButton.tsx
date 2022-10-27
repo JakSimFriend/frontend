@@ -1,11 +1,12 @@
-import React from "react";
-import axios from "axios";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, userIdxAtom } from "../../../common/atom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { logout } from "@react-native-seoul/kakao-login";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { logout } from "@react-native-seoul/kakao-login";
+import axios from "axios";
+import React from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import { isLoggedInAtom, userIdxAtom } from "../../../common/atom";
 
 export const LogOutWithKakao = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);

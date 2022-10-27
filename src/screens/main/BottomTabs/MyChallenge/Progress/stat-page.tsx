@@ -1,13 +1,14 @@
+import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components/native";
-import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
+import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components/native";
+
 import { progressIndexAtom, recieveModalAtom, userIdxAtom } from "../../../../../common/atom";
+import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import RecieveModal from "../../../../../components/organisms/Modal/RecieveModal";
-import axios from "axios";
 
 export const StatPage = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);

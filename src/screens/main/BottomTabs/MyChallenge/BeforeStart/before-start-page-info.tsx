@@ -1,6 +1,10 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StatusBar, Text } from "react-native";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
+
+import { onDevelopModalAtom, userIdxAtom } from "../../../../../common/atom";
 import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import {
   CalendarIcon,
@@ -9,9 +13,6 @@ import {
   FlagIcon,
   UserIconTwo,
 } from "../../../../../components/atoms/TabIcon";
-import axios from "axios";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { onDevelopModalAtom, userIdxAtom } from "../../../../../common/atom";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {

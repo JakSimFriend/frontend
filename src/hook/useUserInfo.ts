@@ -1,10 +1,10 @@
 import { userIdxAtom, userInfoAtom } from "@src/common/atom";
+import { UserInfo } from "@src/screens/main/BottomTabs/Profile/interface/user.interface";
 import axios from "axios";
+import * as R from "ramda";
+import * as RA from "ramda-adjunct";
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import * as RA from "ramda-adjunct";
-import * as R from "ramda";
-import { UserInfo } from "@src/screens/main/BottomTabs/Profile/interface/user.interface";
 
 const getUserInfo = (userId: number) => axios.get(`/profiles/${userId}`);
 

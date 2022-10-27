@@ -3,6 +3,7 @@ import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSetRecoilState } from "recoil";
+
 import { isUserStatusAtom, SignInAtom } from "../../../common/atom";
 
 export interface SignInModal1Props {

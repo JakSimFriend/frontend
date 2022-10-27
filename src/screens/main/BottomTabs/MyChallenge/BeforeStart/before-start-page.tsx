@@ -1,3 +1,8 @@
+import "moment/locale/ko";
+
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -8,22 +13,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Calendar } from "react-native-calendars";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components/native";
+
+import { userIdxAtom } from "../../../../../common/atom";
 import {
   HomeCalendarBlue,
+  HomeCamera,
   HomeClockBlue,
   HomeUserBlue,
-  HomeCamera,
 } from "../../../../../components/atoms/TabIcon";
-import "moment/locale/ko";
-import moment from "moment";
-import { Calendar } from "react-native-calendars";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
-import { userIdxAtom } from "../../../../../common/atom";
-import { useRecoilValue } from "recoil";
 
 type RouteParams = {
   route: {

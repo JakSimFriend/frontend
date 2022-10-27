@@ -1,4 +1,8 @@
 // TODO
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { unlink } from "@react-native-seoul/kakao-login";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -8,16 +12,12 @@ import {
   Text,
   TextInput,
   TextInputChangeEventData,
-  View,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+
 import { isLoggedInAtom, isUserStatusAtom, userIdxAtom } from "../../../common/atom";
-import { unlink } from "@react-native-seoul/kakao-login";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export interface WithdrawalModalProps {
   visible: boolean;

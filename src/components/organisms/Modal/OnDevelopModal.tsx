@@ -1,7 +1,6 @@
 import React from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   Modal,
   StyleSheet,
   Text,
@@ -10,6 +9,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilState } from "recoil";
+
 import { onDevelopModalAtom } from "../../../common/atom";
 
 export default function OnDevelopModal() {

@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { MyState } from "@src/screens/main";
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
-
-import { MyState } from "../../screens/main";
+import { TouchableOpacity } from "react-native";
+import Entypo from "react-native-vector-icons/Entypo";
 
 const Stack = createStackNavigator();
 
@@ -27,7 +27,8 @@ export const StateNav = () => {
           headerTitleStyle: { fontSize: 18, fontWeight: "900" },
           headerRight: () => (
             <TouchableOpacity onPress={goToDetail}>
-              <Text style={{ color: "#054de4", fontSize: 15, marginRight: 18 }}>상세</Text>
+              {/* <Text style={{ color: "#054de4", fontSize: 15, marginRight: 18 }}>상세</Text> */}
+              <Entypo size={24} name="box" style={{ marginRight: 20 }} />
             </TouchableOpacity>
           ),
         }}

@@ -1,15 +1,16 @@
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import React, { useState } from "react";
 import { ImageBackground, Platform, SafeAreaView } from "react-native";
-import styled from "styled-components/native";
-import Cameras from "react-native-vector-icons/AntDesign";
-import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
-import { useNavigation } from "@react-navigation/native";
 import { launchImageLibrary } from "react-native-image-picker";
-import axios from "axios";
+import Cameras from "react-native-vector-icons/AntDesign";
 import { useRecoilState, useRecoilValue } from "recoil";
+import styled from "styled-components/native";
+
 import { CertifiedAtom, CertifiedFailAtom, userIdxAtom } from "../../../../../common/atom";
-import CertifiedModal from "../../../../../components/organisms/Modal/CertifiedModal";
+import { GradientButtons } from "../../../../../components/atoms/GradientButtons";
 import CertifiedFailModal from "../../../../../components/organisms/Modal/CertifiedFailModal";
+import CertifiedModal from "../../../../../components/organisms/Modal/CertifiedModal";
 
 type RouteParams = {
   route: {

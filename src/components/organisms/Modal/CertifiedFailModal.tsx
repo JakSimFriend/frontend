@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSetRecoilState } from "recoil";
+
 import { CertifiedFailAtom } from "../../../common/atom";
 
 export interface Certified1Props {

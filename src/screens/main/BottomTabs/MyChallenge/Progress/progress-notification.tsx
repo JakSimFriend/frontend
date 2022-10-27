@@ -1,18 +1,19 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import styled from "styled-components/native";
 import Alarm from "react-native-vector-icons/MaterialCommunityIcons";
-import ReportModalOne from "../../../../../components/organisms/Modal/ReportModalOne";
-import ReportModalTwo from "../../../../../components/organisms/Modal/ReportModalTwo";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components/native";
+
 import {
   onDevelopModalAtom,
   progressIndexAtom,
   reportModalOne,
   userIdxAtom,
 } from "../../../../../common/atom";
-import axios from "axios";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
+import ReportModalOne from "../../../../../components/organisms/Modal/ReportModalOne";
+import ReportModalTwo from "../../../../../components/organisms/Modal/ReportModalTwo";
 
 export const ProgressNotification = () => {
   const progressIndex = useRecoilValue(progressIndexAtom);

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, StatusBar, Text } from "react-native";
-import styled from "styled-components/native";
+import { userIdxAtom } from "@src/common/atom";
 import {
   CalendarIcon,
   ClockIconTwo,
   DiamondIconTwo,
   FlagIcon,
   UserIconTwo,
-} from "../../../../../components/atoms/TabIcon";
+} from "@src/components/atoms/TabIcon";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StatusBar, Text } from "react-native";
 import { useRecoilValue } from "recoil";
-import { userIdxAtom } from "../../../../../common/atom";
+import styled from "styled-components/native";
 
 type RouteParams = {
   route: {

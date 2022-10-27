@@ -1,5 +1,5 @@
 import { UserInfo } from "@src/screens/main/BottomTabs/Profile/interface/user.interface";
-import { atom, atomFamily } from "recoil";
+import { atom } from "recoil";
 import { v4 as uuid } from "uuid";
 
 export const isLoggedInAtom = atom<boolean>({

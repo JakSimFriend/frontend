@@ -1,10 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import * as ProgressBar from "react-native-progress";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSetRecoilState } from "recoil";
+
 import { CertifiedAtom } from "../../../common/atom";
-import * as ProgressBar from "react-native-progress";
 
 export interface Certified1Props {
   visible: boolean;

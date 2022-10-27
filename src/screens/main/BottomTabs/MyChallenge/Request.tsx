@@ -1,13 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { myIndicatorAtom, userIdxAtom } from "@src/common/atom";
+import { HomeCalendar, HomeClock, HomeUser } from "@src/components/atoms/TabIcon";
+import { ChallengeCard } from "@src/components/challenge/challenge-card";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components/native";
-
-import { myIndicatorAtom, userIdxAtom } from "../../../../common/atom";
-import { HomeCalendar, HomeClock, HomeUser } from "../../../../components/atoms/TabIcon";
 
 type StackParamList = {
   RecruitPage: {
@@ -68,31 +68,21 @@ export const Request = () => {
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               {recruitData.recruitments?.map((item: any, index: number) => {
                 return (
-                  <TouchableOpacity
-                    style={styles.recruitBox}
+                  <ChallengeCard
                     key={index}
-                    onPress={() => {
+                    title={item.title}
+                    waiting={item.waiting}
+                    remainingDay={item.remainingDay}
+                    memberCount={item.memberCount}
+                    onPressEvent={() =>
                       navigation.navigate("RecruitPage", {
                         title: item.title,
                         challengeIdx: item.challengeIdx,
                         members: item.memberCount,
                         waiting: item.waiting,
-                      });
-                    }}
-                  >
-                    <RecruitWrapper>
-                      <Text style={styles.recruitTitle}>{item.title}</Text>
-                      <View style={styles.recruitInfo}>
-                        <HomeCalendar />
-                        <RecruitText>{item.remainingDay}</RecruitText>
-                        <HomeUser />
-                        <RecruitText>{item.memberCount}명</RecruitText>
-                      </View>
-                      <View style={styles.newInfo}>
-                        <Text style={styles.newInfoText}>신규 신청이 {item.waiting}건 있어요!</Text>
-                      </View>
-                    </RecruitWrapper>
-                  </TouchableOpacity>
+                      })
+                    }
+                  />
                 );
               })}
             </ScrollView>
@@ -112,14 +102,6 @@ export const Request = () => {
               {recruitData.applyings?.map((item: any, index: number) => {
                 return (
                   <ChallengeBox key={index}>
-                    {/* <ImageBackground
-                      source={require("../../../../assets/Book.png")}
-                      blurRadius={20}
-                      style={{ position: "absolute", zIndex: 100, width: "100%", height: "100%" }}
-                      borderRadius={15}
-                    >
-                      <Text>dd</Text>
-                    </ImageBackground> */}
                     <TouchableOpacity
                       onPress={() => {
                         navigation.navigate("RequestPage", {

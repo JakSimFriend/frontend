@@ -150,7 +150,7 @@ const MainNav = () => {
             headerBackTitleVisible: false,
           }}
         >
-          {isUser === "success" || isUser === "none" ? (
+          {isUser != "pending" ? (
             <Stack.Screen name="Home" component={LoggedInNav} />
           ) : (
             <>
@@ -274,7 +274,6 @@ const MainNav = () => {
             component={ProgressTopbarNav}
             options={{
               presentation: "transparentModal",
-              headerTitle: progressTitle,
               headerTitleAlign: "center",
               headerRightContainerStyle: {
                 marginBottom: 10,
@@ -282,13 +281,15 @@ const MainNav = () => {
               headerLeftContainerStyle: {
                 marginBottom: 10,
               },
-              headerTitleStyle: {
-                marginBottom: 10,
-              },
               headerLeft: () => (
-                <TouchableOpacity onPress={goToMyChallenge}>
-                  <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
-                </TouchableOpacity>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <TouchableOpacity onPress={goToMyChallenge}>
+                    <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
+                  </TouchableOpacity>
+                  <Text style={{ marginLeft: 44, fontSize: 17, fontWeight: "600" }}>
+                    {progressTitle}
+                  </Text>
+                </View>
               ),
               headerRight: () => (
                 <TouchableOpacity onPress={goToProgressNotification} style={{ marginRight: 18 }}>

@@ -1,13 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
+
 import { progressIndexAtom, progressTitleAtom, userIdxAtom } from "../../../../common/atom";
 import RecieveModal from "../../../../components/organisms/Modal/RecieveModal";
-import axios from "axios";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import LinearGradient from "react-native-linear-gradient";
 
 export const Record = () => {
   const setProgressIndex = useSetRecoilState(progressIndexAtom);

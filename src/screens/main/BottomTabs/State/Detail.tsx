@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from "react-native";
-import styled from "styled-components/native";
-import axios from "axios";
-import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView,ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useRecoilValue } from "recoil";
+import styled from "styled-components/native";
+
+import { a, b, c, d, e, f, g, h } from "../../../../assets/images/images";
 import { userIdxAtom } from "../../../../common/atom";
 
 export const Detail = () => {

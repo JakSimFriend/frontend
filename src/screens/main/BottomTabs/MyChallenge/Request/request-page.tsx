@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -8,7 +10,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components/native";
+
+import { cancelModalAtom, onDevelopModalAtom, userIdxAtom } from "../../../../../common/atom";
 import {
   CalendarIcon,
   ClockIconTwo,
@@ -17,11 +23,6 @@ import {
   UserIconTwo,
 } from "../../../../../components/atoms/TabIcon";
 import ChallengeCancelModal from "../../../../../components/organisms/Modal/ChallengeCancelModal";
-import axios from "axios";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { cancelModalAtom, onDevelopModalAtom, userIdxAtom } from "../../../../../common/atom";
 import OnDevelopModal from "../../../../../components/organisms/Modal/OnDevelopModal";
 
 type RouteParams = {

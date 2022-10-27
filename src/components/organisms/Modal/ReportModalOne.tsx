@@ -1,8 +1,9 @@
+import axios from "axios";
 import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+
 import { progressIndexAtom, reportModalOne, reportModalTwo, userIdxAtom } from "../../../common/atom";
-import axios from "axios";
 
 export default function ReportModalOne() {
   const progressIndex = useRecoilValue(progressIndexAtom);

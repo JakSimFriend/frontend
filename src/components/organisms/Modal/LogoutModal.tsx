@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
 import { LogOutWithKakao } from "../../../components/molecules/authentication/LogoutButton";
 
 export interface LogoutModalProps {

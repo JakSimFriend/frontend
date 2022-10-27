@@ -8,7 +8,7 @@ import {
   userIdxAtom,
 } from "@src/common/atom";
 import { GradientButtons } from "@src/components/atoms/GradientButtons";
-import { HomeCalendar, HomeClock, HomeUser } from "@src/components/atoms/TabIcon";
+import { ChallengeBigCard } from "@src/components/challenge/challenge-big-card";
 import ReactionModal from "@src/components/organisms/Modal/ReactionModal";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -396,58 +396,24 @@ export const Progress = () => {
             <>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 {progressDatas.befores?.map((item: any, index: number) => {
-                  const Members = [1, 2, 3, 4, 5, 6];
-                  const selected = Members.slice(0, item.accept);
-                  const common = Members.concat(selected);
-                  const Others = common.filter(function (v) {
-                    return common.indexOf(v) == common.lastIndexOf(v);
-                  });
                   return (
-                    <ChallengeBox key={index}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate("BeforeStartPage", {
-                            title: item.title,
-                            challengeIdx: item.challengeIdx,
-                          });
-                        }}
-                      >
-                        <ChallengeCategory>
-                          <ChallengeCategoryText>{item.categoryName}</ChallengeCategoryText>
-                        </ChallengeCategory>
-                        <ChallengeTitle>{item.title}</ChallengeTitle>
-                        <ChallengeTags>
-                          {item.tags[2] ? `#${item.tags[2]}` : ""}{" "}
-                          {item.tags[1] ? `#${item.tags[1]}` : ""}{" "}
-                          {item.tags[0] ? `#${item.tags[0]}` : ""}
-                        </ChallengeTags>
-                        <DateWrapper>
-                          <HomeCalendar />
-                          <InfoText>{item.remainingDay}</InfoText>
-                        </DateWrapper>
-                        <ScheduleWrapper>
-                          <HomeClock />
-                          <InfoText>{item.certification}</InfoText>
-                        </ScheduleWrapper>
-                        <MembersWrapper>
-                          <HomeUser />
-                          {Members.slice(0, item.accept).map((item, index) => {
-                            return (
-                              <SelectedWrapper key={index}>
-                                <ButtonText>{item}</ButtonText>
-                              </SelectedWrapper>
-                            );
-                          })}
-                          {Others.map((item, index) => {
-                            return (
-                              <NonSelectedWrapper key={index}>
-                                <ButtonText>{item}</ButtonText>
-                              </NonSelectedWrapper>
-                            );
-                          })}
-                        </MembersWrapper>
-                      </TouchableOpacity>
-                    </ChallengeBox>
+                    <ChallengeBigCard
+                      key={index}
+                      index={index}
+                      title={item.title}
+                      category={item.categoryName}
+                      tag={item.tags}
+                      remainingDay={item.remainingDay}
+                      memberCount={item.accept}
+                      memberCountType={"box"}
+                      certification={item.certification}
+                      onPressEvent={() => {
+                        navigation.navigate("BeforeStartPage", {
+                          title: item.title,
+                          challengeIdx: item.challengeIdx,
+                        });
+                      }}
+                    />
                   );
                 })}
               </ScrollView>
@@ -536,6 +502,7 @@ const styles = StyleSheet.create({
   textWrapper: {
     flexDirection: "row",
     marginTop: 30,
+    marginBottom: 10,
   },
   title: {
     color: "#000000",
