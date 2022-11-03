@@ -27,7 +27,7 @@ export const MyChallengeNav = () => {
           options={{
             headerTitle: "내 도전",
             headerTitleAlign: "left",
-            headerTitleStyle: { fontSize: 20, fontWeight: "900", paddingHorizontal: 10 },
+            headerTitleStyle: { fontSize: 18, fontWeight: "900" },
             headerRight: () => (
               <TouchableOpacity onPress={goToRecord} style={{ marginRight: 20 }}>
                 <Entypo name="box" size={24} />
@@ -44,3 +44,4 @@ export const Wrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
 `;
+

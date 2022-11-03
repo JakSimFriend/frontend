@@ -67,9 +67,6 @@ export const NickName = () => {
         nickName: nickName,
         recommendedIdx: 1,
       })
-      .then(function (response) {
-        console.log(response.data);
-      })
       .catch(function (error) {
         console.log(error);
       });

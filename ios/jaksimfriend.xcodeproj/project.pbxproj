@@ -18,24 +18,7 @@
 		D2D4CFD8CE0D64E412EEA082 /* libPods-jaksimfriend.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C50719E1748B21A1032D1C9 /* libPods-jaksimfriend.a */; };
 		DA475054287FCA6600156F6F /* Swift Bridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA475053287FCA6600156F6F /* Swift Bridging.swift */; };
 		DA488F2B287FCE0400B49857 /* KakaoOpenSDK-1.23.10 in Resources */ = {isa = PBXBuildFile; fileRef = DA488F2A287FCE0400B49857 /* KakaoOpenSDK-1.23.10 */; };
-		DA488F2C287FCE0400B49857 /* KakaoOpenSDK-1.23.10 in Resources */ = {isa = PBXBuildFile; fileRef = DA488F2A287FCE0400B49857 /* KakaoOpenSDK-1.23.10 */; };
 		DABA3613286470F0001F6120 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DABA3612286470F0001F6120 /* GoogleService-Info.plist */; };
-		DAC695AA2851F851003C0C4F /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695992851F851003C0C4F /* FontAwesome5_Solid.ttf */; };
-		DAC695AC2851F851003C0C4F /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC6959A2851F851003C0C4F /* FontAwesome5_Brands.ttf */; };
-		DAC695AE2851F851003C0C4F /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC6959B2851F851003C0C4F /* MaterialCommunityIcons.ttf */; };
-		DAC695B02851F851003C0C4F /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC6959C2851F851003C0C4F /* Zocial.ttf */; };
-		DAC695B22851F851003C0C4F /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC6959D2851F851003C0C4F /* Octicons.ttf */; };
-		DAC695B42851F851003C0C4F /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC6959E2851F851003C0C4F /* FontAwesome5_Regular.ttf */; };
-		DAC695B62851F851003C0C4F /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC6959F2851F851003C0C4F /* SimpleLineIcons.ttf */; };
-		DAC695B82851F851003C0C4F /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A02851F851003C0C4F /* Feather.ttf */; };
-		DAC695BA2851F851003C0C4F /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A12851F851003C0C4F /* Foundation.ttf */; };
-		DAC695BC2851F851003C0C4F /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A22851F851003C0C4F /* FontAwesome.ttf */; };
-		DAC695BE2851F851003C0C4F /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A32851F851003C0C4F /* MaterialIcons.ttf */; };
-		DAC695C02851F851003C0C4F /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A42851F851003C0C4F /* Fontisto.ttf */; };
-		DAC695C22851F851003C0C4F /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A52851F851003C0C4F /* AntDesign.ttf */; };
-		DAC695C42851F851003C0C4F /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A62851F851003C0C4F /* EvilIcons.ttf */; };
-		DAC695C62851F851003C0C4F /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A72851F851003C0C4F /* Ionicons.ttf */; };
-		DAC695C82851F851003C0C4F /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAC695A82851F851003C0C4F /* Entypo.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,7 +235,6 @@
 				C2F71C96D72E13FE63E92670 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
-				00E356EC1AD99517003FC87E /* Resources */,
 				C9199BA30A7C97F8413D6957 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -327,30 +309,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		00E356EC1AD99517003FC87E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DA488F2C287FCE0400B49857 /* KakaoOpenSDK-1.23.10 in Resources */,
-				DAC695C22851F851003C0C4F /* AntDesign.ttf in Resources */,
-				DAC695B42851F851003C0C4F /* FontAwesome5_Regular.ttf in Resources */,
-				DAC695BC2851F851003C0C4F /* FontAwesome.ttf in Resources */,
-				DAC695C42851F851003C0C4F /* EvilIcons.ttf in Resources */,
-				DAC695B22851F851003C0C4F /* Octicons.ttf in Resources */,
-				DAC695C82851F851003C0C4F /* Entypo.ttf in Resources */,
-				DAC695C62851F851003C0C4F /* Ionicons.ttf in Resources */,
-				DAC695B02851F851003C0C4F /* Zocial.ttf in Resources */,
-				DAC695BA2851F851003C0C4F /* Foundation.ttf in Resources */,
-				DAC695AA2851F851003C0C4F /* FontAwesome5_Solid.ttf in Resources */,
-				DAC695C02851F851003C0C4F /* Fontisto.ttf in Resources */,
-				DAC695BE2851F851003C0C4F /* MaterialIcons.ttf in Resources */,
-				DAC695AE2851F851003C0C4F /* MaterialCommunityIcons.ttf in Resources */,
-				DAC695B62851F851003C0C4F /* SimpleLineIcons.ttf in Resources */,
-				DAC695B82851F851003C0C4F /* Feather.ttf in Resources */,
-				DAC695AC2851F851003C0C4F /* FontAwesome5_Brands.ttf in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;

@@ -16,7 +16,7 @@ export const HomeNav = () => {
       screenOptions={{ 
         headerTitle: "홈",
         headerTitleAlign: "left",
-        headerTitleStyle: { fontSize: 18, fontWeight: "600" },
+        headerTitleStyle: { fontSize: 18, fontWeight: "900" },
         headerShadowVisible: false,
       }}
     >

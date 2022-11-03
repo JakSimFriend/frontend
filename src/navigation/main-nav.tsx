@@ -71,7 +71,7 @@ const MainNav = () => {
   const goToChallengeOpenOne = () => navigation.navigate("ChallengeOpenOne");
   const goToChallengeOpenTwo = () => navigation.navigate("ChallengeOpenTwo");
   const goToProgressNotification = () => navigation.navigate("ProgressNotification");
-  const goToMyChallenge = () => navigation.navigate("내챌린지");
+  const goToMyChallenge = () => navigation.navigate("내 도전");
   const goBack = () => navigation.goBack();
 
   const [userIdx, setUserIdx] = useRecoilState(userIdxAtom);
@@ -150,10 +150,13 @@ const MainNav = () => {
             headerBackTitleVisible: false,
           }}
         >
-          {isUser != "pending" ? (
-            <Stack.Screen name="Home" component={LoggedInNav} />
+          {isUser === "success" ? (
+            <>
+              <Stack.Screen name="Home" component={LoggedInNav} />
+            </>
           ) : (
             <>
+              {console.log(isUser)}
               <Stack.Screen
                 name="NickName"
                 component={NickName}
@@ -286,7 +289,7 @@ const MainNav = () => {
                   <TouchableOpacity onPress={goToMyChallenge}>
                     <AntIcons name="arrowleft" size={25} style={{ marginLeft: 15 }} />
                   </TouchableOpacity>
-                  <Text style={{ marginLeft: 44, fontSize: 17, fontWeight: "600" }}>
+                  <Text style={{ marginLeft: 20, fontSize: 17, fontWeight: "600" }}>
                     {progressTitle}
                   </Text>
                 </View>

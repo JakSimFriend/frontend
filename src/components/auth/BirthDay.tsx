@@ -41,9 +41,6 @@ export const BirthDay = () => {
         userIdx: userIdx,
         birth: dateInfo,
       })
-      .then(function (response) {
-        console.log(response.data);
-      })
       .catch(function (error) {
         console.log(error);
       });

@@ -9,7 +9,6 @@ import {
 } from "@src/common/atom";
 import { GradientButtons } from "@src/components/atoms/GradientButtons";
 import { ChallengeBigCard } from "@src/components/challenge/challenge-big-card";
-import ReactionModal from "@src/components/organisms/Modal/ReactionModal";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -35,6 +34,8 @@ import styled from "styled-components/native";
 export const Progress = () => {
   const setProgressIndex = useSetRecoilState(progressIndexAtom);
   const setProgressTitle = useSetRecoilState(progressTitleAtom);
+  const modalVisible = useRecoilValue(reactionModalAtom);
+
   const myIndicator = useRecoilValue(myIndicatorAtom);
   const [nickName, setNickname] = useState("");
   const [profile, setProfile] = useState("");
@@ -134,7 +135,6 @@ export const Progress = () => {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingHorizontal: 20 }}>
-      {/* <StatusBar backgroundColor={"#1016474D"}></StatusBar> */}
       <ProgressWrapper>
         <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
           <View style={[styles.textWrapper]}>
@@ -212,13 +212,23 @@ export const Progress = () => {
                               >
                                 <View style={styles.innerData}>
                                   <View style={styles.pictureWrapper}>
-                                    <Logo
-                                      style={styles.picture}
-                                      resizeMode="contain"
-                                      source={{
-                                        uri: items.profile,
-                                      }}
-                                    />
+                                    {items.profile ? (
+                                      <Logo
+                                        style={styles.picture}
+                                        source={{
+                                          uri: items.profile,
+                                        }}
+                                      />
+                                    ) : (
+                                      <View
+                                        style={{
+                                          width: 42,
+                                          height: 42,
+                                          backgroundColor: "white",
+                                          borderRadius: 100,
+                                        }}
+                                      />
+                                    )}
                                     <TouchableOpacity
                                       onPress={() => {
                                         ShowBottomSheet(items);
@@ -420,8 +430,8 @@ export const Progress = () => {
             </>
           )}
         </ScrollView>
-
-        <ReactionModal />
+        {/* <ModalComponent isVisible={modalVisible} title="" />
+        <ReactionModal /> */}
       </ProgressWrapper>
     </SafeAreaView>
   );
@@ -430,66 +440,6 @@ export const Progress = () => {
 const ProgressWrapper = styled.View`
   flex: 1;
   background-color: #ffffff;
-  /* padding-left: 20px;
-  padding-right: 20px; */
-`;
-const ChallengeBox = styled.View`
-  padding: 20px 10px;
-  background-color: #f6f5fb;
-  border-radius: 12px;
-  margin: 15px 10px 30px 5px;
-`;
-const ChallengeTitle = styled.Text`
-  font-size: 18px;
-  font-weight: 600;
-  margin: 10px 0 15px 0;
-`;
-const ChallengeCategory = styled.View`
-  background-color: #ffffff;
-  border-radius: 15px;
-  padding: 8px 0;
-  margin: 6px 0;
-  width: 80px;
-`;
-const ChallengeCategoryText = styled.Text`
-  text-align: center;
-`;
-const ChallengeTags = styled.Text`
-  margin: 0 0 20px 0;
-  color: #6f81a9;
-`;
-const Logo = styled.Image`
-  width: 20px;
-  height: 20px;
-`;
-const DateWrapper = styled.View`
-  flex-direction: row;
-  margin-top: 5px;
-`;
-const ScheduleWrapper = styled.View`
-  flex-direction: row;
-  margin-top: 5px;
-`;
-const MembersWrapper = styled.View`
-  flex-direction: row;
-  margin-top: 5px;
-`;
-const SelectedWrapper = styled.View`
-  background-color: #054de4;
-  border-radius: 4px;
-  margin-left: 3px;
-`;
-const NonSelectedWrapper = styled.View`
-  background-color: #bfc7d7;
-  border-radius: 4px;
-  margin-left: 3px;
-`;
-const InfoText = styled.Text`
-  padding: 0 5px;
-`;
-const ButtonText = styled.Text`
-  padding: 0 5px;
-  color: transparent;
 `;
 const TextOne = styled.Text`
   font-size: 18px;
@@ -497,12 +447,16 @@ const TextOne = styled.Text`
   font-weight: 500;
   letter-spacing: 1px;
 `;
+const Logo = styled.Image`
+  width: 20px;
+  height: 20px;
+`;
 
 const styles = StyleSheet.create({
   textWrapper: {
     flexDirection: "row",
     marginTop: 30,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   title: {
     color: "#000000",
@@ -594,11 +548,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 25,
     backgroundColor: "#ffffff",
-    marginRight: 15,
+    marginRight: 10,
     borderRadius: 15,
   },
   detailButtonText: {
-    color: "#054de4",
+    color: "#6F81A9",
   },
   completedButton: {
     backgroundColor: "#BFC7D7",
