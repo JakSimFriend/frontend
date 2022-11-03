@@ -156,7 +156,6 @@ const MainNav = () => {
             </>
           ) : (
             <>
-              {console.log(isUser)}
               <Stack.Screen
                 name="NickName"
                 component={NickName}

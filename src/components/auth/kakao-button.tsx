@@ -17,7 +17,8 @@ export const KakaoSignInButton = () => {
 
   useEffect(() => {
     AsyncStorage.getItem("fcmtoken").then((value) => {
-      if (RA.isNilOrEmpty(value)) useGetFcmTokenByGoogle();
+      if (RA.isNilOrEmpty(value))
+        useGetFcmTokenByGoogle().then((token: string) => setFcmToken(token));
       else setFcmToken(value as string);
     });
   }, []);
