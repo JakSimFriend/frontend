@@ -14,7 +14,7 @@ export default function ReportModalOne() {
 
   const postReport = () => {
     axios
-      .post("https://jaksimfriend.site/settings/report", {
+      .post("https://yenie.shop/settings/report", {
         userIdx: userIdx,
         challengeIdx: progressIndex,
         certificationIdx: 0,
@@ -46,6 +46,7 @@ export default function ReportModalOne() {
               onPress={() => {
                 setModalOneVisible(false);
                 setModalTwoVisible(true);
+                postReport()
               }}
             >
               <Text style={styles.ReportButtonText}>신고</Text>

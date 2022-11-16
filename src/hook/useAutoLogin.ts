@@ -33,7 +33,7 @@ const getFCMToken = async () => {
 };
 
 export const useAutoLogin = () => {
-  axios.defaults.baseURL = "https://jaksimfriend.site";
+  axios.defaults.baseURL = "https://yenie.shop";
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUserStatus = useSetRecoilState(isUserStatusAtom);
   const setUserIdx = useSetRecoilState(userIdxAtom);
@@ -59,7 +59,7 @@ export const useAutoLogin = () => {
           setUserIdx(Number(data.result));
           getUserInfo(Number(data.result)).then(({ data }) => {
             const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
-
+            
             if (RA.isNilOrEmpty(userInfo.nickName)) {
               setIsUserStatus("pending");
             } else {
@@ -92,7 +92,6 @@ export const useAutoLogin = () => {
       if (RA.isNotNilOrEmpty(value)) {
         getJwt();
         getIdx();
-
         // 구글로그인-파이어베이스 연동
         googleSigninConfigure();
         getFCMToken();

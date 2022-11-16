@@ -87,7 +87,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
 
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
+      .get(`https://yenie.shop/challenges/${challengeIdx}/${userIdx}`)
       .then(function (response) {
         setInfoData(response.data.result);
       })
@@ -97,7 +97,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
   }, []);
   const joinChallenge = () => {
     axios
-      .post(`https://jaksimfriend.site/challenges/join`, {
+      .post(`https://yenie.shop/challenges/join`, {
         userIdx: userIdx,
         challengeIdx: challengeIdx,
       })

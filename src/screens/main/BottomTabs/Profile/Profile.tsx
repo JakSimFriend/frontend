@@ -43,7 +43,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   const [profileData, setProfileData] = useState<UserInfo>();
   const getData = () => {
     axios
-      .get(`https://jaksimfriend.site/profiles/${userIdx}`)
+      .get(`https://yenie.shop/profiles/${userIdx}`)
       .then((response) => setProfileData(response.data.result[0]))
       .catch((error) => console.log(error));
   };
@@ -51,7 +51,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   const receiveReward = () => {
     // 광고보상받기
     axios
-      .patch(`https://jaksimfriend.site/profiles/${userIdx}/reward`)
+      .patch(`https://yenie.shop/profiles/${userIdx}/reward`)
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
   };

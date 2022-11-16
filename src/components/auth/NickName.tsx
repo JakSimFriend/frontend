@@ -51,7 +51,7 @@ export const NickName = () => {
   //회원 탈퇴 API
   const signOutPatch = () => {
     axios
-      .patch(`https://jaksimfriend.site/users/${userIdx}/delete`)
+      .patch(`https://yenie.shop/users/${userIdx}/delete`)
       .then(function (response) {
         console.log(response);
       })
@@ -62,7 +62,7 @@ export const NickName = () => {
 
   const postNickName = () => {
     axios
-      .post("https://jaksimfriend.site/users/nickname", {
+      .post("https://yenie.shop/users/nickname", {
         userIdx: userIdx,
         nickName: nickName,
         recommendedIdx: 1,
@@ -73,7 +73,7 @@ export const NickName = () => {
   };
   const checkNickName = () => {
     axios
-      .post("https://jaksimfriend.site/users/nickname/check", {
+      .post("https://yenie.shop/users/nickname/check", {
         userIdx: userIdx,
         nickName: nickName,
       })
@@ -98,7 +98,7 @@ export const NickName = () => {
   //추천인 확인
   const checkUser = () => {
     axios
-      .post(`https://jaksimfriend.site/users/check`, {
+      .post(`https://yenie.shop/users/check`, {
         userIdx: userIdx,
         nickName: nickName2,
       })

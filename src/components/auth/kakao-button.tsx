@@ -12,6 +12,7 @@ import { useSetRecoilState } from "recoil";
 export const KakaoSignInButton = () => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserStatusAtom);
+  const setIsUserStatus = useSetRecoilState(isUserStatusAtom);
   const setUserIdx = useSetRecoilState(userIdxAtom);
   const [fcmToken, setFcmToken] = useState<string>();
 
@@ -31,44 +32,45 @@ export const KakaoSignInButton = () => {
       console.log(error);
       return;
     }
-
-    axios
-      .post(
-        "https://jaksimfriend.site/users/kakao-login",
-        {},
-        {
-          headers: {
-            "KAKAO-ACCESS-TOKEN": JSON.stringify(token.accessToken),
-            "DEVICE-TOKEN": fcmToken as string,
+    if (token)
+      axios
+        .post(
+          "https://yenie.shop/users/kakao-login",
+          {},
+          {
+            headers: {
+              "KAKAO-ACCESS-TOKEN": JSON.stringify(token.accessToken),
+              "DEVICE-TOKEN": fcmToken as string,
+            },
           },
-        },
-      )
-      .then((response) => {
-        AsyncStorage.multiSet([
-          ["jwt", response.data.result.jwt],
-          ["userIdx", JSON.stringify(response.data.result.userIdx)],
-        ]);
-        axios.defaults.headers.common["X-ACCESS-TOKEN"] = response.data.result.jwt;
+        )
+        .then((response) => {
+          AsyncStorage.multiSet([
+            ["jwt", response.data.result.jwt],
+            ["userIdx", JSON.stringify(response.data.result.userIdx)],
+          ]);
+          axios.defaults.headers.common["X-ACCESS-TOKEN"] = response.data.result.jwt;
 
-        setUserIdx(response.data.result.userIdx);
-        return axios
-          .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
-          .then((response) => {
-            // nick name에 따라 유저의 가입 완료 여부 체크
-            if (response.data.result[0].nickName === null) {
-              setIsUser("none");
-            } else {
-              setIsUser("success");
-            }
-            setIsLoggedIn(true);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+          setUserIdx(response.data.result.userIdx);
+          return axios
+            .get(`https://yenie.shop/profiles/${response.data.result.userIdx}`)
+            .then((response) => {
+              // nick name에 따라 유저의 가입 완료 여부 체크
+              console.log(response)
+              if (response.data.result[0].nickName === null) {
+                setIsUser("none");
+              } else {
+                setIsUser("success");
+              }
+              setIsLoggedIn(true);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   };
   return (
     <TouchableOpacity onPress={signInWithKakao} style={styles.kakaoButton}>

@@ -39,7 +39,7 @@ const GetChallenge = (challengeId: number, userId: number) =>
     `https://jaksimfriend.site/my-challenges/${challengeId}/${userId}/recruitment-info`,
   );
 const PatchUserStatus = (waitingUserId: number, userId: number, type: "accept" | "refuse") =>
-  axios.patch(`https://jaksimfriend.site/challenges/${waitingUserId}/${userId}/${type}`);
+  axios.patch(`https://yenie.shopsite/challenges/${waitingUserId}/${userId}/${type}`);
 
 export const RecruitPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;

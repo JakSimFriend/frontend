@@ -41,7 +41,7 @@ export const RequestPage = ({ route }: RouteParams) => {
   const [data, setData]: any = useState([]);
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/challenges/${challengeIdx}/${userIdx}`)
+      .get(`https://yenie.shop/challenges/${challengeIdx}/${userIdx}`)
       .then(function (response) {
         setData(response.data.result);
       })
@@ -51,7 +51,7 @@ export const RequestPage = ({ route }: RouteParams) => {
   }, []);
   const cancelChallenge = () => {
     axios
-      .patch(`https://jaksimfriend.site/challenges/${waitingIdx}/${userIdx}/cancel`)
+      .patch(`https://yenie.shop/challenges/${waitingIdx}/${userIdx}/cancel`)
       .then(function (response) {
         console.log(response.data);
       })

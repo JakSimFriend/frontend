@@ -80,7 +80,7 @@ const MainNav = () => {
   // signOut
   const signOutPatch = () => {
     axios
-      .patch(`https://jaksimfriend.site/users/${userIdx}/delete`)
+      .patch(`https://yenie.shopyenie.shop/users/${userIdx}/delete`)
       .then(function (response) {
         console.log(response.data.result);
       })
@@ -114,7 +114,7 @@ const MainNav = () => {
   const tags = useRecoilValue(tagsAtom);
   const createChallenge = () => {
     axios
-      .post("https://jaksimfriend.site/challenges", {
+      .post("https://yenie.shop/challenges", {
         title: title,
         content: content,
         startDate: startDate,

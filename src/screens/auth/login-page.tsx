@@ -10,6 +10,7 @@ import { KakaoSignInButton } from "../../components/auth/kakao-button";
 const LoginPage = () => {
   // 자동 로그인
   useAutoLogin();
+
   return (
     <>
       <StatusBar barStyle={"default"} backgroundColor={"#947BEA"}></StatusBar>
