@@ -43,7 +43,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   const [profileData, setProfileData] = useState<UserInfo>();
   const getData = () => {
     axios
-      .get(`https://yenie.shop/profiles/${userIdx}`)
+      .get(`https://eddy-pl.com/api/profiles/${userIdx}`)
       .then((response) => setProfileData(response.data.result[0]))
       .catch((error) => console.log(error));
   };
@@ -51,7 +51,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
   const receiveReward = () => {
     // 광고보상받기
     axios
-      .patch(`https://yenie.shop/profiles/${userIdx}/reward`)
+      .patch(`https://eddy-pl.com/api/profiles/${userIdx}/reward`)
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
   };
@@ -113,7 +113,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
             colors={[Color.violet[100], Color.blue[400]]}
           >
             <Text style={styles.pointTitleText}>내 캐시</Text>
-            <Text style={styles.pointText}>{profileData?.point.toLocaleString()}C</Text>
+            <Text style={styles.pointText}>{profileData?.balance.toLocaleString()}C</Text>
             <View style={styles.pointButtonView}>
               <TouchableOpacity style={styles.pointButton} onPress={() => setIsModalVisible(true)}>
                 <Text style={styles.pointButtonText}>초대하기</Text>

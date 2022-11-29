@@ -41,7 +41,7 @@ export const BeforeStartPage = ({ route }: RouteParams) => {
   const [data, setData]: any = useState([]);
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/before-info`)
+      .get(`https://eddy-pl.com/api/my-challenges/${challengeIdx}/${userIdx}/before-info`)
       .then(function (response) {
         setData(response.data.result[0]);
       })

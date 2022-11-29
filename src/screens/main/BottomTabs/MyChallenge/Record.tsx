@@ -20,7 +20,7 @@ export const Record = () => {
   const [recordData, setRecordData]: any = useState([]);
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/my-challenges/${userIdx}/record`)
+      .get(`https://eddy-pl.com/api/my-challenges/${userIdx}/record`)
       .then(function (response) {
         if (response.data.result[0] === undefined) {
           setRecordEmpty(true);

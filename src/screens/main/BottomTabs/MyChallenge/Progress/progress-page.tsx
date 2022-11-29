@@ -25,8 +25,9 @@ export const ProgressPage = () => {
   const [data, setData]: any = useState([]);
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-info`)
+      .get(`https://eddy-pl.com/api/my-challenges/${progressIndex}/${userIdx}/progress-info`)
       .then(function (response) {
+        console.log(response);
         setData(response.data.result[0]);
       })
       .catch(function (error) {
@@ -110,9 +111,7 @@ export const ProgressPage = () => {
                     <View style={{ position: "relative" }}>
                       <Logo source={{ uri: item.profile }} />
                       <EmojiWrapper>
-                        <Emoji
-                          source={require("@src/assets/images/Emo.png")}
-                        />
+                        <Emoji source={require("@src/assets/images/Emo.png")} />
                       </EmojiWrapper>
                     </View>
 

@@ -36,7 +36,7 @@ export const HomeLists = () => {
     AsyncStorage.getItem("userIdx").then((value) => {
       const userIdx = value;
       axios
-        .get(`challenges/${categoryIndex + 1}/${userIdx}/home`)
+        .get(`/challenges/home/${categoryIndex + 1}/${userIdx}`)
         .then(({ data }: { data: HomeViewRecommendChangeRequest }) => {
           if (data.result === undefined) {
             setListEmpty(true);

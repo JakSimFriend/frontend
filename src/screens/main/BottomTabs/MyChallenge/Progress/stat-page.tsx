@@ -24,7 +24,7 @@ export const StatPage = () => {
   useEffect(() => {
     axios
       .get(
-        `https://jaksimfriend.site/my-challenges/${progressIndex}/${userIdx}/progress-calculation`,
+        `https://eddy-pl.com/api/my-challenges/${progressIndex}/${userIdx}/progress-calculation`,
       )
       .then(function (response) {
         setData(response.data.result);
@@ -36,7 +36,7 @@ export const StatPage = () => {
   }, []);
   const postReward = () => {
     axios
-      .post(`https://jaksimfriend.site/my-challenges/reward`, {
+      .post(`https://eddy-pl.com/api/my-challenges/reward`, {
         challengeIdx: progressIndex,
         userIdx: userIdx,
         achievement: data.achievement,

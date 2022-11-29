@@ -13,7 +13,7 @@ export const LogOutWithKakao = () => {
   const userIdx = useRecoilValue(userIdxAtom);
   const logOutDelete = () => {
     axios
-      .delete(`https://yenie.shop/users/${userIdx}/logout`)
+      .delete(`https://eddy-pl.com/api/users/${userIdx}/logout`)
       .then(function (response) {
         console.log(response.data.result);
       })

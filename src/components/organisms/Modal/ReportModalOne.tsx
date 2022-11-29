@@ -14,7 +14,7 @@ export default function ReportModalOne() {
 
   const postReport = () => {
     axios
-      .post("https://yenie.shop/settings/report", {
+      .post("https://eddy-pl.com/api/settings/report", {
         userIdx: userIdx,
         challengeIdx: progressIndex,
         certificationIdx: 0,

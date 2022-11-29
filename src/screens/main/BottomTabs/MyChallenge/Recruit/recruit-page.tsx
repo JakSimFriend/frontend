@@ -36,10 +36,10 @@ type RouteParams = {
 
 const GetChallenge = (challengeId: number, userId: number) =>
   axios.get<MyChallenges>(
-    `https://jaksimfriend.site/my-challenges/${challengeId}/${userId}/recruitment-info`,
+    `https://eddy-pl.com/api/my-challenges/${challengeId}/${userId}/recruitment-info`,
   );
 const PatchUserStatus = (waitingUserId: number, userId: number, type: "accept" | "refuse") =>
-  axios.patch(`https://yenie.shopsite/challenges/${waitingUserId}/${userId}/${type}`);
+  axios.patch(`https://eddy-pl.com/api/site/challenges/${waitingUserId}/${userId}/${type}`);
 
 export const RecruitPage = ({ route }: RouteParams) => {
   const { challengeIdx } = route.params;

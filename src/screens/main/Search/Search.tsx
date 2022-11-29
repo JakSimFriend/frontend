@@ -51,7 +51,7 @@ export const Search = () => {
   useEffect(() => {
     axios
       .get<SearchByCategoryRequest>(
-        `https://yenie.shop/searches/${categoryIndex}/${userIdx}`,
+        `https://eddy-pl.com/api/searches/${categoryIndex}/${userIdx}`,
       )
       .then(({ data }) => {
         if (data.result === undefined) {

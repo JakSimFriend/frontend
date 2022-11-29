@@ -32,7 +32,7 @@ export const Request = () => {
   const [recruitData, setRecruitData]: any = useState([]);
   const GetData = () => {
     axios
-      .get(`https://jaksimfriend.site/my-challenges/${userIdx}/application`)
+      .get(`https://eddy-pl.com/api/my-challenges/application/${userIdx}`)
       .then((response) => {
         setListEmpty(false);
         if (response.data.result === undefined) {

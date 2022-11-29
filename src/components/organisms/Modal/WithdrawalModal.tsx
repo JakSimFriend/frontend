@@ -92,7 +92,7 @@ export default function WithdrawalModal({ visible, setVisible }: WithdrawalModal
 
   const signOutPatch = () => {
     axios
-      .patch(`https://yenie.shop/users/${userIdx}/delete`)
+      .patch(`https://eddy-pl.com/api/users/${userIdx}/delete`)
       .then(function (response) {
         console.log(response.data.result);
       })

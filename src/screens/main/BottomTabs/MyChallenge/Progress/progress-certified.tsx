@@ -68,7 +68,7 @@ export const ProgressCertified = ({ route }: RouteParams) => {
     };
     await axios
       .post(
-        `https://jaksimfriend.site/my-challenges/${challengeIdx}/${userIdx}/certification`,
+        `https://eddy-pl.com/api/my-challenges/${challengeIdx}/${userIdx}/certification`,
         formdata,
         { headers: headers },
       )

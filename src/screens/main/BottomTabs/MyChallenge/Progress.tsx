@@ -101,7 +101,7 @@ export const Progress = () => {
   const [progressDatas, setProgressDatas]: any = useState([]);
   const getData = () => {
     axios
-      .get(`https://jaksimfriend.site/my-challenges/${userIdx}/progress`)
+      .get(`https://eddy-pl.com/api/my-challenges/progress/${userIdx}`)
       .then(function (response) {
         if (response.data.result === undefined) {
           setListEmpty(true);
@@ -120,7 +120,7 @@ export const Progress = () => {
 
   const postReaction = () => {
     axios
-      .post("https://jaksimfriend.site/fcm/reaction", {
+      .post("https://eddy-pl.com/api/fcm/reaction", {
         senderIdx: userIdx,
         receiverIdx: membersIdx,
         reactionIdx: emoticonIndex + 1,

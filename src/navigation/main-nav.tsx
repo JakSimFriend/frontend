@@ -80,7 +80,7 @@ const MainNav = () => {
   // signOut
   const signOutPatch = () => {
     axios
-      .patch(`https://yenie.shopyenie.shop/users/${userIdx}/delete`)
+      .patch(`https://eddy-pl.com/api/users/${userIdx}/delete`)
       .then(function (response) {
         console.log(response.data.result);
       })
@@ -114,7 +114,7 @@ const MainNav = () => {
   const tags = useRecoilValue(tagsAtom);
   const createChallenge = () => {
     axios
-      .post("https://yenie.shop/challenges", {
+      .post("https://eddy-pl.com/api/challenges", {
         title: title,
         content: content,
         startDate: startDate,
@@ -150,6 +150,7 @@ const MainNav = () => {
             headerBackTitleVisible: false,
           }}
         >
+          {console.log(isUser)}
           {isUser === "success" ? (
             <>
               <Stack.Screen name="Home" component={LoggedInNav} />

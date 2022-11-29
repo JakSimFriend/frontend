@@ -28,7 +28,7 @@ export const ProgressNotification = () => {
   };
   const getData = () => {
     axios
-      .get(`https://yenie.shop/alerts/${progressIndex}/${userIdx}`)
+      .get(`https://eddy-pl.com/api/alerts/${progressIndex}/${userIdx}`)
       .then((response) => {
         if (response.data.code === 1000) {
           setListEmpty(false);
@@ -44,7 +44,7 @@ export const ProgressNotification = () => {
   };
   const deleteNotification = (item: any) => {
     axios
-      .patch(`https://yenie.shop/alerts/${item}/delete/${userIdx}`)
+      .patch(`https://eddy-pl.com/api/alerts/${item}/delete/${userIdx}`)
       .then(function (response) {
         console.log(response.data);
         getData();

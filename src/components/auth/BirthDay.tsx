@@ -37,7 +37,7 @@ export const BirthDay = () => {
   const userIdx = useRecoilValue(userIdxAtom);
   const postBirthDay = () => {
     axios
-      .post("https://yenie.shop/users/birth", {
+      .post("https://eddy-pl.com/api/users/birth", {
         userIdx: userIdx,
         birth: dateInfo,
       })

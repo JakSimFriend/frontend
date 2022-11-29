@@ -33,7 +33,7 @@ const getFCMToken = async () => {
 };
 
 export const useAutoLogin = () => {
-  axios.defaults.baseURL = "https://yenie.shop";
+  axios.defaults.baseURL = "https://eddy-pl.com/api";
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUserStatus = useSetRecoilState(isUserStatusAtom);
   const setUserIdx = useSetRecoilState(userIdxAtom);
@@ -52,14 +52,12 @@ export const useAutoLogin = () => {
   const getIdx = async () => {
     try {
       const idx: string | null = await AsyncStorage.getItem("userIdx");
-
       if (RA.isNilOrEmpty(idx)) {
         //userIdx가 없을 경우
         getUserIdx().then(({ data }) => {
           setUserIdx(Number(data.result));
           getUserInfo(Number(data.result)).then(({ data }) => {
             const userInfo: UserInfo = R.head(data.result) as unknown as UserInfo;
-            
             if (RA.isNilOrEmpty(userInfo.nickName)) {
               setIsUserStatus("pending");
             } else {

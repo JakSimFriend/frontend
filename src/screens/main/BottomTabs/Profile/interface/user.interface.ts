@@ -10,6 +10,7 @@ export interface result {
   nickName: string;
   promise: string;
   point: number;
+  balance: number
 }
 
 export interface points {

@@ -40,7 +40,7 @@ export const Alert = () => {
   const [notificationData, setNotificationData] = useState([]);
   const getNotificationData = () => {
     axios
-      .get(`https://yenie.shop/alerts/home/${userIdx}`)
+      .get(`https://eddy-pl.com/api/alerts/home/${userIdx}`)
       .then((response) => {
         setNotificationData(response.data.result || []);
       })
@@ -54,7 +54,7 @@ export const Alert = () => {
 
   const cancelChallenge = (item: any) => {
     axios
-      .patch(`https://yenie.shop/alerts/${item}/${userIdx}/delete`)
+      .patch(`https://eddy-pl.com/api/alerts/${item}/${userIdx}/delete`)
       .then(function (response) {
         console.log(response.data);
         getNotificationData();
@@ -66,7 +66,7 @@ export const Alert = () => {
 
   const deleteAllAlerts = () => {
     axios
-      .patch(`https://yenie.shop/alerts/${userIdx}/delete-all`)
+      .patch(`https://eddy-pl.com/api/alerts/${userIdx}/delete-all`)
       .then(function (response) {
         console.log(response.data);
         getNotificationData();

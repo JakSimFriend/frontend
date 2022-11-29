@@ -87,7 +87,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
 
   useEffect(() => {
     axios
-      .get(`https://yenie.shop/challenges/${challengeIdx}/${userIdx}`)
+      .get(`https://eddy-pl.com/api/challenges/${challengeIdx}/${userIdx}`)
       .then(function (response) {
         setInfoData(response.data.result);
       })
@@ -97,7 +97,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
   }, []);
   const joinChallenge = () => {
     axios
-      .post(`https://yenie.shop/challenges/join`, {
+      .post(`https://eddy-pl.com/api/challenges/join`, {
         userIdx: userIdx,
         challengeIdx: challengeIdx,
       })

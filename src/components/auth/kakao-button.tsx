@@ -35,7 +35,7 @@ export const KakaoSignInButton = () => {
     if (token)
       axios
         .post(
-          "https://yenie.shop/users/kakao-login",
+          "https://eddy-pl.com/api/users/kakao-login",
           {},
           {
             headers: {
@@ -53,7 +53,7 @@ export const KakaoSignInButton = () => {
 
           setUserIdx(response.data.result.userIdx);
           return axios
-            .get(`https://yenie.shop/profiles/${response.data.result.userIdx}`)
+            .get(`https://eddy-pl.com/api/profiles/${response.data.result.userIdx}`)
             .then((response) => {
               // nick name에 따라 유저의 가입 완료 여부 체크
               console.log(response)
