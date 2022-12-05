@@ -19,8 +19,9 @@ export const Record = () => {
   const [recordEmpty, setRecordEmpty] = useState(false);
   const [recordData, setRecordData]: any = useState([]);
   useEffect(() => {
+    // TODO
     axios
-      .get(`https://eddy-pl.com/api/my-challenges/${userIdx}/record`)
+      .get(`https://eddy-pl.com/api/my-challenges/record/${userIdx}`)
       .then(function (response) {
         if (response.data.result[0] === undefined) {
           setRecordEmpty(true);
@@ -75,7 +76,7 @@ export const Record = () => {
                       ) : (
                         <TouchableOpacity
                           onPress={() => {
-                            navigation.navigate("ProgressDetailTopTab");
+                            // navigation.navigate("ProgressDetailTopTab");
                             setProgressIndex(item.challengeIdx);
                             setProgressTitle(item.title);
                           }}

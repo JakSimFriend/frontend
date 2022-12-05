@@ -93,7 +93,7 @@ export const ChallengeOpenTwo = () => {
     hideDatePicker();
   };
   const handleTimeConfirm = (time: Date) => {
-    setTime(moment(time).format("hh:mm:ss"));
+    setTime(moment(time).format("hh:mm"));
     hideTimePicker();
   };
 

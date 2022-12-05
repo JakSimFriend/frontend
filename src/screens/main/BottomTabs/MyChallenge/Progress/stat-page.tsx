@@ -23,9 +23,7 @@ export const StatPage = () => {
   const [fill, setFill] = useState(0);
   useEffect(() => {
     axios
-      .get(
-        `https://eddy-pl.com/api/my-challenges/${progressIndex}/${userIdx}/progress-calculation`,
-      )
+      .get(`https://eddy-pl.com/api/my-challenges/${progressIndex}/progress-calculation/${userIdx}`)
       .then(function (response) {
         setData(response.data.result);
         setFill(response.data.result.achievement);

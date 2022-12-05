@@ -31,7 +31,7 @@ export const BeforeStartPageInfo = ({ route }: RouteParams) => {
   const userIdx = useRecoilValue(userIdxAtom);
   useEffect(() => {
     axios
-      .get(`https://eddy-pl.com/api/my-challenges/${challengeIdx}/${userIdx}/detail`)
+      .get(`https://eddy-pl.com/api/challenges/${challengeIdx}/detail/${userIdx}/`)
       .then(function (response) {
         setData(response.data.result);
       })

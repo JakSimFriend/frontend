@@ -1,10 +1,9 @@
 import { useAutoLogin } from "@src/hook/useAutoLogin";
 import React from "react";
-import { Platform, SafeAreaView, StatusBar, View } from "react-native";
+import { Platform, SafeAreaView, StatusBar } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styled from "styled-components/native";
 
-import { GoogleSignIn } from "../../components/auth/GoogleLogin";
 import { KakaoSignInButton } from "../../components/auth/kakao-button";
 
 const LoginPage = () => {
@@ -25,9 +24,6 @@ const LoginPage = () => {
           <Detail>함께 챌린지할 친구들을 찾아보세요!</Detail>
           <ButtonWrapper>
             <KakaoSignInButton />
-            <View style={{ marginTop: 10 }}>
-              <GoogleSignIn />
-            </View>
             {/* <View style={{ marginTop: 10 }}>
               <GradientButtons onPress={() => {}} Title="애플 계정으로 시작하기" />
             </View> */}

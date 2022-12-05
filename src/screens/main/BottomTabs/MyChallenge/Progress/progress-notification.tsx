@@ -61,6 +61,7 @@ export const ProgressNotification = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Wrapper>
+          {/* TODO */}
           {listEmpty || notificationData.length === 0 ? (
             <EmptyText>확인하실 알림이 없어요</EmptyText>
           ) : (

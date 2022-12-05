@@ -17,7 +17,7 @@ export const Detail = () => {
   const userIdx = useRecoilValue(userIdxAtom);
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/status/${userIdx}/detail`)
+      .get(`https://eddy-pl.com/api/status/detail/${userIdx}`)
       .then(function (response) {
         if (response.data.code === 3049) {
           setDetailEmpty(true);
@@ -43,7 +43,7 @@ export const Detail = () => {
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           {detailEmpty ? (
-            <>
+            <>ㅌ
               <View style={styles.EmptyView}>
                 <Text style={styles.EmptyText}>완료한 챌린지가 없어요</Text>
               </View>

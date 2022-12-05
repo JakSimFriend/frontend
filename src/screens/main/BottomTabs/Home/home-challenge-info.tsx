@@ -87,7 +87,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
 
   useEffect(() => {
     axios
-      .get(`https://eddy-pl.com/api/challenges/${challengeIdx}/${userIdx}`)
+      .get(`https://eddy-pl.com/api/challenges/${challengeIdx}/detail/${userIdx}`)
       .then(function (response) {
         setInfoData(response.data.result);
       })

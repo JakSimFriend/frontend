@@ -115,10 +115,11 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
             <Text style={styles.pointTitleText}>내 캐시</Text>
             <Text style={styles.pointText}>{profileData?.balance.toLocaleString()}C</Text>
             <View style={styles.pointButtonView}>
+              {/* TODO: copy user nickname */}
               <TouchableOpacity style={styles.pointButton} onPress={() => setIsModalVisible(true)}>
                 <Text style={styles.pointButtonText}>초대하기</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[styles.pointButton, { marginHorizontal: 10 }]}
                 onPress={() => {
                   setIsDeveloperModalVisible(true);
@@ -134,7 +135,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
                 }}
               >
                 <Text style={styles.pointButtonText}>인출하기</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </LinearGradient>
         </View>
@@ -259,7 +260,6 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
 const styles = StyleSheet.create({
   safeAreaView: {
     marginTop: 11,
-    backgroundColor: Color.white[200],
     flexDirection: "column",
     justifyContent: "flex-start",
     position: "relative",
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF4D",
     paddingVertical: 13,
     borderRadius: 13,
-    width: "30%",
+    width: "100%",
   },
   pointButtonText: {
     color: Color.white[0],

@@ -61,15 +61,15 @@ export const ProgressCertified = ({ route }: RouteParams) => {
     });
   };
   const postPhoto = async () => {
-    const formdata = new FormData();
-    formdata.append("images", image);
+    const formData = new FormData();
+    formData.append("images", image);
     const headers = {
       "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
     };
     await axios
       .post(
         `https://eddy-pl.com/api/my-challenges/${challengeIdx}/${userIdx}/certification`,
-        formdata,
+        formData,
         { headers: headers },
       )
       .then((response) => {

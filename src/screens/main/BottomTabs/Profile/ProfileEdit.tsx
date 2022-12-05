@@ -58,7 +58,7 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
   const [data, setDatas]: any = useState([]);
   useEffect(() => {
     axios
-      .get(`https://jaksimfriend.site/profiles/${userIdx}/edit`)
+      .get(`https://eddy-pl.com/api/profiles/${userIdx}/edit`)
       .then((response) => {
         setDatas(response.data.result);
       })
@@ -69,7 +69,7 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
 
   const postPromise = () => {
     axios
-      .post(`https://jaksimfriend.site/profiles/promise`, {
+      .post(`https://eddy-pl.com/api/profiles/promise`, {
         userIdx: userIdx,
         promise: promise,
       })
@@ -106,7 +106,7 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
       "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
     };
     return axios
-      .post(`https://jaksimfriend.site/profiles/${userIdx}/image`, formdata, { headers: headers })
+      .post(`https://eddy-pl.com/api/profiles/${userIdx}/image`, formdata, { headers: headers })
       .catch((error) => {
         if (error.response) {
           console.log(error.response);
@@ -142,7 +142,7 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
         </View>
         <View style={styles.body}>
           <View style={styles.imageView}>
-            {data.profile ? (
+            {data?.profile ? (
               <Image source={{ uri: data.profile }} style={styles.image} />
             ) : (
               <View style={{ ...styles.image, ...styles.emptyImage }} />
@@ -153,7 +153,7 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
           </View>
           <Text style={styles.textInputTitle}>작심 다짐하기</Text>
           <TextInput
-            placeholder={data.promise}
+            placeholder={data?.promise}
             style={[styles.textInput, { borderColor: textInputBorderColor }]}
             onChange={(e) => onChangeText(e.nativeEvent.text)}
             value={promise}

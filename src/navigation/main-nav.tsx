@@ -7,10 +7,11 @@ import { Color } from "@src/assets/color";
 import Modal from "@src/components/organisms/Modal/modal";
 import axios from "axios";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import AntIcons from "react-native-vector-icons/AntDesign";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
+import { Notify } from "../assets/images/images";
 import {
   createdFailModalAtom,
   createdModalAtom,
@@ -163,7 +164,7 @@ const MainNav = () => {
                 options={{
                   headerTitle: "회원가입",
                   headerTitleAlign: "center",
-                  headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+                  headerTitleStyle: { fontSize: 16, fontWeight: "900" },
                   headerLeft: () => (
                     <AntIcons
                       onPress={kakaoSignOut}
@@ -180,7 +181,7 @@ const MainNav = () => {
                 options={{
                   headerTitle: "회원가입",
                   headerTitleAlign: "center",
-                  headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+                  headerTitleStyle: { fontSize: 16, fontWeight: "900" },
                   headerLeft: () => (
                     <TouchableOpacity>
                       <AntIcons
@@ -296,7 +297,7 @@ const MainNav = () => {
               ),
               headerRight: () => (
                 <TouchableOpacity onPress={goToProgressNotification} style={{ marginRight: 18 }}>
-                  <Text style={{ color: "#054de4" }}>알림</Text>
+                  <Image source={Notify} />
                 </TouchableOpacity>
               ),
             }}
@@ -445,7 +446,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerTitle: "도전작심 개설",
               headerTitleAlign: "center",
-              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+              headerTitleStyle: { fontSize: 16, fontWeight: "900" },
               headerTransparent: false,
               headerTintColor: "#000000",
               headerRight: () => (
@@ -467,7 +468,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerTitle: "도전작심 개설",
               headerTitleAlign: "center",
-              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+              headerTitleStyle: { fontSize: 16, fontWeight: "900" },
               headerTransparent: false,
               headerTintColor: "#000000",
               headerRight: () => (
@@ -493,7 +494,7 @@ const MainNav = () => {
               presentation: "transparentModal",
               headerTitle: "도전작심 개설",
               headerTitleAlign: "center",
-              headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+              headerTitleStyle: { fontSize: 16, fontWeight: "900" },
               headerTransparent: false,
               headerTintColor: "#000000",
               headerRight: () => (

@@ -1,6 +1,7 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import React from "react";
 import { Dimensions } from "react-native";
+import { Platform } from "react-native";
 import styled from "styled-components/native";
 
 import { ProgressInfoNav } from "./progress-info-nav";
@@ -28,7 +29,7 @@ export const ProgressTopbarNav = () => {
             marginRight: -50,
             marginLeft: 5,
             width: Dimensions.get("window").width * 0.3,
-            marginTop: 30,
+            marginTop: Platform.OS === "ios" ? 100 : 30,
           },
           tabBarPressColor: "#ffffff",
         }}

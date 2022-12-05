@@ -6,16 +6,11 @@ interface Notification {
   alertIdx: number;
   image: string;
   alert: string;
-  time: string;
-}
-
-export interface Alert {
   date: string;
-  notifications: Notification[];
 }
 
 interface AlertItemProps {
-  alert: Alert;
+  alert: Notification;
   cancel: () => void;
 }
 
@@ -23,19 +18,17 @@ const AlertItem = ({ alert, cancel }: AlertItemProps) => {
   console.log(alert);
   return (
     <>
-      {alert.notifications.map((noti: Notification, index: number) => (
-        <View key={index} style={styles.alertWrapper}>
-          <Image
-            resizeMode="contain"
-            source={{ uri: noti.image }}
-            style={(styles.icon, { width: 25, height: 25 })}
-          />
-          <View style={styles.mainContentWrapper}>
-            <Text style={styles.alert}>{noti.alert}</Text>
-            <Text style={styles.date}>{alert.date + noti.time}</Text>
-          </View>
+      <View style={styles.alertWrapper}>
+        <Image
+          resizeMode="contain"
+          source={{ uri: alert.image }}
+          style={(styles.icon, { width: 25, height: 25 })}
+        />
+        <View style={styles.mainContentWrapper}>
+          <Text style={styles.alert}>{alert.alert}</Text>
+          <Text style={styles.date}>{alert.date}</Text>
         </View>
-      ))}
+      </View>
     </>
   );
 };

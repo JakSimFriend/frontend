@@ -27,7 +27,7 @@ export const ProgressPageInfo = ({ route }: RouteParams) => {
   const [data, setData]: any = useState([]);
   useEffect(() => {
     axios
-      .get(`https://eddy-pl.com/api/my-challenges/${challengeIdx}/${userIdx}/detail`)
+      .get(`https://eddy-pl.com/api/challenges/${challengeIdx}/detail/${userIdx}/`)
       .then(function (response) {
         setData(response.data.result);
       })

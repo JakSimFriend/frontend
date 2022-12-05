@@ -32,7 +32,7 @@ export const Setting = ({ navigation }: StackScreenProps<SettingNavParamList>) =
   const patchAlert = () => {
     axios
       .patch(
-        `https://jaksimfriend.site/settings/${userIdx}/${switchEnable ? "alert-cancel" : "alert"}`,
+        `https://eddy-pl.com/api/settings/alert/${switchEnable ? "0" : "1"}/${userIdx}`,
       )
       .then(() => {
         AsyncStorage.setItem("alertButton", String(!switchEnable));

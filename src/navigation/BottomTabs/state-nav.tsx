@@ -2,8 +2,9 @@ import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MyState } from "@src/screens/main";
 import React from "react";
-import { TouchableOpacity } from "react-native";
-import Entypo from "react-native-vector-icons/Entypo";
+import { Image, TouchableOpacity } from "react-native";
+
+import { Archieve } from "../../assets/images/images";
 
 const Stack = createStackNavigator();
 
@@ -24,11 +25,10 @@ export const StateNav = () => {
         options={{
           headerTitle: "현황",
           headerTitleAlign: "left",
-          headerTitleStyle: { fontSize: 15, fontWeight: "900" },
+          headerTitleStyle: { fontSize: 16, fontWeight: "900" },
           headerRight: () => (
-            <TouchableOpacity onPress={goToDetail}>
-              {/* <Text style={{ color: "#054de4", fontSize: 15, marginRight: 18 }}>상세</Text> */}
-              <Entypo size={24} name="box" style={{ marginRight: 20 }} />
+            <TouchableOpacity onPress={goToDetail} style={{ marginRight: 20 }}>
+              <Image source={Archieve} />
             </TouchableOpacity>
           ),
         }}

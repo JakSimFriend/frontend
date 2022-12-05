@@ -45,7 +45,7 @@ export const ClockIcon = ({ focused }: TabBarIconProps) => {
 export const UserIcon = ({ focused }: TabBarIconProps) => {
   return (
     <User
-      name={focused ? "user-circle" : "user-o"}
+      name={focused ? "user-circle" : "user-circle"}
       color={focused ? "#054DE4" : "#BFC7D7"}
       size={23}
     />

@@ -2,18 +2,21 @@ import "moment/locale/ko";
 
 import { useNavigation } from "@react-navigation/native";
 import { Color } from "@src/assets/color";
+import { Calender as CalendarIcon, Camera, Timer, User } from "@src/assets/images/images";
 import { progressIndexAtom, userIdxAtom } from "@src/common/atom";
 import { GradientButtons } from "@src/components/atoms/GradientButtons";
-import {
-  HomeCalendarBlue,
-  HomeCamera,
-  HomeClockBlue,
-  HomeUserBlue,
-} from "@src/components/atoms/TabIcon";
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components/native";
@@ -25,7 +28,7 @@ export const ProgressPage = () => {
   const [data, setData]: any = useState([]);
   useEffect(() => {
     axios
-      .get(`https://eddy-pl.com/api/my-challenges/${progressIndex}/${userIdx}/progress-info`)
+      .get(`https://eddy-pl.com/api/my-challenges/${progressIndex}/progress-info/${userIdx}`)
       .then(function (response) {
         console.log(response);
         setData(response.data.result[0]);
@@ -87,23 +90,24 @@ export const ProgressPage = () => {
           <View style={styles.infoBox}>
             <View style={styles.infoWrapper}>
               <Text style={styles.textColor}>
-                <HomeCalendarBlue /> {data.date}
+                <Image source={CalendarIcon} /> {data.date}
               </Text>
               <Text style={styles.textBottomColor}>
-                <HomeClockBlue /> {data.certificationInfo}
+                <Image source={Camera} /> {data.certificationInfo}
               </Text>
             </View>
             <View style={styles.infoWrapper}>
               <Text style={styles.textColor}>
-                <HomeUserBlue /> {data.limited} 명
+                <Image source={User} /> {data.memberCount} 명
               </Text>
               <Text style={styles.textBottomColor}>
-                <HomeCamera /> {data.deadline}
+                <Image source={Timer} /> {data.deadline}
               </Text>
             </View>
           </View>
           <Text style={styles.membersTitle}>작심친구 {data.memberCount}</Text>
           <View style={{ marginTop: 20 }}>
+            {/* TODO */}
             {data.members?.map((item: any, index: number) => {
               return (
                 <Friend key={index}>

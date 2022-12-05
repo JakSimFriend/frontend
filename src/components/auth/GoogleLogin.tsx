@@ -48,7 +48,7 @@ export const GoogleSignIn = () => {
               axios.defaults.headers.common["X-ACCESS-TOKEN"] = response.data.result.jwt;
 
               return axios
-                .get(`https://jaksimfriend.site/profiles/${response.data.result.userIdx}`)
+                .get(`https://eddy-pl.com/api/profiles/${response.data.result.userIdx}`)
                 .then((response) => {
                   if (response.data.result[0].nickName === null) {
                     setIsUser("none");

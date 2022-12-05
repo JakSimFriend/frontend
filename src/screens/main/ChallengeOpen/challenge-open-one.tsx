@@ -314,7 +314,7 @@ const Wrapper = styled.View`
 `;
 const SubTitle = styled.Text`
   color: Color.blue[900];
-  font-size: 13px;
+  font-size: 15px;
   margin-bottom: 10px;
 `;
 const TagTitle1 = styled.Text`
@@ -340,7 +340,8 @@ const TagsTextInput = styled.TextInput`
   background-color: #f5f5fb;
   border-radius: 10px;
   border-width: 1px;
-  width: 30%;
+  width: 32%;
+  justify-content: space-between;
 `;
 const styles = StyleSheet.create({
   progressBar: {
@@ -382,11 +383,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 40,
+    marginRight: 10,
   },
   lastView: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 10,
+    marginRight: 10,
   },
   guideText: {
     fontWeight: "400",

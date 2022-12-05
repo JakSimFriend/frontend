@@ -15,11 +15,12 @@ export const MyState = () => {
   const icons = [a, b, c, d, e, f, g, h];
   const [statData, setStatData] = useState<Status>();
   const [categoryEmpty, setCategoryEmpty] = useState(false);
+  const [season, setSeason] = useState<{ period: string; seasonIdx: number; seasonName: string }>();
   const stateIndicator = useRecoilValue(stateIndicatorAtom);
   const userIdx = useRecoilValue(userIdxAtom);
   const getData = () => {
     axios
-      .get(`https://jaksimfriend.site/status/${userIdx}`)
+      .get(`https://eddy-pl.com/api/status/${userIdx}`)
       .then(function (response) {
         if (response.data.code === 3049) {
           setCategoryEmpty(true);
@@ -31,6 +32,9 @@ export const MyState = () => {
       .catch(function (error) {
         console.log(error);
       });
+    axios
+      .get(`https://eddy-pl.com/api/status/season`)
+      .then(({ data }) => setSeason(data.result[0]));
   };
   useEffect(() => {
     getData();
@@ -42,10 +46,10 @@ export const MyState = () => {
         <Wrapper>
           <LinearGradient style={styles.blueBox} colors={["#947BEA", "#1151E5"]}>
             <UpBox>
-              {/* TODO: 시즌 api 적용 */}
-              <SeasonTitle>시즌 1</SeasonTitle>
+              <SeasonTitle>{season?.seasonName}</SeasonTitle>
               <ChallengeText>
-                2022/06/01 ~ 2022/08/30{"\n"} 기간동안 완료한 챌린지만 합산됩니다
+                {season?.period}
+                {"\n"} 기간동안 완료한 챌린지만 합산됩니다
               </ChallengeText>
             </UpBox>
             <InfoWrapper>
