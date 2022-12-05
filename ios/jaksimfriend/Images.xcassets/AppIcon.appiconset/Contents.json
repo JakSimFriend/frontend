@@ -1,13 +1,13 @@
 {
   "images" : [
     {
-      "filename" : "40.png",
+      "filename" : "ic_launcher.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "60.png",
+      "filename" : "ic_launcher 1.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
