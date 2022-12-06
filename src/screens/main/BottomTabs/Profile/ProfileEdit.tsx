@@ -86,6 +86,7 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
         console.log("ImagePicker Error: ", res.errorCode);
       } else if (res.assets) {
         setImage({
+          ...res.assets,
           uri:
             Platform.OS === "android"
               ? res.assets[0].uri
@@ -101,23 +102,42 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
   const postPhoto = () => {
     if (!image.uri) return;
     const formData = new FormData();
-    formData.append("profile", image);
-
+    formData.append("profile", JSON.stringify(image.uri));
     const headers = {
-      "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "multipart/form-data; boundary=---011000010111000001101001",
+      "Content-Length": "0",
     };
 
-    return axios
-      .post(`https://eddy-pl.com/api/profiles/${userIdx}/image`, formData, { headers: headers })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-      });
+    const options = {
+      method: "POST",
+      url: "https://eddy-pl.com/api/profiles/1/image",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        Referer: "",
+        "Content-Type": "multipart/form-data; boundary=---011000010111000001101001",
+      },
+      data: formData,
+    };
+
+    return (
+      axios
+        .request(options)
+        // .post(
+        //   `https://eddy-pl.com/api/profiles/${userIdx}/image`,
+        //   '-----011000010111000001101001\r\nContent-Disposition: form-data; name="profile"; filename="2022-01-23 20.42.56.jpg"\r\nContent-Type: image/jpeg\r\n\r\n\r\n-----011000010111000001101001--\r\n',
+        //   { headers },
+        // )
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
+        })
+    );
   };
   const onPressComplete = () => {
     Promise.all([postPhoto(), postPromise(), setProfileIndicator(!profileIndicator)]).then(() =>

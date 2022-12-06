@@ -50,7 +50,7 @@ import {
 } from "../screens/main";
 import { HomeChallengeInfo } from "../screens/main/BottomTabs/Home/home-challenge-info";
 import { ProgressPageInfo } from "../screens/main/BottomTabs/MyChallenge/Progress/progress-page-info";
-import ProfileEdit from "../screens/main/BottomTabs/Profile/profileEdit";
+import ProfileEdit from "../screens/main/BottomTabs/Profile/ProfileEdit";
 import { ProgressTopbarNav } from "./BottomTabs/MyChallenge/progress-topbar-nav";
 import LoggedOutNav from "./logged-out-nav";
 import LoggedInNav from "./loggedIn-nav";

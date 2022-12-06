@@ -43,7 +43,7 @@ export const Detail = () => {
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           {detailEmpty ? (
-            <>ㅌ
+            <>
               <View style={styles.EmptyView}>
                 <Text style={styles.EmptyText}>완료한 챌린지가 없어요</Text>
               </View>
