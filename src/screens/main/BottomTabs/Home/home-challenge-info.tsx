@@ -179,7 +179,7 @@ export const HomeChallengeInfo = ({ route }: RouteParams) => {
               </IconWrapper>
               <TextWrapper>
                 <Text style={{ marginTop: 9 }}>
-                  신청 인원 {infoData.waiting}명, 대기자 수 {members}명
+                  신청 인원 {members}명, 대기자 수 {infoData.waiting}명
                 </Text>
               </TextWrapper>
             </InfoWrapper>

@@ -100,13 +100,15 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
 
   const postPhoto = () => {
     if (!image.uri) return;
-    const formdata = new FormData();
-    formdata.append("images", image);
+    const formData = new FormData();
+    formData.append("profile", image);
+
     const headers = {
       "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
     };
+
     return axios
-      .post(`https://eddy-pl.com/api/profiles/${userIdx}/image`, formdata, { headers: headers })
+      .post(`https://eddy-pl.com/api/profiles/${userIdx}/image`, formData, { headers: headers })
       .catch((error) => {
         if (error.response) {
           console.log(error.response);

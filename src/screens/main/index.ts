@@ -14,7 +14,7 @@ export * from "./BottomTabs/MyChallenge/Recruit/recruit-page";
 export * from "./BottomTabs/MyChallenge/Recruit/recruit-page-info";
 export * from "./BottomTabs/MyChallenge/request";
 export * from "./BottomTabs/MyChallenge/Request/request-page";
-export * from "./BottomTabs/Profile/profile";
+export * from "./BottomTabs/Profile/Profile";
 export * from "./BottomTabs/Profile/profileEdit";
 export * from "./BottomTabs/Profile/setting/setting";
 export * from "./BottomTabs/State/detail";

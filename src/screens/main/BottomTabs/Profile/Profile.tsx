@@ -85,7 +85,6 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
                 style={{ marginLeft: 12 }}
               >
                 <AntDesign name="setting" size={24} />
-                {/* Todo */}
               </TouchableOpacity>
             </View>
           </View>
@@ -115,27 +114,9 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
             <Text style={styles.pointTitleText}>내 캐시</Text>
             <Text style={styles.pointText}>{profileData?.balance.toLocaleString()}C</Text>
             <View style={styles.pointButtonView}>
-              {/* TODO: copy user nickname */}
               <TouchableOpacity style={styles.pointButton} onPress={() => setIsModalVisible(true)}>
                 <Text style={styles.pointButtonText}>초대하기</Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity
-                style={[styles.pointButton, { marginHorizontal: 10 }]}
-                onPress={() => {
-                  setIsDeveloperModalVisible(true);
-                  // getAds();
-                }}
-              >
-                <Text style={styles.pointButtonText}>충전하기</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.pointButton}
-                onPress={() => {
-                  setIsDeveloperModalVisible(true);
-                }}
-              >
-                <Text style={styles.pointButtonText}>인출하기</Text>
-              </TouchableOpacity> */}
             </View>
           </LinearGradient>
         </View>
@@ -158,16 +139,18 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
                 있어요!
               </Text>
               <Text style={{ fontWeight: "400", fontSize: 17, color: "#6F81A9", marginTop: 50 }}>
-                앱 링크를 복사하시겠어요?
+                닉네임을 복사하시겠어요?
               </Text>
             </>
           }
           leftContent="취소"
-          rightContent="링크 복사"
+          rightContent="닉네임 복사"
           leftFn={() => setIsModalVisible(false)}
           rightFn={() => {
-            Clipboard.setString("https://www.apple.com/kr/app-store/");
-            setIsModalVisible(false);
+            if (profileData) {
+              Clipboard.setString(profileData?.nickName);
+              setIsModalVisible(false);
+            }
           }}
           isRightIsJsx={false}
         />
@@ -260,6 +243,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
 const styles = StyleSheet.create({
   safeAreaView: {
     marginTop: 11,
+    backgroundColor: Color.white[0],
     flexDirection: "column",
     justifyContent: "flex-start",
     position: "relative",

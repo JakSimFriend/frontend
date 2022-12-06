@@ -29,6 +29,7 @@ export const NickName = () => {
   const userIdx = useRecoilValue(userIdxAtom);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const setIsUser = useSetRecoilState(isUserStatusAtom);
+  const [recommenderIdx, setRecommenderIdx] = useState<number>();
 
   useEffect(() => {
     // 닉네임에서 앱 닫을 시 = 백버튼 누른것과 동일하게 signOut
@@ -65,7 +66,7 @@ export const NickName = () => {
       .post("https://eddy-pl.com/api/users/nickname", {
         userIdx: userIdx,
         nickName: nickName,
-        recommendedIdx: 1,
+        recommendedIdx: recommenderIdx,
       })
       .catch(function (error) {
         console.log(error);
@@ -78,7 +79,7 @@ export const NickName = () => {
         nickName: nickName,
       })
       .then(function (response) {
-        if (response.data.code === 3015) {
+        if (response.data.code === 3102) {
           setModalVisible2(true);
           setGuideColor3(BLACK);
           setNickNameColor(RED);
@@ -113,6 +114,7 @@ export const NickName = () => {
           setButtonColor2(BLACK);
           setGuideColor4(BLUE);
           setNickNameColor2(BLUE);
+          setRecommenderIdx(response.data.result);
         }
       })
       .catch(function (error) {
@@ -190,6 +192,7 @@ export const NickName = () => {
               value={nickName}
               onChangeText={setNickName}
               onChange={(e) => {
+                setButtonColor1(GREY_BUTTON);
                 onChangeNickName(e.nativeEvent.text);
               }}
             />
