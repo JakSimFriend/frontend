@@ -67,7 +67,12 @@ export const ProgressCertified = ({ route }: RouteParams) => {
   };
   const postPhoto = async () => {
     await axios
-      .post("https://eddy-pl.com/file/image", { image: image.base64, type: image.type })
+      .post("https://eddy-pl.com/file/image", {
+        image: image.base64,
+        type: image.type,
+        category: "certification",
+        primaryKey: userIdx,
+      })
       .then(({ data }) =>
         axios
           .post(`https://eddy-pl.com/api/my-challenges/${challengeIdx}/certification/${userIdx}`, {

@@ -108,7 +108,12 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
     const formData = new FormData();
     formData.append("profile", image.base64);
     return axios
-      .post(`https://eddy-pl.com/file/image`, { image: image.base64, type: image.type })
+      .post(`https://eddy-pl.com/file/image`, {
+        image: image.base64,
+        type: image.type,
+        category: "profile",
+        primaryKey: userIdx,
+      })
       .then(({ data }) =>
         axios
           .post(
