@@ -23,6 +23,7 @@ import { profileIndicatorAtom, userIdxAtom } from "../../../../common/atom";
 import { ProfileNavParamList } from "../../../../navigation";
 
 type ImageType = {
+  base64?: string;
   name?: string | undefined;
   type?: string | undefined;
   uri?: string | undefined;
@@ -79,65 +80,53 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
   };
 
   const UploadImage = async () => {
-    launchImageLibrary({ selectionLimit: 1, mediaType: "photo" }, (res: any) => {
-      if (res.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (res.errorCode) {
-        console.log("ImagePicker Error: ", res.errorCode);
-      } else if (res.assets) {
-        setImage({
-          ...res.assets,
-          uri:
-            Platform.OS === "android"
-              ? res.assets[0].uri
-              : res.assets[0].uri.replace("file://", ""),
-          name: res.assets[0].fileName,
-          type: res.assets[0].type,
-        });
-      }
-      setDisable(false);
-    });
+    launchImageLibrary(
+      { selectionLimit: 1, mediaType: "photo", includeBase64: true },
+      (res: any) => {
+        if (res.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (res.errorCode) {
+          console.log("ImagePicker Error: ", res.errorCode);
+        } else if (res.assets) {
+          setImage({
+            ...res.assets[0],
+            uri:
+              Platform.OS === "android"
+                ? res.assets[0].uri
+                : res.assets[0].uri.replace("file://", ""),
+            name: res.assets[0].fileName,
+            type: res.assets[0].type,
+          });
+        }
+        setDisable(false);
+      },
+    );
   };
 
   const postPhoto = () => {
     if (!image.uri) return;
     const formData = new FormData();
-    formData.append("profile", JSON.stringify(image.uri));
-    const headers = {
-      Accept: "application/json, text/plain, */*",
-      "Content-Type": "multipart/form-data; boundary=---011000010111000001101001",
-      "Content-Length": "0",
-    };
-
-    const options = {
-      method: "POST",
-      url: "https://eddy-pl.com/api/profiles/1/image",
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        Referer: "",
-        "Content-Type": "multipart/form-data; boundary=---011000010111000001101001",
-      },
-      data: formData,
-    };
-
-    return (
-      axios
-        .request(options)
-        // .post(
-        //   `https://eddy-pl.com/api/profiles/${userIdx}/image`,
-        //   '-----011000010111000001101001\r\nContent-Disposition: form-data; name="profile"; filename="2022-01-23 20.42.56.jpg"\r\nContent-Type: image/jpeg\r\n\r\n\r\n-----011000010111000001101001--\r\n',
-        //   { headers },
-        // )
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log("Error", error.message);
-          }
-        })
-    );
+    formData.append("profile", image.base64);
+    return axios
+      .post(`https://eddy-pl.com/file/image`, { image: image.base64, type: image.type })
+      .then(({ data }) =>
+        axios
+          .post(
+            `https://eddy-pl.com/api/profiles/${userIdx}/image`,
+            { url: data.imageUrl },
+            { headers: { "Content-Type": "application/json" } },
+          )
+          .catch((error) => {
+            if (error.response) {
+              console.log(error.response);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log("Error", error.message);
+            }
+          }),
+      )
+      .catch((err) => console.log(err));
   };
   const onPressComplete = () => {
     Promise.all([postPhoto(), postPromise(), setProfileIndicator(!profileIndicator)]).then(() =>

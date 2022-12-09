@@ -346,7 +346,7 @@ PODS:
     - glog
   - react-native-get-random-values (1.8.0):
     - React-Core
-  - react-native-image-picker (4.8.4):
+  - react-native-image-picker (4.10.2):
     - React-Core
   - react-native-pager-view (5.4.24):
     - React-Core
@@ -702,7 +702,7 @@ SPEC CHECKSUMS:
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
-  react-native-image-picker: cffb727cf2f59bd5c0408e30b3dbe0b935f88835
+  react-native-image-picker: bf34f3f516d139ed3e24c5f5a381a91819e349ea
   react-native-pager-view: 95d0418c3c74279840abec6926653d32447bafb6
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457

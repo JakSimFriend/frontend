@@ -21,6 +21,7 @@ type RouteParams = {
   };
 };
 type ImageType = {
+  base64?: string;
   name?: string | undefined;
   type?: string | undefined;
   uri?: string | undefined;
@@ -42,53 +43,55 @@ export const ProgressCertified = ({ route }: RouteParams) => {
     name: "test",
   });
   const UploadImage = () => {
-    launchImageLibrary({ selectionLimit: 1, mediaType: "photo" }, (res: any) => {
-      if (res.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (res.errorCode) {
-        console.log("ImagePicker Error: ", res.errorCode);
-      } else if (res.assets) {
-        setImage({
-          uri:
-            Platform.OS === "android"
-              ? res.assets[0].uri
-              : res.assets[0].uri.replace("file://", ""),
-          name: res.assets[0].fileName,
-          type: res.assets[0].type,
-        });
-        setCertified(true);
-      }
-    });
+    launchImageLibrary(
+      { selectionLimit: 1, mediaType: "photo", includeBase64: true },
+      (res: any) => {
+        if (res.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (res.errorCode) {
+          console.log("ImagePicker Error: ", res.errorCode);
+        } else if (res.assets) {
+          setImage({
+            ...res.assets[0],
+            uri:
+              Platform.OS === "android"
+                ? res.assets[0].uri
+                : res.assets[0].uri.replace("file://", ""),
+            name: res.assets[0].fileName,
+            type: res.assets[0].type,
+          });
+          setCertified(true);
+        }
+      },
+    );
   };
   const postPhoto = async () => {
-    const formData = new FormData();
-    formData.append("images", image);
-    const headers = {
-      "Content-Type": "multipart/form-data; boundary=someArbitraryUniqueString",
-    };
     await axios
-      .post(
-        `https://eddy-pl.com/api/my-challenges/${challengeIdx}/${userIdx}/certification`,
-        formData,
-        { headers: headers },
+      .post("https://eddy-pl.com/file/image", { image: image.base64, type: image.type })
+      .then(({ data }) =>
+        axios
+          .post(`https://eddy-pl.com/api/my-challenges/${challengeIdx}/certification/${userIdx}`, {
+            url: data.imageUrl,
+          })
+          .then((response) => {
+            if (response.data.code === 3035) {
+              setModalIndex(1);
+            } else if (response.data.code === 1000) {
+              setCertifiedPercent(response.data.result);
+              setModalIndex(0);
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              console.log(error.response);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log("Error", error.message);
+            }
+          }),
       )
-      .then((response) => {
-        if (response.data.code === 3035) {
-          setModalIndex(1);
-        } else if (response.data.code === 1000) {
-          setCertifiedPercent(response.data.result);
-          setModalIndex(0);
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-      });
+      .catch((err) => console.log(err));
   };
   const openModal = () => {
     modalIndex === 0 ? setModalVisible(true) : setModalTwoVisible(true);
