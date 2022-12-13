@@ -56,12 +56,12 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
     }
   };
 
-  const [data, setDatas]: any = useState([]);
+  const [data, setData]: any = useState([]);
   useEffect(() => {
     axios
       .get(`https://eddy-pl.com/api/profiles/${userIdx}/edit`)
       .then((response) => {
-        setDatas(response.data.result);
+        setData(response.data.result);
       })
       .catch((error) => {
         console.log(error);
@@ -105,8 +105,6 @@ export default function ProfileEdit({ navigation }: StackScreenProps<ProfileNavP
 
   const postPhoto = () => {
     if (!image.uri) return;
-    const formData = new FormData();
-    formData.append("profile", image.base64);
     return axios
       .post(`https://eddy-pl.com/file/image`, {
         image: image.base64,
