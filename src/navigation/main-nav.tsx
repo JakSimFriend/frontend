@@ -151,7 +151,6 @@ const MainNav = () => {
             headerBackTitleVisible: false,
           }}
         >
-          {console.log(isUser)}
           {isUser === "success" ? (
             <>
               <Stack.Screen name="Home" component={LoggedInNav} />

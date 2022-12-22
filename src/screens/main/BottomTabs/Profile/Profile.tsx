@@ -12,6 +12,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -62,6 +63,7 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
 
   return (
     <>
+      <StatusBar backgroundColor={Color.white[100]} />
       <SafeAreaView style={styles.safeAreaView}>
         <View
           style={{ paddingHorizontal: 20 }}
@@ -243,7 +245,6 @@ export const Profile = ({ navigation }: StackScreenProps<ProfileNavParamList>) =
 const styles = StyleSheet.create({
   safeAreaView: {
     marginTop: 11,
-    backgroundColor: Color.white[0],
     flexDirection: "column",
     justifyContent: "flex-start",
     position: "relative",
