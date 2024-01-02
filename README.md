@@ -2,5 +2,6 @@
 JakSimFriend frontend 
 
 
-https://github.com/JakSimFriend/frontend/assets/58925260/099913a7-9234-4605-afb8-858e7c6da17a
+https://github.com/JakSimFriend/frontend/assets/58925260/6874d573-4a0b-4492-ad20-bbaec3f53532
+
 
